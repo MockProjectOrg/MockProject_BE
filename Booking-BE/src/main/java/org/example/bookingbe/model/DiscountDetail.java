@@ -20,6 +20,9 @@ public class DiscountDetail {
     @ManyToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
     public DiscountDetail() {
     }
@@ -62,5 +65,13 @@ public class DiscountDetail {
 
     public void setDiscount(Discount discount) {
         this.discount = discount;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 }

@@ -10,6 +10,9 @@ public class Payment {
     private Long id;
     @Column(name = "payment_method", columnDefinition = "Varchar(50)")
     private String paymentMethod;
+    @ManyToOne
+    @JoinColumn(name = "bank_account_id")
+    private BankAccount bankAccount;
 
     public Payment() {
     }
@@ -28,5 +31,13 @@ public class Payment {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 }
