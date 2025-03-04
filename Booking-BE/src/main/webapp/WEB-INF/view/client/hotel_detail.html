@@ -1,163 +1,260 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
-    <title>Room Details</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
+        /* RESET CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      .menu {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-        background-color: #f8f9fa;
-        padding: 10px;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-top: 60px;
+        }
 
-      .menu a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-        padding: 8px 12px;
-      }
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px 20px;
+        }
 
-      .container {
-        display: flex;
-        gap: 20px;
-        margin: 20px;
-        align-items: center;
-      }
+        .menu {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            align-items: center;
+        }
 
-      .image-container {
-        position: relative;
-        width: 50%;
-        height: 500px;
-      }
+        .menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+            transition: 0.3s;
+        }
 
-      .room-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 10px;
-      }
+        .menu a:hover {
+            color: #00bcd4;
+        }
 
-      .nav-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        border-radius: 50%;
-      }
+        /* Hotel Detail Layout */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-      .prev {
-        left: 10px;
-      }
+        .hotel-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-      .next {
-        right: 10px;
-      }
+        .hotel-header h1 {
+            color: #00bcd4;
+        }
 
-      .btn-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
-      }
+        .image-slider {
+            position: relative;
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
 
-      .btn-switch {
-        padding: 10px 15px;
-        border: none;
-        background-color: #00bcd4;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
+        .hotel-image {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+            object-fit: cover;
+        }
 
-      .btn-switch:hover {
-        background-color: #008c9e;
-      }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
 
-      .room-info {
-        width: 50%;
-      }
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
 
-      h3 {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
+        .prev { left: 10px; }
+        .next { right: 10px; }
 
-      .room-info p {
-        margin: 10px 0;
-      }
+        .hotel-info {
+            margin-top: 20px;
+        }
 
-      .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        background-color: #00bcd4;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-top: 15px;
-      }
+        .hotel-info h2 {
+            color: #00bcd4;
+        }
 
-      .btn:hover {
-        background-color: #008c9e;
-      }
+        .hotel-info p {
+            margin: 10px 0;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .feature-item {
+            background: #00bcd4;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00bcd4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #008c9e;
+        }
+
+        /* Review Section */
+        .review-section {
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-section h3 {
+            color: #00bcd4;
+            text-align: center;
+        }
+
+        .review-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .user-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu {
+                justify-content: center;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="header">
-      <div class="menu">
-        <a href="#">Home</a>
-        <a href="#">Room</a>
-        <a href="#">About Us</a>
-        <a href="#">Pages</a>
-        <a href="#">News</a>
-        <a href="#">Contact</a>
-        <a href="#"><i class="fas fa-search"></i></a>
-      </div>
+</head>
+<body>
+    <div class="navbar">
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Rooms</a>
+            <a href="#">About Us</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a href="#"><i class="fas fa-search"></i></a>
+        </div>
     </div>
 
     <div class="container">
-      <div class="image-container">
-        <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-        <img
-          id="hotel-image"
-          class="hotel-image"
-          th:src="${hotel.imageUrls[0]}"
-          alt="Hotel Image"
-        />
-        <button class="nav-button next" onclick="nextImage()">&#10095;</button>
-      </div>
+        <div class="hotel-header">
+            <h1>Luxury Hotel</h1>
+            <p>Experience the best hospitality and comfort.</p>
+        </div>
 
-      <div class="hotel-info">
-        <h3 th:text="${hotel.name}">Hotel Name</h3>
-        <p><strong>Type:</strong> <span th:text="${hotel.RoomTypeID}"></span></p>
-        <p>
-          <strong>Description:</strong>
-          <span th:text="${hotel.description}"></span>
-        </p>
-        <p>
-          <strong>Price:</strong>
-          <span th:text="${#numbers.formatCurrency(room.price)}"></span> /ngày
-        </p>
-        <a href="#" class="btn">Room List</a>
-      </div>
+        <div class="image-slider">
+            <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
+            <img id="hotel-image" class="hotel-image" src="https://www.hotelierindia.com/cloud/2021/03/17/Multi-property-IHG-Osaka-Japan.jpg" alt="Hotel">
+            <button class="nav-button next" onclick="nextImage()">&#10095;</button>
+        </div>
+
+        <div class="hotel-info">
+            <h2>Hotel Overview</h2>
+            <p>A luxury hotel with premium facilities, located in the heart of the city.</p>
+            <div class="features">
+                <span class="feature-item">Free Wi-Fi</span>
+                <span class="feature-item">Swimming Pool</span>
+                <span class="feature-item">Spa & Wellness</span>
+                <span class="feature-item">Restaurant</span>
+                <span class="feature-item">Gym</span>
+            </div>
+            <a href="#" class="btn">Book Now</a>
+        </div>
+
+        <div class="review-section">
+            <h3>Guest Reviews</h3>
+            <div class="review-item">
+                <img class="user-image" src="https://randomuser.me/api/portraits/women/1.jpg" alt="User">
+                <div class="user-info">
+                    <span><strong>Jane Doe</strong></span>
+                    <span>Great service and comfortable stay!</span>
+                </div>
+            </div>
+        </div>
     </div>
-  </body>
+
+    <div class="footer">Copyright © 2025 Luxury Hotel</div>
+
+    <script>
+        function prevImage() {  }
+        function nextImage() { }
+    </script>
+</body>
 </html>
