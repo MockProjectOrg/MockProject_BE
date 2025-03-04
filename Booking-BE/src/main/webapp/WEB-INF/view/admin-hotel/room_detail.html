@@ -257,26 +257,27 @@
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <div class="navbar">
+  <div class="header">
     <div class="logo">
-      <!-- Bạn có thể thêm logo tại đây nếu muốn -->
+      <p>Admin Page</p>
     </div>
+    <a class=""></a>
+    
+  </div>
+  <div class="navbar">
     <div class="hamburger" onclick="toggleMenu()">
       <i class="fas fa-bars"></i>
     </div>
     <div class="menu" id="menu">
-      <a href="#">Home</a>
-      <a href="#">Room</a>
-      <a href="#">About Us</a>
-      <a href="#">Pages</a>
-      <a href="#">News</a>
-      <a href="#">Contact</a>
-      <a href="#"><i class="fas fa-search"></i></a>
+      <a href="#">Rooms</a>
+      <a href="#">Users</a>
+      <a href="#">Bookings</a>
+      <a href="#">Discounts</a>
+      <a href="#">Statiscal</a>
+      <a href="#">Web Page</a>
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="container">
     <div class="image-container">
       <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
@@ -285,7 +286,8 @@
     </div>
     <div class="room-info">
       <h3 id="room-title">Room Details</h3>
-      <p><strong>Room Name:</strong> <span id="room-name">Luxury Suite</span></p>
+      <p><strong>Room Name:</strong> <span id="room-name"><input type="text">
+      Luxury Suite</span></p>
       <p><strong>Type:</strong> <span id="room-type">Deluxe</span></p>
       <p><strong>Price:</strong> <span id="room-price">$150</span> /ngày</p>
       <p><strong>Size:</strong> <span>45 mét vuông</span></p>
@@ -297,34 +299,12 @@
         <li>Air Conditioning</li>
       </ul>
       <p><strong>Description:</strong> <span id="room-description">A luxurious room with sea view.</span></p>
-      <a href="#" class="btn">Booking Now</a>
+      <div class="btn-group">
+        <button>Edit</button>
+        <button>Cancel</button>
+      </div>
     </div>
   </div>
-
-  <!-- Review Section -->
-  <div class="review">
-    <h3>Reviews</h3>
-    <div class="review-list">
-      <div class="review-item">
-        <img class="user-image" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Avatar" />
-        <div class="user-info">
-          <span class="user-name">John Doe</span>
-          <span class="user-review">"Great room with an amazing view!"</span>
-        </div>
-      </div>
-      <div class="review-item">
-        <img class="user-image" src="https://randomuser.me/api/portraits/women/2.jpg" alt="User Avatar" />
-        <div class="user-info">
-          <span class="user-name">Emily Smith</span>
-          <span class="user-review">"Very clean and comfortable, highly recommend!"</span>
-        </div>
-      </div>
-      <div class="review-item">
-        <img class="user-image" src="https://randomuser.me/api/portraits/men/3.jpg" alt="User Avatar" />
-        <div class="user-info">
-          <span class="user-name">David Brown</span>
-          <span class="user-review">"Friendly staff and top-notch service."</span>
-        </div>
       </div>
     </div>
   </div>
