@@ -2,6 +2,8 @@ package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -18,6 +20,14 @@ public class User {
     private String password;
     @Column(name = "address", columnDefinition = "varchar(155)")
     private String address;
+    @Column(name = "gender")
+    private Integer gender;
+    @Column(name = "first_name", columnDefinition = "varchar(50)")
+    private String firstName;
+    @Column(name = "last_name", columnDefinition = "varchar(50)")
+    private String lastName;
+    @Column(name = "birthday", columnDefinition = "Date")
+    private LocalDate birthday;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -88,5 +98,37 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }
