@@ -1,0 +1,504 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+    Dashboard Overview
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<div class="flex">
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-900 h-screen">
+    <div class="p-4 text-white text-2xl font-bold">
+      dashlite
+    </div>
+    <nav class="mt-10">
+      <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
+        <i class="fas fa-tachometer-alt mr-3">
+        </i>
+        Dashboard
+      </a>
+      <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
+        <i class="fas fa-book mr-3">
+        </i>
+        Bookings
+      </a>
+      <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
+        <i class="fas fa-bed mr-3">
+        </i>
+        Room
+      </a>
+
+    </nav>
+    <div class="mt-10 px-4">
+      <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="#">
+        <i class="fas fa-arrow-left mr-3">
+        </i>
+        Main Dashboard
+      </a>
+      <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="#">
+        <i class="fas fa-th-large mr-3">
+        </i>
+        All Components
+      </a>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="flex-1 p-6">
+    <!-- Top Bar -->
+    <div class="flex justify-between items-center mb-6">
+
+      <div class="flex items-center">
+        <div class="mr-4">
+          <img alt="Flag" class="rounded-full" height="30" src="https://storage.googleapis.com/a1aa/image/0Ff5SQhxkCrEGj3lf3K94qcQC1s_NjHEALDnF69PZKE.jpg" width="30"/>
+        </div>
+        <div class="flex items-center">
+          <img alt="User Avatar" class="rounded-full mr-2" height="30" src="https://storage.googleapis.com/a1aa/image/YDBCQH_TqS7OJDXBh6B_E_XomAnNTc7E41JSmqk-8GQ.jpg" width="30"/>
+          <div>
+            <div class="text-sm font-semibold">
+              HIEU
+            </div>
+            <div class="text-xs text-gray-500">
+              Administrator
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Dashboard Overview -->
+    <div class="text-2xl font-semibold mb-4">
+      Dashboard Overview
+    </div>
+    <div class="text-gray-500 mb-6">
+      Welcome to ADMIN Dashboard Template.
+    </div>
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-gray-500">
+          Total Booking
+        </div>
+        <div class="text-3xl font-bold">
+          11,230
+          <span class="text-red-500 text-sm">
+        ↓ 1.93%
+       </span>
+        </div>
+        <div class="flex justify-between mt-4">
+          <div>
+            <div class="text-gray-500">
+              THIS MONTH
+            </div>
+            <div class="text-xl font-bold">
+              1913
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              THIS WEEK
+            </div>
+            <div class="text-xl font-bold">
+              1125
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-gray-500">
+          Rooms Available
+        </div>
+        <div class="text-3xl font-bold">
+          312
+        </div>
+        <div class="flex justify-between mt-4">
+          <div>
+            <div class="text-gray-500">
+              BOOKED (W)
+            </div>
+            <div class="text-xl font-bold">
+              913
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              BOOKED (M)
+            </div>
+            <div class="text-xl font-bold">
+              125
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-gray-500">
+          Expenses
+        </div>
+        <div class="text-3xl font-bold">
+          79,358.50 USD
+        </div>
+        <div class="flex justify-between mt-4">
+          <div>
+            <div class="text-gray-500">
+              THIS MONTH
+            </div>
+            <div class="text-xl font-bold">
+              3,540.59 USD
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              THIS WEEK
+            </div>
+            <div class="text-xl font-bold">
+              1,259.28 USD
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Charts and Graphs -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            Top Selected Package
+          </div>
+          <div class="text-gray-500">
+            30 Days
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              Starter Package
+            </div>
+            <div class="text-gray-500">
+              56%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 56%">
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              Honeymoon Package
+            </div>
+            <div class="text-gray-500">
+              45%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-purple-600 h-2.5 rounded-full" style="width: 45%">
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              Vacation Package
+            </div>
+            <div class="text-gray-500">
+              32%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-yellow-600 h-2.5 rounded-full" style="width: 32%">
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              Continental Package
+            </div>
+            <div class="text-gray-500">
+              29%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-pink-600 h-2.5 rounded-full" style="width: 29%">
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              Spring Package
+            </div>
+            <div class="text-gray-500">
+              18.49%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-orange-600 h-2.5 rounded-full" style="width: 18.49%">
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-gray-500">
+              All suite Package
+            </div>
+            <div class="text-gray-500">
+              16%
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-green-600 h-2.5 rounded-full" style="width: 16%">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            Sales Revenue
+          </div>
+          <div class="text-gray-500">
+            30 Days
+          </div>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <div class="text-gray-500">
+              Monthly
+            </div>
+            <div class="text-2xl font-bold">
+              9.28K
+              <span class="text-green-500 text-sm">
+          ↑ 7.46%
+         </span>
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              Weekly
+            </div>
+            <div class="text-2xl font-bold">
+              2.69K
+              <span class="text-red-500 text-sm">
+          ↓ 1.92%
+         </span>
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              Daily (Avg)
+            </div>
+            <div class="text-2xl font-bold">
+              0.94K
+              <span class="text-green-500 text-sm">
+          ↑ 3.45%
+         </span>
+            </div>
+          </div>
+        </div>
+        <img alt="Sales Revenue Chart" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/K_qDynisksiWbw9hve-nqR2ZMaK-AMLFb8p7cHv1ZlE.jpg" width="400"/>
+      </div>
+    </div>
+    <!-- Room Booking Chart and Income vs Expenses -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            Room Booking Chart
+          </div>
+          <div class="text-gray-500">
+            30 Days
+          </div>
+        </div>
+        <img alt="Room Booking Chart" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/FAaehLnzEtp1YMRLZEXCiwNvBFa-DTz7zJj3xoinfmQ.jpg" width="400"/>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            Income vs Expenses
+          </div>
+          <div class="text-gray-500">
+            30 Days
+          </div>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <div class="text-gray-500">
+              Income
+            </div>
+            <div class="text-2xl font-bold">
+              2.57K
+              <span class="text-red-500 text-sm">
+          ↓ 12.27%
+         </span>
+            </div>
+          </div>
+          <div>
+            <div class="text-gray-500">
+              Expenses
+            </div>
+            <div class="text-2xl font-bold">
+              3.5K
+              <span class="text-red-500 text-sm">
+          ↓ 8.37%
+         </span>
+            </div>
+          </div>
+        </div>
+        <img alt="Income vs Expenses Chart" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/UtUN5_Uh7ccbJ_0R9IJhhop4dTSGed-8g8So9a6NvtU.jpg" width="400"/>
+      </div>
+    </div>
+    <!-- New Customer and Recent Activities -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            New Customer
+          </div>
+          <div class="text-blue-500">
+            View All
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <img alt="Customer Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Abu Bin Ishtiyak
+              </div>
+              <div class="text-gray-500 text-sm">
+                info@softnio.com
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Customer Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Sharon Walker
+              </div>
+              <div class="text-gray-500 text-sm">
+                sharon@softnio.com
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Customer Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Gloria Oliver
+              </div>
+              <div class="text-gray-500 text-sm">
+                gloria_72@example.com
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Customer Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Phillip Sullivan
+              </div>
+              <div class="text-gray-500 text-sm">
+                phillip55@example.com
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Customer Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Tasnim Ifrat
+              </div>
+              <div class="text-gray-500 text-sm">
+                tasif45@example.com
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-gray-500">
+            Recent Activities
+          </div>
+          <div class="text-blue-500">
+            Cancel All
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <img alt="Activity Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Keith Jensen
+              </div>
+              <div class="text-gray-500 text-sm">
+                requested for room.
+              </div>
+              <div class="text-gray-400 text-xs">
+                2 hours ago
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Activity Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Harry Simpson
+              </div>
+              <div class="text-gray-500 text-sm">
+                placed a Order.
+              </div>
+              <div class="text-gray-400 text-xs">
+                2 hours ago
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Activity Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Stephanie Marshall
+              </div>
+              <div class="text-gray-500 text-sm">
+                cancelled booking.
+              </div>
+              <div class="text-gray-400 text-xs">
+                2 hours ago
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Activity Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Nicholas Carr
+              </div>
+              <div class="text-gray-500 text-sm">
+                confirmed booking.
+              </div>
+              <div class="text-gray-400 text-xs">
+                2 hours ago
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <img alt="Activity Avatar" class="rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg" width="40"/>
+            <div>
+              <div class="text-gray-700 font-semibold">
+                Timothy Moreno
+              </div>
+              <div class="text-gray-500 text-sm">
+                placed a Order.
+              </div>
+              <div class="text-gray-400 text-xs">
+                2 hours ago
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="mt-6 text-center text-gray-500 text-sm">
+      © 2024 DashLite. Template by Softnio
+    </div>
+  </div>
+</div>
+</body>
+</html>
