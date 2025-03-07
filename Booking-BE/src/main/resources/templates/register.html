@@ -151,10 +151,10 @@
             color: #deb887;
         }
 
-        .social-login{
-            text-align: center;
-            padding-top: 20px;
-        }
+        /*.social-login{*/
+        /*    text-align: center;*/
+        /*    padding-top: 20px;*/
+        /*}*/
 
         .fb-btn img, .google-btn img {
             width: 20px;
@@ -174,11 +174,21 @@
 
         }
 
-        .radio-gender{
+        /*.radio-gender{*/
+        /*    display: flex;*/
+        /*    margin: 20px;*/
+        /*}*/
+        .select-gender{
             display: flex;
-            margin: 20px;
+            flex-direction: column;
         }
-
+        .select-gender label{
+            margin-bottom: 5px;
+        }
+        .option-gender{
+            width: 150px;
+            height: 32px;
+        }
     </style>
 </head>
 <body>
@@ -206,19 +216,19 @@
             <div class="slogan">
                 <p>Enjoy the perfect trip with us!!</p>
             </div>
-            <form action="loginServlet" method="post">
+            <form action="/api/Doregister" method="post" th:object="${user}" onsubmit="validatePasswords(event)">
                 <table class="table-form">
                     <tr>
                         <td>
                             <div class="input-group">
                                 <label for="firstname">First Name</label>
-                                <input type="text" id="firstname" name="firstname" required>
+                                <input type="text" id="firstname" name="firstname" th:field="*{firstName}" required>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <label for="lastname">Last Name</label>
-                                <input type="text" id="lastname" name="lastname" required>
+                                <input type="text" id="lastname" name="lastname" th:field="*{lastName}" required>
                             </div>
                         </td>
                     </tr>
@@ -226,13 +236,13 @@
                         <td>
                             <div class="input-group">
                                 <label for="username">Username</label>
-                                <input type="text" id="username" name="username" required>
+                                <input type="text" id="username" name="username" th:field="*{userName}" required>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <label for="email">Email</label>
-                                <input type="text" id="email" name="email" required>
+                                <input type="text" id="email" name="email" th:field="*{email}" required>
                             </div>
                         </td>
                     </tr>
@@ -240,32 +250,30 @@
                         <td>
                             <div class="input-group">
                                 <label for="birthday">Birthday</label>
-                                <input type="date" id="birthday" name="birthday" required>
+                                <input type="date" id="birthday" name="birthday" th:field="*{birthday}" required>
                             </div>
                         </td>
-                        <td>
+                        <td class="select-gender">
                             <label>Gender</label>
-                            <div class="radio-gender">
-                                <input type="radio" id="Male" name="Male" value="Male">
-                                <label for="Male"> Male</label><br>
-                                <input type="radio" id="Female" name="Female" value="Female">
-                                <label for="Female"> Female</label><br>
-                                <input type="radio" id="Other" name="Other" value="Other">
-                                <label for="Other"> Other</label><br>
-                            </div>
+                            <select class="option-gender" name="gender" id="gender" th:field="*{gender}">
+                                <option th:value="1" th:text="Male">Male</option>
+                                <option th:value="2" th:text="Female">Female</option>
+                                <option th:value="3" th:text="Other">Other</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="input-group">
                                 <label for="password">Password</label>
-                                <input type="password" id="password" name="password" required>
+                                <input type="password" id="password" name="password" th:field="*{password}" required>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <label for="re-password">Re Password</label>
                                 <input type="password" id="re-password" name="re-password" required>
+                                <span style="color: red" id="password-error"></span>
                             </div>
                         </td>
                     </tr>
@@ -273,49 +281,17 @@
                         <td>
                             <div class="input-group">
                                 <label for="phone">Phone</label>
-                                <input type="text" id="phone" name="phone" required>
+                                <input type="text" id="phone" name="phone" th:field="*{phone}" required>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <label for="address">Address</label>
-                                <input type="text" id="address" name="address" required>
+                                <input type="text" id="address" name="address" th:field="*{address}" required>
                             </div>
                         </td>
                     </tr>
                 </table>
-<!--                <div class="input-group">-->
-<!--                    <label for="firstname">First Name</label>-->
-<!--                    <input type="text" id="firstname" name="firstname" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="lastname">Last Name</label>-->
-<!--                    <input type="text" id="lastname" name="lastname" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="username">Username</label>-->
-<!--                    <input type="text" id="username" name="username" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="email">Email</label>-->
-<!--                    <input type="text" id="email" name="email" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="password">Password</label>-->
-<!--                    <input type="password" id="password" name="password" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="re-password">Re Password</label>-->
-<!--                    <input type="password" id="re-password" name="re-password" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="phone">Phone</label>-->
-<!--                    <input type="text" id="phone" name="phone" required>-->
-<!--                </div>-->
-<!--                <div class="input-group">-->
-<!--                    <label for="address">Address</label>-->
-<!--                    <input type="text" id="address" name="address" required>-->
-<!--                </div>-->
                 <button type="submit" class="login-btn">REGISTER</button>
             </form>
         </div>
@@ -323,4 +299,18 @@
 
 </div>
 </body>
+<script>
+    function validatePasswords(event) {
+        var password = document.getElementById("password").value;
+        var repassword = document.getElementById("re-password").value;
+        var errorSpan = document.getElementById("password-error");
+
+        if (password !== repassword) {
+            errorSpan.textContent = "Mật khẩu không trùng khớp!";
+            event.preventDefault();
+        } else {
+            errorSpan.textContent = "";
+        }
+    }
+</script>
 </html>

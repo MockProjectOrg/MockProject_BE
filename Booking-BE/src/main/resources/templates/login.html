@@ -223,7 +223,7 @@
             <div class="slogan">
                 <p>Enjoy the perfect trip with us!!</p>
             </div>
-            <form action="loginServlet" method="post">
+            <form th:action="@{/login}" method="post">
                 <div class="input-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
