@@ -1,0 +1,275 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>
+        About Us - Sona
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+                 font-family: 'Roboto', sans-serif;
+             }
+             h1, h2, h3, h4, h5, h6 {
+                 font-family: 'Playfair Display', serif;
+             }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+<header class="absolute top-0 left-0 w-full z-20 py-6">
+    <div class="container mx-auto flex justify-between items-center px-6">
+        <div class="flex items-center space-x-4">
+            <a class="text-orange-500 font-semibold" href="tel:+1234567890">
+                <i class="fas fa-phone-alt">
+                </i>
+                (12) 345 67890
+            </a>
+            <a class="text-orange-500 font-semibold" href="mailto:info.colorlib@gmail.com">
+                <i class="fas fa-envelope">
+                </i>
+                info.colorlib@gmail.com
+            </a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a class="text-white font-semibold" href="#">
+                <i class="fab fa-facebook-f">
+                </i>
+            </a>
+            <a class="text-white font-semibold" href="#">
+                <i class="fab fa-twitter">
+                </i>
+            </a>
+            <a class="text-white font-semibold" href="#">
+                <i class="fab fa-tripadvisor">
+                </i>
+            </a>
+            <a class="text-white font-semibold" href="#">
+                <i class="fab fa-instagram">
+                </i>
+            </a>
+            <a class="bg-orange-500 text-white px-4 py-2 rounded font-semibold" href="#">
+                BOOKING NOW
+            </a>
+            <a class="text-white font-semibold" href="#">
+                <img alt="Flag of the United Kingdom" class="inline-block" height="20" src="https://storage.googleapis.com/a1aa/image/GPc0QUVzE_eIqAn-iq2nshuZKLhxk4vSRx-3Q40pBiw.jpg" width="20"/>
+                EN
+                <i class="fas fa-chevron-down">
+                </i>
+            </a>
+            <a class="text-white font-semibold" th:href="@{/login}">
+                <i class="fas fa-user">
+                </i>
+                Login
+            </a>
+            <a class="text-white font-semibold" th:href="@{/register}">
+                <i class="fas fa-user-plus">
+                </i>
+                Register
+            </a>
+        </div>
+    </div>
+    <nav class="relative z-20">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <a class="text-3xl font-bold hero-text text-white" th:href="@{/home}">
+                Sona.
+            </a>
+            <ul class="flex space-x-6">
+                <li>
+                    <a class="text-white hover:text-orange-500" th:href="@{/home}">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="text-white hover:text-orange-500" th:href="@{/about}">
+                        About Us
+                    </a>
+                </li>
+                <li>
+                    <a class="text-white hover:text-orange-500" th:href="@{/contact}">
+                        Contact
+                    </a>
+                </li>
+            </ul>
+            <div class="relative">
+                <input class="border border-orange-500 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." type="text"/>
+                <i class="fas fa-search absolute left-3 top-3 text-gray-500">
+                </i>
+            </div>
+        </div>
+    </nav>
+</header>
+<section class="hero relative h-screen flex flex-col justify-center">
+    <img alt="A luxurious hotel with a beautiful exterior view" class="absolute inset-0 w-full h-full object-cover" height="1080" src="https://storage.googleapis.com/a1aa/image/J67C3gRAy0X4rody8bh1GnRZY641HrQNYFQKGMiJpV0.jpg" width="1920"/>
+    <div class="absolute inset-0 bg-black opacity-50">
+    </div>
+    <div class="container mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between px-6">
+        <div class="text-white max-w-lg">
+            <h1 class="text-5xl md:text-6xl font-bold hero-text">
+                Information about us
+            </h1>
+            <p class="mt-4 text-lg">
+                Discover below
+            </p>
+            <div class="mt-6 animate-bounce">
+                <a class="scroll-smooth" href="#contact-form">
+                    <i class="fas fa-chevron-down text-4xl text-orange-500" style="line-height: 2;">
+                    </i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Main Content -->
+<div class="container mx-auto py-16">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold">
+            About Us
+        </h1>
+        <nav class="text-gray-600 mt-4">
+            <a class="hover:text-orange-600" th:href="@{/home}">
+                Home
+            </a>
+            <span class="mx-2">
+      &gt;
+     </span>
+            <span>
+      About Us
+     </span>
+        </nav>
+    </div>
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">
+            Welcome To Sona.
+        </h2>
+        <p class="text-gray-600 mb-8">
+            Welcome to our convenient and fast hotel booking platform! We offer a seamless booking experience, helping you find and reserve luxurious hotels at the best prices. Our system provides detailed information, real images, and customer reviews, ensuring you choose the perfect stay. Book your room today and enjoy a hassle-free trip!
+        </p>
+
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <img alt="Decorative image of a hotel room" class="w-full h-auto rounded-lg shadow-md" height="300" src="https://storage.googleapis.com/a1aa/image/-FFJLT5r4z-OmKUHbdaJomPHSWphwobLxBAbKlkIQQ4.jpg" width="400"/>
+        <img alt="Decorative image of a tourist attraction" class="w-full h-auto rounded-lg shadow-md" height="300" src="https://storage.googleapis.com/a1aa/image/uSMRCAaHggvUJVYNx0iAXUaHhNboI6XAVC-y2FSEgRY.jpg" width="400"/>
+        <img alt="Decorative image of a scenic view" class="w-full h-auto rounded-lg shadow-md" height="300" src="https://storage.googleapis.com/a1aa/image/3ldDOtYk_IPMqbcxIrsr-A6TzTi-63ZcuEwcTvrz8yA.jpg" width="400"/>
+    </div>
+    <!-- Additional Content -->
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">
+            Testimonials
+        </h2>
+        <p class="text-gray-600 mb-8">
+            Hear what our guests have to say about their stay at Sona.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+                <p class="text-gray-600 mb-4">
+                    "The service was exceptional and the rooms were beautifully decorated. Highly recommend!"
+                </p>
+                <h3 class="text-xl font-bold">
+                    - John Doe
+                </h3>
+            </div>
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+                <p class="text-gray-600 mb-4">
+                    "A wonderful experience from start to finish. The staff were friendly and attentive."
+                </p>
+                <h3 class="text-xl font-bold">
+                    - Jane Smith
+                </h3>
+            </div>
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+                <p class="text-gray-600 mb-4">
+                    "The location is perfect for exploring the city. The hotel itself is a gem."
+                </p>
+                <h3 class="text-xl font-bold">
+                    - Michael Brown
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+            <h3 class="text-xl font-bold mb-4">
+                About Sona
+            </h3>
+            <p class="text-gray-400">
+                Sona is a luxury hotel located in the heart of Paris, offering the best in comfort and style.
+            </p>
+        </div>
+        <div>
+            <h3 class="text-xl font-bold mb-4">
+                Quick Links
+            </h3>
+            <ul class="space-y-2">
+                <li>
+                    <a class="text-gray-400 hover:text-white" th:href="@{/}">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="text-gray-400 hover:text-white" href="#">
+                        About Us
+                    </a>
+                </li>
+                <li>
+                    <a class="text-gray-400 hover:text-white" href="#">
+                        Contact
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="text-xl font-bold mb-4">
+                Contact Us
+            </h3>
+            <p class="text-gray-400">
+                <i class="fas fa-map-marker-alt mr-2">
+                </i>
+                123 Paris St, Paris, France
+            </p>
+            <p class="text-gray-400">
+                <i class="fas fa-phone-alt mr-2">
+                </i>
+                (12) 345 67890
+            </p>
+            <p class="text-gray-400">
+                <i class="fas fa-envelope mr-2">
+                </i>
+                info.colorlib@gmail.com
+            </p>
+        </div>
+        <div>
+            <h3 class="text-xl font-bold mb-4">
+                Follow Us
+            </h3>
+            <div class="flex space-x-4">
+                <a class="text-gray-400 hover:text-white" href="#">
+                    <i class="fab fa-facebook-f">
+                    </i>
+                </a>
+                <a class="text-gray-400 hover:text-white" href="#">
+                    <i class="fab fa-twitter">
+                    </i>
+                </a>
+                <a class="text-gray-400 hover:text-white" href="#">
+                    <i class="fab fa-tripadvisor">
+                    </i>
+                </a>
+                <a class="text-gray-400 hover:text-white" href="#">
+                    <i class="fab fa-instagram">
+                    </i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="text-center text-gray-400 mt-8">
+        © 2023 Sona. All rights reserved.
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Seaside Hotel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .header-title {
+        font-family: 'Playfair Display', serif;
+    }
+    .btn-booknow {
+        background-color: white;
+        color: black;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-booknow:hover {
+        background-color: #FFA500;
+        color: white;
+    }
+    .pagination-button {
+        background-color: #FFA500;
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+    }
+    .pagination-button:hover {
+        background-color: #FF8C00;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+<header class="relative">
+  <img alt="Hotel room background" class="w-full h-96 object-cover" height="500" src="https://storage.googleapis.com/a1aa/image/V-UuEUXzqudt45wYgxTaSOTlnyx23j62Rcx5_m4kh_U.jpg" width="1920"/>
+  <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col items-center justify-center">
+    <div class="container mx-auto px-4 flex justify-between items-center py-4">
+      <div class="text-white text-3xl font-bold header-title">
+
+      </div>
+      <div class="flex items-center space-x-4">
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-tripadvisor"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a class="bg-orange-500 text-white px-4 py-2 rounded font-semibold" href="#">
+          BOOKING NOW
+        </a>
+        <a class="text-white font-semibold flex items-center" href="#">
+          <img alt="Flag of the United Kingdom" class="inline-block mr-1" height="20" src="https://storage.googleapis.com/a1aa/image/pVnxoppQCf5vNH8CvFsuY-FJxueNX2Zke3sWRZG4Dg4.jpg" width="20"/>
+          EN
+          <i class="fas fa-chevron-down ml-1"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fas fa-user"></i>
+          Login
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fas fa-user-plus"></i>
+          Register
+        </a>
+      </div>
+    </div>
+    <nav class="relative z-20 w-full">
+      <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <a class="text-3xl font-bold hero-text text-white" th:href="@{/home}">
+          Sona.
+        </a>
+        <ul class="flex space-x-6">
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/home}">
+              Home
+            </a>
+          </li>
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/about}">
+              About Us
+            </a>
+          </li>
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/contact}">
+              Contact
+            </a>
+          </li>
+        </ul>
+        <div class="relative">
+          <input class="border border-orange-500 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." type="text"/>
+          <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+        </div>
+      </div>
+    </nav>
+    <div class="text-center mt-10">
+      <h1 class="text-5xl text-white header-title">Select</h1>
+      <h2 class="text-4xl text-white header-title">ROOMS</h2>
+    </div>
+  </div>
+</header>
+<main class="container mx-auto px-4 py-8">
+  <div class="flex flex-col md:flex-row justify-between items-start mb-4">
+    <div class="flex flex-col space-y-8 mb-4 md:mb-0">
+      <div class="bg-white p-4 rounded shadow mb-4">
+        <h3 class="text-lg font-bold mb-2">Filter by Room Type</h3>
+        <div class="space-y-2">
+          <label class="flex items-center">
+            <input class="mr-2" type="checkbox"/> Standard Room
+          </label>
+          <label class="flex items-center">
+            <input class="mr-2" type="checkbox"/> Deluxe Room
+          </label>
+          <label class="flex items-center">
+            <input class="mr-2" type="checkbox"/> Premier Room
+          </label>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-bold mb-2">Filter by Price</h3>
+        <input class="w-full" id="priceRange" max="1000" min="0" oninput="updatePrice(this.value)" type="range"/>
+        <div class="flex justify-between text-sm gap:10px">
+          <span>$0</span>
+          <span class="mx-2" id="priceValue">$500</span>
+          <span>$1000</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-grow ml-0 md:ml-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Room 1 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Standard Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/_VkA0_rxBfK85Oyeifyunj4wqBgNvw5ZluOxEcN9rGc.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 2 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 2 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 30 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Standard Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $29</button>
+          </div>
+        </div>
+        <!-- Room 2 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Deluxe Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/8-tN2z-yl0dJLdUxx7FmH4YONPhkHbKVHtabyGkkrc8.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 1 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 2 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 35 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Deluxe Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $39</button>
+          </div>
+        </div>
+        <!-- Room 3 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Premier Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/tj90SkhNleE6Ca2z4SKN4iNLJZm9Cw50Z84VI6QgPvA.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 2 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 4 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 40 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Premier Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $49</button>
+          </div>
+        </div>
+        <!-- Room 4 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Standard Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/_VkA0_rxBfK85Oyeifyunj4wqBgNvw5ZluOxEcN9rGc.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 2 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 2 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 30 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Standard Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $29</button>
+          </div>
+        </div>
+        <!-- Room 5 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Deluxe Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/8-tN2z-yl0dJLdUxx7FmH4YONPhkHbKVHtabyGkkrc8.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 1 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 2 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 35 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Deluxe Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $39</button>
+          </div>
+        </div>
+        <!-- Room 6 -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div class="relative">
+            <img alt="Premier Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/tj90SkhNleE6Ca2z4SKN4iNLJZm9Cw50Z84VI6QgPvA.jpg" width="400"/>
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 2 ROOM LEFT</div>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center text-gray-600 text-sm mb-2">
+              <i class="fas fa-user-friends mr-2"></i> 4 Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 40 ft
+            </div>
+            <h3 class="text-xl font-bold mb-2">Premier Room</h3>
+            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
+            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $49</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center items-center mt-8 space-x-4">
+        <button class="pagination-button">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="text-lg">1</span>
+        <button class="pagination-button">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="bg-gray-800 text-white py-8">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 class="text-xl font-bold mb-2">Seaside Hotel</h3>
+        <p class="text-gray-400">123 Beach Avenue, Seaside City, CA 12345</p>
+        <p class="text-gray-400">Phone: (123) 456-7890</p>
+        <p class="text-gray-400">Email: info@seasidehotel.com</p>
+      </div>
+      <div class="space-x-4">
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-facebook-f"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-twitter"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-instagram"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <p class="text-gray-400">&copy; 2023 Seaside Hotel. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+<script>
+  function updatePrice(value) {
+      document.getElementById('priceValue').innerText = '$' + value;
+  }
+</script>
+</body>
+</html>
