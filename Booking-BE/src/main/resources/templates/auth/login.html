@@ -1,68 +1,262 @@
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-    Login Page
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-  <style>
-    body {
-             font-family: 'Roboto', sans-serif;
-         }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+<!--    <link th:href="@{/styles/login.css}" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            border-bottom: 2px solid #deb887;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .logo span {
+            color: #deb887;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #222;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #deb887;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-signup {
+            background-color: #deb887;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-signup:hover {
+            background-color: #c49163;
+        }
+
+        .login-container {
+            width: 500px;
+            height: 500px;
+            padding: 20px;
+        }
+
+        .wrap-login{
+            display: flex;
+            background: white;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            height: 550px;
+        }
+
+        .img-login img{
+            width: 350px;
+            height: 510px;
+            display: block;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            /*font-weight: bold;*/
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background: #deb887;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-btn:hover {
+            background: #c49163;
+        }
+
+        .wrap-link {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .slogan {
+            padding-bottom: 20px;
+            text-align: center;
+            color: #deb887;
+        }
+
+        .social-login{
+            text-align: center;
+            padding-top: 20px;
+        }
+        .fb-btn, .google-btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+
+        .fb-btn {
+            background-color: #1877f2;
+        }
+
+        .google-btn {
+            background-color: #db4437;
+        }
+
+        .fb-btn img, .google-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .social-login p {
+            margin-bottom: 20px;
+        }
+
+    </style>
 </head>
-<body class="bg-white flex items-center justify-center min-h-screen">
-<div class="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
-  <div class="flex-1 flex items-center justify-center p-6">
-    <img alt="Illustration of people interacting with data visualizations and charts" height="400" src="https://storage.googleapis.com/a1aa/image/1yNXQbrSF9rZ_nNZgUYzEk7rRWnv2QS5_ijZcHrKm6A.jpg" width="600"/>
-  </div>
-  <div class="flex-1 bg-blue-900 text-white p-8 flex flex-col justify-center">
-    <h1 class="text-3xl font-bold mb-4">
-      Hello!
-      <br/>
-      Welcome back!
-    </h1>
-    <p class="mb-6">
-      Let's Login to Your Account
-    </p>
-    <form class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium" for="username">
-          Username
-        </label>
-        <input class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" id="username" type="text"/>
-      </div>
-      <div>
-        <label class="block text-sm font-medium" for="password">
-          Password
-        </label>
-        <input class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" id="password" type="password"/>
-      </div>
-      <button class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition duration-300" type="submit">
-        Login
-      </button>
-    </form>
-    <div class="mt-4 text-sm">
-      <p>
-        Don't have an account?
-        <a class="text-blue-300 underline" href="#">
-          Sign in now
-        </a>
-      </p>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Sona<span>.</span></div>
+    <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Rooms</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Pages</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+        <button class="btn-signup"><a href="/api/register" style="color: white; text-decoration: none">Register</a></button>
     </div>
-    <div class="mt-8 text-xs flex justify-between">
-      <a class="text-blue-300 underline" href="#">
-        Privacy Policy
-      </a>
-      <a class="text-blue-300 underline" href="#">
-        Cookies Settings
-      </a>
+</nav>
+<div class="login-main" style="width: 100%; height: 500px">
+    <div class="wrap-login">
+        <div class="img-login">
+            <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D">
+        </div>
+        <div class="login-container">
+            <h2>Hi!</h2>
+            <div class="slogan">
+                <p>Enjoy the perfect trip with us!!</p>
+            </div>
+            <form th:action="@{/login}" method="post">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="wrap-link">
+                    <div class="remember">
+                        <input type="checkbox" value="">
+                        <label>Remember me</label>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </div>
+                <button type="submit" class="login-btn">LOGIN</button>
+            </form>
+            <div class="social-login">
+                <p>Hoặc đăng nhập bằng</p>
+                <button class="fb-btn">
+                    <a src="" >Facebook </a>
+                </button>
+                <button class="google-btn">
+                    <a src="" >Google </a>
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+
 </div>
 </body>
 </html>
+
+
