@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm kiếm khách sạn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-3">Tìm kiếm khách sạn</h2>
+    <div class="input-group mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Nhập tên khách sạn">
+        <button class="btn btn-primary" onclick="searchHotels()">Tìm kiếm</button>
+    </div>
+    <ul id="hotelResults" class="list-group"></ul>
+</div>
+
+<script>
+    function searchHotels() {
+        let searchTerm = document.getElementById("searchInput").value;
+
+        fetch(`/hotels/search?search=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(data => {
+                let resultsContainer = document.getElementById("hotelResults");
+                resultsContainer.innerHTML = ""; // Xóa kết quả cũ
+
+                if (data.length === 0) {
+                    resultsContainer.innerHTML = "<li class='list-group-item'>Không tìm thấy khách sạn.</li>";
+                    return;
+                }
+
+                data.forEach(hotel => {
+                    let listItem = document.createElement("li");
+                    listItem.className = "list-group-item";
+                    listItem.innerHTML = `<strong>${hotel.hotelName}</strong> - ${hotel.address}`;
+                    resultsContainer.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error("Lỗi:", error));
+    }
+</script>
+</body>
+</html>

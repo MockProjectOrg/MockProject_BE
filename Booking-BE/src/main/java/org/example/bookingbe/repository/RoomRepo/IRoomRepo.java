@@ -2,8 +2,10 @@ package org.example.bookingbe.repository.RoomRepo;
 
 import org.example.bookingbe.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
 public interface IRoomRepo extends JpaRepository<Room, Long> {
+    List<Room> findByPriceBetween(Double minPrice, Double maxPrice); // CẬP NHẬT
+    List<Room> findByPriceBetweenAndDescriptionContainingIgnoreCase(Double minPrice, Double maxPrice, String description); // CẬP NHẬT
+    List<Room> findByDescriptionContainingIgnoreCase(String description);
 }
