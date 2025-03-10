@@ -18,15 +18,26 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
-
+    
+    @ManyToMany
+    @JoinColumn(name = "image_id")
+    private Image image;
+    
+    
+    
+    @JoinColumn(name = "status_id")
+    private Status status;
+    
     public Room() {}
 
-    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel) {
+    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel,Image image, Status status) {
         this.id = id;
         this.price = price;
         this.description = description;
         this.roomType = roomType;
         this.hotel = hotel;
+        this.image = image;
+        this.status = status;
     }
 
     public Long getId() {
@@ -60,14 +71,25 @@ public class Room {
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
-
-
-
+    
     public Hotel getHotel() {
         return hotel;
     }
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+    
+    public Image getImage(){
+      return image;
+    }
+    public void setImage(Image image){
+      this.image = image;
+    }
+    public Status getStatus(){
+      return status;
+    }
+    public void setStatus(Status status){
+      this.status = status;
     }
 }

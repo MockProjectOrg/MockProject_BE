@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Room Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .menu {
+            display: flex;
+            gap: 15px;
+            background-color: #333;
+            padding: 10px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 12px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-switch {
+            padding: 10px 15px;
+            border: none;
+            background-color: #00bcd4;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .btn-switch:hover {
+            background-color: #008c9e;
+        }
+
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-gallery img {
+            width: 100px;
+            height: 80px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .image-gallery div {
+            position: relative;
+            display: inline-block;
+        }
+
+        .delete-checkbox {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        #preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        #preview img {
+            width: 100px;
+            height: 80px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="menu">
+        <a href="#">Home</a>
+        <a href="#">Room</a>
+        <a href="#">About Us</a>
+        <a href="#">Pages</a>
+        <a href="#">News</a>
+        <a href="#">Contact</a>
+        <a href="#"><i class="fas fa-search"></i></a>
+    </div>
+</div>
+
+<div class="container">
+    <h3>Room Details</h3>
+    
+    <form th:action="@{/admin/rooms/update}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" th:value="${room.id}" />
+
+        <label for="name">Room Name:</label>
+        <input type="text" id="name" name="name" th:value="${room.name}" required />
+
+        <label for="roomType">Room Type:</label>
+        <select id="roomType" name="roomType">
+            <option th:each="type : ${roomTypes}" th:value="${type.id}" 
+                    th:text="${type.name}" th:selected="${room.roomType.id == type.id}">
+            </option>
+        </select>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required th:text="${room.description}"></textarea>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" th:value="${room.price}" required />
+
+        <!-- Hiển thị ảnh hiện tại -->
+        <label>Current Images:</label>
+        <div class="image-gallery">
+            <div th:each="img : ${room.imageUrls}">
+                <img th:src="${img}" />
+                <input type="checkbox" name="deleteImages" th:value="${img}" class="delete-checkbox" title="Remove" />
+            </div>
+        </div>
+
+        <!-- Upload ảnh mới -->
+        <label for="images">Upload New Images:</label>
+        <input type="file" id="images" name="images" multiple accept="image/*" onchange="previewImages()" />
+        <div id="preview"></div>
+
+        <div class="btn-container">
+            <button type="submit" class="btn-switch">Save</button>
+            <a href="/admin/rooms" class="btn-switch">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewImages() {
+        let preview = document.getElementById("preview");
+        preview.innerHTML = "";
+        let files = document.getElementById("images").files;
+
+        for (let i = 0; i < files.length; i++) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let img = document.createElement("img");
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(files[i]);
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -10,8 +10,8 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "date_review", columnDefinition = "DATETIME")
-    private LocalDateTime dateReview;
+    @Column(name = "date_review",nullable = flase)
+    private LocalDateTime dateReview =LocalDateTime.now();
     @Column(name = "rate", columnDefinition = "LONG")
     private Long rate;
     @Column(name = "description", columnDefinition = "TEXT")
@@ -22,7 +22,9 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
-
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
+    
     public Review() {
     }
 
@@ -72,5 +74,11 @@ public class Review {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+    public Hotel getHotel(){
+      return hotel;
+    }
+    public void setHotel(Hotel hotel){
+      this.hotel = hotel;
     }
 }
