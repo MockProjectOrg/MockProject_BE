@@ -1,0 +1,71 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Phòng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-roboto">
+<div class="container mx-auto p-6">
+    <h2 class="text-3xl font-bold mb-6 text-center">Danh sách phòng của khách sạn: <span th:text="${hotel.hotelName}"></span></h2>
+
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="py-3 px-6 border-b text-left">ID</th>
+                <th class="py-3 px-6 border-b text-left">Tên Phòng</th>
+                <th class="py-3 px-6 border-b text-left">Giá</th>
+                <th class="py-3 px-6 border-b text-left">Loại</th>
+                <th class="py-3 px-6 border-b text-left">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="room : ${rooms}" class="hover:bg-gray-100">
+                <td class="py-3 px-6 border-b" th:text="${room.id}"></td>
+                <td class="py-3 px-6 border-b" th:text="${room.description}"></td>
+                <td class="py-3 px-6 border-b" th:text="${room.price}"></td>
+                <td class="py-3 px-6 border-b" th:if="${room.roomType != null}" th:text="${room.roomType.typeName}"></td>
+                <td class="py-3 px-6 border-b" th:unless="${room.roomType != null}">Không có loại</td>
+                <td class="py-3 px-6 border-b">
+                    <a th:href="@{/managerRooms/delete/{id}(id=${room.id}, userId=${hotel.user.id})}" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i> Xóa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="text-2xl font-bold mt-8 mb-4 text-center">Thêm Phòng Mới</h3>
+    <form th:action="@{/managerRooms/add}" method="post" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <input type="hidden" name="hotel.id" th:value="${hotel.id}">
+
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Tên/Mô tả Phòng:</label>
+            <input type="text" name="description" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Giá:</label>
+            <input type="number" name="price" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Loại Phòng:</label>
+            <select name="roomType.id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">-- Chọn loại phòng --</option>
+                <option value="1">Single</option>
+                <option value="2">Double</option>
+                <option value="3">Suite</option>
+                <!-- Thêm các loại phòng khác nếu cần -->
+            </select>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Thêm Phòng</button>
+    </form>
+
+    <div class="text-center mt-6">
+        <a href="/managerHotel" class="inline-block text-blue-500 hover:text-blue-700"><i class="fas fa-arrow-left"></i> Quay lại trang chính</a>
+    </div>
+</div>
+</body>
+</html>

@@ -17,7 +17,7 @@ public class UserService implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     public User registerUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepo.findByRoleName("USER");
         user.setRole(role);
         return userRepo.save(user);

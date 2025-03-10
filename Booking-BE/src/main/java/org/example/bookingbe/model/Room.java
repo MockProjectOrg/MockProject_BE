@@ -12,7 +12,7 @@ public class Room {
     private Double price;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
     @ManyToOne

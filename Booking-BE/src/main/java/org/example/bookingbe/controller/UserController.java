@@ -1,5 +1,6 @@
 package org.example.bookingbe.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.respone.MessageRespone;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
@@ -28,13 +29,13 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(){
-        return "login";
+        return "auth/login";
     }
 
     @GetMapping("/register")
     public String register(Model model){
         model.addAttribute("user", new User());
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/Doregister")
@@ -42,14 +43,22 @@ public class UserController {
         System.out.println("User after add: " + user);
         if(userService.existsUser(user.getUserName()) || userService.exstsEmail(user.getEmail())){
             model.addAttribute("message", new MessageRespone("User or Email already exists"));
-            return "register";
+            return "auth/register";
         }
         userService.registerUser(user);
-        return "redirect:/api/login";
+        return "redirect:auth/login";
     }
 
-    @GetMapping("/user/home")
-    public String getUser(){
+    @GetMapping("/user/userProfile")
+    public String getUser(HttpSession session, Model model) {
+        // Lấy userId từ session
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/api/login"; // Nếu không có userId, yêu cầu đăng nhập lại
+        }
+
+        model.addAttribute("userId", userId);
         return "profile";
     }
 

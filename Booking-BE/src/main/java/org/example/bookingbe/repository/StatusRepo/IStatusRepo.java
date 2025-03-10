@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IStatusRepo extends JpaRepository<Status, Long> {
+    void deleteByRoomId(Long roomId);
 }
