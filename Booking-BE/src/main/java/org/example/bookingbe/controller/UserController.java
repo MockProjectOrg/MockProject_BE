@@ -23,18 +23,17 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(){
-        return "login";
+        return "auth/login";
     }
 
     @GetMapping("/register")
     public String register(Model model){
         model.addAttribute("user", new User());
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/Doregister")
     public String doRegister(@ModelAttribute("user") User user, Model model){
-        System.out.println("User after add: " + user);
         if(userService.existsUser(user.getUserName()) || userService.exstsEmail(user.getEmail())){
             model.addAttribute("message", new MessageRespone("User or Email already exists"));
             return "register";
@@ -45,7 +44,7 @@ public class UserController {
 
     @GetMapping("/user/home")
     public String getUser(){
-        return "profile";
+        return "client/homePage";
     }
 
 
