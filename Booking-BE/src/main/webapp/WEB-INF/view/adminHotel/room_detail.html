@@ -20,6 +20,7 @@
         gap: 15px;
         align-items: right;
         background-color: #f8f9fa;
+        justify-content: right;
         padding: 10px;
       }
 
@@ -177,6 +178,14 @@
         currentIndex = (currentIndex + 1) % images.length;
         imageElement.src = images[currentIndex];
       }
+      function editRoom(){
+        let roomID = "[[${room.id}]]";
+        window.location.href = '/update_room' + roomID;
+      }
+      function cancelRoom(){
+        window.location.href = '/room';
+      }
+        
     </script>
   </body>
 </html>
