@@ -15,7 +15,7 @@ public class MailRegister {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmailRegister(String email, String accountName) throws MessagingException {
+    public void sendEmailRegister(String email, String firstName, String lastName) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
@@ -28,7 +28,7 @@ public class MailRegister {
         templateEngine.setTemplateResolver(templateResolver);
 
         Context context = new Context();
-        context.setVariable("name", accountName);
+        context.setVariable("name", firstName);
         String htmlContent = templateEngine.process("EmailRegister", context);
 
         mimeMessageHelper.setTo(email);
