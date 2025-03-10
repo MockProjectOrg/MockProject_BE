@@ -2,6 +2,8 @@ package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "hotel")
 public class Hotel {
@@ -16,7 +18,7 @@ public class Hotel {
     private String description;
     @Column(name = "avatar", columnDefinition = "TEXT")
     private String avatar;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     public Hotel() {}
