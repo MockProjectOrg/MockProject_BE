@@ -19,12 +19,9 @@ public class Room {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
     
-    @ManyToMany
-    @JoinColumn(name = "image_id")
+    @OneToMany (@mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
+    private List<Image> images;
     private Image image;
-    
-    
-    
     @JoinColumn(name = "status_id")
     private Status status;
     

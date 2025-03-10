@@ -3,45 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <title>Room Details</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background-color: #f8f9fa;
       }
 
-      .menu {
-        display: flex;
-        gap: 15px;
-        align-items: right;
-        background-color: #f8f9fa;
-        justify-content: right;
+      .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background: #343a40;
+        color: white;
+        padding-top: 20px;
+      }
+
+      .sidebar h4 {
+        text-align: center;
+      }
+
+      .sidebar .nav-link {
+        color: white;
         padding: 10px;
       }
 
-      .menu a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-        padding: 8px 12px;
+      .sidebar .nav-link.active {
+        background: #007bff;
       }
 
-      .container {
+      .content {
+        margin-left: 260px;
+        padding: 20px;
+      }
+
+      .room-container {
         display: flex;
         gap: 20px;
-        margin: 20px;
         align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .image-container {
         position: relative;
         width: 50%;
-        height: 500px;
+        height: 400px;
       }
 
       .room-image {
@@ -72,27 +88,6 @@
         right: 10px;
       }
 
-      .btn-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .btn-switch {
-        padding: 10px 15px;
-        border: none;
-        background-color: #00bcd4;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-
-      .btn-switch:hover {
-        background-color: #008c9e;
-      }
-
       .room-info {
         width: 50%;
       }
@@ -102,70 +97,68 @@
         margin-bottom: 10px;
       }
 
-      .room-info p {
-        margin: 10px 0;
-      }
-
-      .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        background-color: #00bcd4;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
+      .btn-container {
+        display: flex;
+        gap: 10px;
         margin-top: 15px;
       }
 
-      .btn:hover {
-        background-color: #008c9e;
+      .btn-switch {
+        padding: 10px 15px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .btn-switch:hover {
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <div class="menu">
-        <a href="#">Home</a>
-        <a href="#">Room</a>
-        <a href="#">About Us</a>
-        <a href="#">Pages</a>
-        <a href="#">News</a>
-        <a href="#">Contact</a>
-        <a href="#"><i class="fas fa-search"></i></a>
-      </div>
-    </div>
 
-    <div class="container">
-      <div class="image-container">
-        <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-        <img
-          id="room-image"
-          class="room-image"
-          th:src="${room.imageUrls[0]}"
-          alt="Room Image"
-        />
-        <button class="nav-button next" onclick="nextImage()">&#10095;</button>
-      </div>
+    <div class="d-flex">
+      <nav class="sidebar">
+        <h4>Admin Panel</h4>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a href="#" class="nav-link">🏠 Dashboard</a></li>
+          <li class="nav-item"><a href="#" class="nav-link active">🏨 Rooms</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">👥 Users</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">📅 Bookings</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">📊 Statistics</a></li>
+        </ul>
+      </nav>
 
-      <div class="room-info">
-        <h3 th:text="${room.name}">Room Name</h3>
-        <p><strong>Type:</strong> <span th:text="${room.RoomTypeID}"></span></p>
-        <p>
-          <strong>Description:</strong>
-          <span th:text="${room.description}"></span>
-        </p>
-        <p>
-          <strong>Price:</strong>
-          <span th:text="${#numbers.formatCurrency(room.price)}"></span> /ngày
-        </p>
-        <div class="btn-container">
-          <button class="btn-switch" onclick="editRoom()">Edit</button></button>
-          <button class="btn-switch" onclick="cancelRoom()">Cancel</button>
+      <div class="content">
+        <h2>Room Details</h2>
+
+        <div class="room-container">
+          <div class="image-container">
+            <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
+            <img id="room-image" class="room-image" th:src="${room.image_id != null and room.image_id.size() > 0 ? room.image_id[0] : '/images/d'}" alt="Room Image" />
+            <button class="nav-button next" onclick="nextImage()">&#10095;</button>
+          </div>
+
+          <div class="room-info">
+            <h3 th:text="${room.name}">Room Name</h3>
+            <p><strong>Room Type:</strong> <span th:text="${room.RoomTypeID}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
+            <p><strong>Price:</strong> <span th:text="${room.price != null ? #numbers.formatCurrency(room.price) : 'Liên hệ'}"></span> /ngày</p>
+
+            <div class="btn-container">
+              <button class="btn-switch" onclick="editRoom()">Chỉnh sửa</button>
+              <button class="btn-switch" onclick="cancelRoom()">Hủy</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <script>
-      let images = [];
+      let images = [[${room.image_id}]];
       let currentIndex = 0;
       let imageElement = document.getElementById("room-image");
 
@@ -178,14 +171,7 @@
         currentIndex = (currentIndex + 1) % images.length;
         imageElement.src = images[currentIndex];
       }
-      function editRoom(){
-        let roomID = "[[${room.id}]]";
-        window.location.href = '/update_room' + roomID;
-      }
-      function cancelRoom(){
-        window.location.href = '/room';
-      }
-        
     </script>
+    
   </body>
 </html>
