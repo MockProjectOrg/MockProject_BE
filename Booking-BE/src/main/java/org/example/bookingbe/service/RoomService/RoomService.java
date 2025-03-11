@@ -27,6 +27,8 @@ public class RoomService implements IRoomService {
     @Autowired
     private IUserRepo userRepo;
 
+
+
     public List<Room> getRoomsByHotel(Long hotelId, Long userId) {
         Optional<User> user = userRepo.findById(userId);
         if (user.isPresent()) {
@@ -38,6 +40,12 @@ public class RoomService implements IRoomService {
         }
         throw new RuntimeException("User is not authorized to access this hotel's rooms");
     }
+
+    @Override
+    public Optional<Room> getRoomById(Long roomId) {
+        return roomRepo.findById(roomId);
+    }
+
 
     @Override
     public Room createRoom(Room room, Long userId) {

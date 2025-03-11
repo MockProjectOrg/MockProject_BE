@@ -38,7 +38,8 @@ public class RoomController {
 
     // Danh sách phòng của khách sạn do Manager quản lý
     @GetMapping
-    public String listRooms(Model model) {
+    public String listRooms(@RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "10") int pageSize,Model model) {
         // Lấy thông tin user từ Spring Security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
@@ -69,6 +70,9 @@ public class RoomController {
         model.addAttribute("rooms", rooms);
         model.addAttribute("hotel", hotel);
         model.addAttribute("newRoom", new Room());
+        model.addAttribute("page", page);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalRooms", rooms.size());
 
         return "managerHotel/managerRoom";
     }
@@ -108,6 +112,44 @@ public class RoomController {
 
         return "redirect:/managerRooms";
     }
+
+
+    //Chỉnh sửa phòng
+    // Hiển thị trang chỉnh sửa phòng
+    @GetMapping("/edit/{id}")
+    public String editRoom(@PathVariable Long id, Model model) {
+        // Lấy thông tin user từ Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
+        Long userId = userPriciple.getId();
+
+        Room room = roomService.getRoomById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng"));
+
+        // Kiểm tra quyền sở hữu
+        if (!room.getHotel().getUser().getId().equals(userId)) {
+            throw new RuntimeException("Bạn không có quyền chỉnh sửa phòng này");
+        }
+
+        model.addAttribute("room", room);
+        return "managerHotel/editRoom";  // Tạo file `editRoom.html` trong thư mục Thymeleaf
+    }
+
+    // Xử lý cập nhật phòng
+    @PostMapping("/update/{id}")
+    public String updateRoom(@PathVariable Long id, @ModelAttribute Room updatedRoom) {
+        // Lấy thông tin user từ Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
+        Long userId = userPriciple.getId();
+
+        roomService.updateRoom(id, updatedRoom, userId);
+        return "redirect:/managerRooms";
+    }
+
+
+
+
 
 
     // Xóa phòng
