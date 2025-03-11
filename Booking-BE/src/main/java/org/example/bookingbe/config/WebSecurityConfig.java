@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/login", "/api/register", "/api/Doregister").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/managerHotel/**", "/managerRooms/**").hasRole("HOTEL_MANAGER") // Thêm quyền cho Hotel Manager
+                        .requestMatchers("/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER") // Thêm quyền cho Hotel Manager
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
