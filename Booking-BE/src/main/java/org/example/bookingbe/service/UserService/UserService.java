@@ -1,6 +1,5 @@
 package org.example.bookingbe.service.UserService;
 
-import org.example.bookingbe.model.Role;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.RoleRepo.IRoleRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
@@ -16,6 +15,17 @@ public class UserService implements IUserService {
     private IRoleRepo roleRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
@@ -26,7 +36,4 @@ public class UserService implements IUserService {
         return userRepo.existsByUserName(username);
     }
 
-    @Override
-        return userRepo.existsByEmail(email);
-    }
 }

@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_name", columnDefinition = "varchar(100)")
+    @Column(name = "user_name", columnDefinition = "varchar(100)", unique = true)
     private String userName;
-    @Column(name = "email", columnDefinition = "varchar(50)")
+    @Column(name = "email", columnDefinition = "varchar(50)", unique = true)
     private String email;
     @Column(name = "phone", columnDefinition = "varchar(10)")
     private String phone;
@@ -26,7 +26,7 @@ public class User {
     private String firstName;
     @Column(name = "last_name", columnDefinition = "varchar(50)")
     private String lastName;
-    @Column(name = "birthday", columnDefinition = "Date")
+    @Column(name = "birthday")
     private LocalDate birthday;
     @ManyToOne
     @JoinColumn(name = "role_id")
