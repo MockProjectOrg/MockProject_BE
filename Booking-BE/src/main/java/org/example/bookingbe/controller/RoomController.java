@@ -1,21 +1,24 @@
 package org.example.bookingbe.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import ch.qos.logback.core.model.Model;
+import org.example.bookingbe.model.Room;
 import org.example.bookingbe.service.RoomService.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/room")
 public class RoomController {
-  private final RoomService roomService;
-  public RoomController(RoomService roomService){
-    this.roomService = roomService;
-  }
-  @GetMapping("/room/{id}")
-  public String getRoomById(@PathVariable Long id, Model model){
-    Optional<Room> room = roomService.getRoomById(id);
-    if(room.isPresent()){
-    model.addAttribute("room",room.get());
-    return "room_detail";
-  } return "Failed Page";
+    @Autowired
+    private RoomService roomService;
+    @GetMapping("/room/{id}")
+    public String getRoomDetail(@PathVariable Long id, Model models){
+        Optional<Room> room = roomService.getRoomById(id);
+
+    }
+
 }

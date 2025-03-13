@@ -1,15 +1,18 @@
-package org.example.bookingbe.service.RoomService;
+package org.example.bookingbe.service;
 
+import org.example.bookingbe.model.Room;
+import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.example.bookingbe.repository.RoomRepo.RoomRepo;
+
+import java.util.Optional;
+
 @Service
-public class RoomService implements IRoomService {
-  private final RoomRepo roomRepo;
-  public IRoomService(RoomRepo roomRepo){
-    this.roomRepo = roomRepo;
-  }
-  @Override
-  public Optional<Room> getRoomById(Long id){
-    return roomRepo.findByid(id);
-  }
+public class RoomService {
+    @Autowired
+    private RoomRepo roomRepository;
+
+    public Optional<Room> getRoomById(Long id) {
+        return roomRepository.findById(id);
+    }
 }
