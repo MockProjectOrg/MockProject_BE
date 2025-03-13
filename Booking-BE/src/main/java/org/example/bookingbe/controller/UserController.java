@@ -40,7 +40,6 @@ public class UserController {
     @PostMapping("/Doregister")
     public String doRegister(@ModelAttribute("user") User user, Model model){
         System.out.println("User after add: " + user);
-        if(userService.existsUser(user.getUserName()) || userService.existsEmail(user.getEmail())){
             model.addAttribute("message", new MessageRespone("User or Email already exists"));
             return "register";
         }
