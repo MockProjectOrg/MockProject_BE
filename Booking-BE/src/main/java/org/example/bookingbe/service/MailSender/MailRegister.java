@@ -20,7 +20,7 @@ public class MailRegister {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/templates/");
+        templateResolver.setPrefix("/templates/client/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("HTML");
 
@@ -28,8 +28,8 @@ public class MailRegister {
         templateEngine.setTemplateResolver(templateResolver);
 
         Context context = new Context();
-        context.setVariable("name", firstName);
-        String htmlContent = templateEngine.process("EmailRegister", context);
+        context.setVariable("name", firstName + " " + lastName);
+        String htmlContent = templateEngine.process("emailRegister", context);
 
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Thông báo đăng ký tài khoản thành công");
