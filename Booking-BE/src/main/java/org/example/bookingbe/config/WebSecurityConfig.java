@@ -42,13 +42,14 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/login", "/api/register", "/api/Doregister").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER") // Thêm quyền cho Hotel Manager
+                        .requestMatchers("/managerHotel/**", "/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/api/login")
                         .loginProcessingUrl("/login")
-                        .successHandler(customAuthenticationSuccessHandler()) // Xử lý điều hướng sau đăng nhập
+                        .successHandler(customAuthenticationSuccessHandler())
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
