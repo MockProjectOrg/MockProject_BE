@@ -1,177 +1,232 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
     <title>Room Details</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f8f9fa;
-      }
+        body {
+          body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
 
-      .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        top: 0;
-        background: #343a40;
-        color: white;
-        padding-top: 20px;
-      }
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #343a40;
+    color: white;
+    padding-top: 20px;
+}
 
-      .sidebar h4 {
+.sidebar h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-link {
+    color: white;
+    padding: 12px 20px;
+    display: block;
+    transition: background 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background: #495057;
+}
+
+.sidebar .nav-link.active {
+    background: #007bff;
+}
+
+.content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+.room-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.15);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.image-container {
+    position: relative;
+    width: 50%;
+    height: 350px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.nav-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.room-info {
+    width: 45%;
+}
+
+h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.btn-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-switch {
+    padding: 10px 18px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn-switch:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .room-container {
+        flex-direction: column;
         text-align: center;
-      }
-
-      .sidebar .nav-link {
-        color: white;
-        padding: 10px;
-      }
-
-      .sidebar .nav-link.active {
-        background: #007bff;
-      }
-
-      .content {
-        margin-left: 260px;
         padding: 20px;
-      }
+    }
 
-      .room-container {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .image-container {
-        position: relative;
-        width: 50%;
-        height: 400px;
-      }
-
-      .room-image {
+    .image-container {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 10px;
-      }
+        height: 300px;
+    }
 
-      .nav-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        border-radius: 50%;
-      }
-
-      .prev {
-        left: 10px;
-      }
-
-      .next {
-        right: 10px;
-      }
-
-      .room-info {
-        width: 50%;
-      }
-
-      h3 {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
-
-      .btn-container {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-      }
-
-      .btn-switch {
-        padding: 10px 15px;
-        border: none;
-        background-color: #007bff;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-
-      .btn-switch:hover {
-        background-color: #0056b3;
-      }
+    .room-info {
+        width: 100%;
+    }
+}
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div class="d-flex">
-      <nav class="sidebar">
+<div class="d-flex">
+    <nav class="sidebar">
         <h4>Admin Panel</h4>
         <ul class="nav flex-column">
-          <li class="nav-item"><a href="#" class="nav-link">🏠 Dashboard</a></li>
-          <li class="nav-item"><a href="#" class="nav-link active">🏨 Rooms</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">👥 Users</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">📅 Bookings</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">📊 Statistics</a></li>
+            <li class="nav-item"><a class="nav-link" href="statistics.html">🏠 Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link active" href="room_detail.html">🏨 Rooms</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">👥 Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">📅 Bookings</a></li>
+            <li class="nav-item"><a class="nav-link" href="statistics.html">📊 Statistics</a></li>
         </ul>
-      </nav>
+    </nav>
 
-      <div class="content">
+    <div class="content">
         <h2>Room Details</h2>
-
         <div class="room-container">
-          <div class="image-container">
-            <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-            <img id="room-image" class="room-image" th:src="${room.image_id != null and room.image_id.size() > 0 ? room.image_id[0] : '/images/d'}" alt="Room Image" />
-            <button class="nav-button next" onclick="nextImage()">&#10095;</button>
-          </div>
-
-          <div class="room-info">
-            <h3 th:text="${room.name}">Room Name</h3>
-            <p><strong>Room Type:</strong> <span th:text="${room.RoomTypeID}"></span></p>
-            <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
-            <p><strong>Price:</strong> <span th:text="${room.price != null ? #numbers.formatCurrency(room.price) : 'Liên hệ'}"></span> /ngày</p>
-
-            <div class="btn-container">
-              <button class="btn-switch" onclick="editRoom()">Chỉnh sửa</button>
-              <button class="btn-switch" onclick="cancelRoom()">Hủy</button>
+            <div class="image-container">
+                <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
+                <img alt="Room Image" class="room-image"
+                     id="room-image" th:src="${room.images[0] != null ? room.images[0].image_url : 'default.jpg'}"/>
+                <button class="nav-button next" onclick="nextImage()">&#10095;</button>
             </div>
-          </div>
+
+            <div class="room-info">
+                <h3 th:text="${room.name}">Room Name</h3>
+                <p><strong>Room Type:</strong> <span th:text="${room.getRoomType()}"></span>
+                <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
+                <p><strong>Price:</strong> <span
+                        th:text="${room.price != null ? #numbers.formatCurrency(room.price) : 'contact'}"></span> /date
+                </p>
+
+                <div class="btn-container">
+                    <button class="btn-switch" onclick="window.location.href='/update_room'">Edit</button>
+                    <button class="btn-switch" onclick="window.location.href='/room_list'">Cancel</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <script>
-      let images = [[${room.image_id}]];
-      let currentIndex = 0;
-      let imageElement = document.getElementById("room-image");
+<script>
+    let images = /*[[${room.images.![imageUrl]}]]*/ [];
+let currentIndex = 0;
+let imageElement = document.getElementById("room-image");
 
-      function prevImage() {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        imageElement.src = images[currentIndex];
-      }
+function prevImage() {
+if (images.length === 0) return;
+currentIndex = (currentIndex - 1 + images.length) % images.length;
+imageElement.src = images[currentIndex];
+}
 
-      function nextImage() {
-        currentIndex = (currentIndex + 1) % images.length;
-        imageElement.src = images[currentIndex];
-      }
-    </script>
-    
-  </body>
+function nextImage() {
+if (images.length === 0) return;
+currentIndex = (currentIndex + 1) % images.length;
+imageElement.src = images[currentIndex];
+}
+</script>
+
+</body>
 </html>

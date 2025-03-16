@@ -2,6 +2,8 @@ package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "room")
 public class Room {
@@ -18,8 +20,9 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Image> images;
 
-    public Room() {}
 
     public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel) {
         this.id = id;
@@ -61,13 +64,19 @@ public class Room {
         this.roomType = roomType;
     }
 
-
-
     public Hotel getHotel() {
         return hotel;
     }
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

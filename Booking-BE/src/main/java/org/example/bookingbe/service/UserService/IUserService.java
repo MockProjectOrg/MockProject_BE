@@ -7,7 +7,7 @@ public interface IUserService {
 
     boolean existsByEmail(String email);
 
-    void registerUser(User user);
+    User registerUser(User user);
 
     Boolean existsUser(String username);
 }
