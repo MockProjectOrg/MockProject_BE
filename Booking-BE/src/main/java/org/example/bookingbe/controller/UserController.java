@@ -29,7 +29,7 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @GetMapping("/login")
+    @GetMapping("/")
     public String login(HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
             return "redirect:/api/user/home";

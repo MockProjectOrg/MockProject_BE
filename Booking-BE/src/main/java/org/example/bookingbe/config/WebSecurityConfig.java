@@ -44,17 +44,17 @@ public class WebSecurityConfig {
                         .expiredUrl("/api/login?expired")
                         .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login","/api/register","/api/Doregister", "/api/current-user", "/api/session-info").permitAll()
+                        .requestMatchers("/api/","/api/register","/api/Doregister").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/api/login")
+                        .loginPage("/api/")
                         .loginProcessingUrl("/login")
                         .successHandler(customAuthenticationSuccessHandler())
                 )
-                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/api/login")
+                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/api/")
                         .deleteCookies("JSESSIONID"));
 
         return http.build();
