@@ -16,6 +16,9 @@ public class Room {
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
     @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
+    @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
@@ -27,6 +30,7 @@ public class Room {
         this.description = description;
         this.roomType = roomType;
         this.hotel = hotel;
+        this.status = status;
     }
 
     public Long getId() {
@@ -61,7 +65,13 @@ public class Room {
         this.roomType = roomType;
     }
 
+    public Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public Hotel getHotel() {
         return hotel;

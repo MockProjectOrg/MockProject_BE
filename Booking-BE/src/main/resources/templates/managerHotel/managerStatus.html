@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý trạng thái phòng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --danger-color: #e74c3c;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .card-header {
+      border-radius: 10px 10px 0 0;
+      padding: 15px 20px;
+    }
+
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    .table th {
+      font-weight: 600;
+      background-color: var(--dark-color);
+      color: white;
+    }
+
+    .action-buttons button, .action-buttons a {
+      margin-right: 5px;
+    }
+
+    .form-container {
+      display: none;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .btn-add {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .btn-add:hover {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .btn-edit {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #e67e22;
+      color: white;
+    }
+
+    .btn-delete {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b;
+      color: white;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+
+    .page-title {
+      color: var(--dark-color);
+      margin-bottom: 30px;
+      font-weight: 600;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    .alert {
+      border-radius: 8px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .table-responsive {
+      border-radius: 10px;
+    }
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .empty-data {
+      padding: 40px;
+      text-align: center;
+      color: #7f8c8d;
+    }
+
+    .empty-data i {
+      font-size: 50px;
+      margin-bottom: 20px;
+      color: #bdc3c7;
+    }
+  </style>
+</head>
+<body>
+<div class="main-container">
+  <h1 class="page-title">
+    <i class="fas fa-door-open mr-2"></i>Quản lý trạng thái phòng
+  </h1>
+
+  <!-- Thông báo -->
+  <div class="alert alert-success alert-dismissible fade show" th:if="${success}" role="alert">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span th:text="${success}"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="alert alert-danger alert-dismissible fade show" th:if="${error}" role="alert">
+    <i class="fas fa-exclamation-circle mr-2"></i>
+    <span th:text="${error}"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Nút thêm mới -->
+  <button id="btnShowAddForm" class="btn btn-add">
+    <i class="fas fa-plus mr-2"></i>Thêm trạng thái mới
+  </button>
+
+  <!-- Form thêm mới -->
+  <div class="form-container" id="createForm">
+    <div class="card">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-plus-circle mr-2"></i>Thêm trạng thái mới
+        </h5>
+      </div>
+      <div class="card-body">
+        <form th:action="@{/hotelManager/roomStatuses/create}" method="post">
+          <div class="form-group">
+            <label for="createStatusName">Tên trạng thái:</label>
+            <input type="text" class="form-control" id="createStatusName" name="statusName" required
+                   placeholder="Nhập tên trạng thái">
+          </div>
+          <div class="form-group text-right">
+            <button type="button" class="btn btn-secondary" id="btnCancelCreate">
+              <i class="fas fa-times mr-2"></i>Hủy
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-save mr-2"></i>Lưu trạng thái
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form chỉnh sửa -->
+  <div class="form-container" id="editForm">
+    <div class="card">
+      <div class="card-header bg-warning text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-edit mr-2"></i>Chỉnh sửa trạng thái
+        </h5>
+      </div>
+      <div class="card-body">
+        <form th:action="@{/hotelManager/roomStatuses/edit}" method="post">
+          <input type="hidden" id="editStatusId" name="id">
+          <div class="form-group">
+            <label for="editStatusName">Tên trạng thái:</label>
+            <input type="text" class="form-control" id="editStatusName" name="statusName" required>
+          </div>
+          <div class="form-group text-right">
+            <button type="button" class="btn btn-secondary" id="btnCancelEdit">
+              <i class="fas fa-times mr-2"></i>Hủy
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-check mr-2"></i>Cập nhật
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách trạng thái -->
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h3 class="card-title mb-0">
+        <i class="fas fa-list mr-2"></i>Danh sách trạng thái
+      </h3>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+          <tr>
+            <th width="10%">ID</th>
+            <th width="60%">Tên trạng thái</th>
+            <th width="30%">Hành động</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="status : ${statuses}">
+            <td th:text="${status.id}"></td>
+            <td th:text="${status.statusName}"></td>
+            <td class="action-buttons">
+              <button class="btn btn-sm btn-edit edit-btn"
+                      th:data-id="${status.id}"
+                      th:data-name="${status.statusName}">
+                <i class="fas fa-edit mr-1"></i>Sửa
+              </button>
+              <a th:href="@{/hotelManager/roomStatuses/delete/{id}(id=${status.id})}"
+                 class="btn btn-sm btn-delete"
+                 onclick="return confirm('Bạn có chắc chắn muốn xóa trạng thái này?')">
+                <i class="fas fa-trash-alt mr-1"></i>Xóa
+              </a>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(statuses)}">
+            <td colspan="3" class="empty-data">
+              <i class="fas fa-database"></i>
+              <p>Không có dữ liệu trạng thái phòng</p>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Các biến lưu trữ tham chiếu đến các phần tử
+    const createForm = document.getElementById('createForm');
+    const editForm = document.getElementById('editForm');
+    const btnShowAddForm = document.getElementById('btnShowAddForm');
+    const btnCancelCreate = document.getElementById('btnCancelCreate');
+    const btnCancelEdit = document.getElementById('btnCancelEdit');
+    const editButtons = document.querySelectorAll('.edit-btn');
+
+    // Ẩn các form khi trang được tải
+    createForm.style.display = 'none';
+    editForm.style.display = 'none';
+
+    // Hiển thị form thêm mới khi nút "Thêm mới" được nhấn
+    btnShowAddForm.addEventListener('click', function() {
+      createForm.style.display = 'block';
+      createForm.classList.add('fade-in');
+      editForm.style.display = 'none';
+      btnShowAddForm.style.display = 'none';
+      document.getElementById('createStatusName').focus();
+    });
+
+    // Ẩn form thêm mới khi nút "Hủy" được nhấn
+    btnCancelCreate.addEventListener('click', function() {
+      createForm.style.display = 'none';
+      btnShowAddForm.style.display = 'block';
+    });
+
+    // Ẩn form chỉnh sửa khi nút "Hủy" được nhấn
+    btnCancelEdit.addEventListener('click', function() {
+      editForm.style.display = 'none';
+      btnShowAddForm.style.display = 'block';
+    });
+
+    // Hiển thị form chỉnh sửa khi nút "Sửa" được nhấn
+    editButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const name = this.getAttribute('data-name');
+
+        // Hiển thị form chỉnh sửa và ẩn các form khác
+        editForm.style.display = 'block';
+        editForm.classList.add('fade-in');
+        createForm.style.display = 'none';
+        btnShowAddForm.style.display = 'none';
+
+        // Điền dữ liệu vào form
+        document.getElementById('editStatusId').value = id;
+        document.getElementById('editStatusName').value = name;
+        document.getElementById('editStatusName').focus();
+
+        // Cuộn đến form chỉnh sửa
+        editForm.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Tự động ẩn thông báo sau 5 giây
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.classList.remove('show');
+        alert.classList.add('fade');
+        setTimeout(() => {
+          alert.style.display = 'none';
+        }, 150);
+      }, 5000);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,25 +1,18 @@
 package org.example.bookingbe.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
-import org.example.bookingbe.model.Room;
-import org.example.bookingbe.model.User;
 import org.example.bookingbe.service.BookingService.IBookingService;
 import org.example.bookingbe.service.HotelService.IHotelService;
-import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/managerBookings")
-public class BookingController {
+public class ManagerBookingController {
 
     @Autowired
     private IBookingService bookingService;
