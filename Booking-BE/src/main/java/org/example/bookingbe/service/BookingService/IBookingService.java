@@ -1,6 +1,17 @@
 package org.example.bookingbe.service.BookingService;
 
+import java.util.List;
+
 public interface IBookingService {
-    
-    int getTotalRevenue(int i);
+
+    Double getTotalRevenue();
+
+    List<Double> getMonthlyRevenue();
+
+    Double getTotalOrder();
+
+    List<Double> getQuarterlyRevenue();
+
+    List<Double> getYearlyRevenue();
+
 }

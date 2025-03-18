@@ -27,11 +27,19 @@ public class Status {
         this.id = id;
     }
 
-    public String getStatusName() {
+    public String getName() {
         return statusName;
     }
 
-    public void setStatusName(String statusName) {
+    public void setName(String statusName) {
         this.statusName = statusName;
+    }
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "id=" + id +
+                ", statusName='" + statusName + '\'' +
+                '}';
     }
 }

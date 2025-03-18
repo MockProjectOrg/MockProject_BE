@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.util.Collection;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -32,10 +35,16 @@ public class WebSecurityConfig {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .sessionFixation().newSession()
+                        .maximumSessions(1)
+                        .expiredUrl("/api/login?expired")
+                        .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login","/api/register","/api/Doregister").permitAll()
+                        .requestMatchers("/api/login","/api/register","/api/Doregister", "/api/current-user", "/api/session-info").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
@@ -43,9 +52,10 @@ public class WebSecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/api/login")
                         .loginProcessingUrl("/login")
-                        .successHandler(customAuthenticationSuccessHandler()) // Xử lý điều hướng sau đăng nhập
+                        .successHandler(customAuthenticationSuccessHandler())
                 )
-                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login"));
+                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/api/login")
+                        .deleteCookies("JSESSIONID"));
 
         return http.build();
     }
