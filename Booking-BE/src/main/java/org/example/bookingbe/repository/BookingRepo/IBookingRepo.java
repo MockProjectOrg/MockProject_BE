@@ -35,4 +35,7 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.checkOut BETWEEN :startDate AND :endDate")
     List<Booking> findUpcomingCheckouts(@Param("startDate") LocalDateTime startDate,
                                         @Param("endDate") LocalDateTime endDate);
+
+
+
 }

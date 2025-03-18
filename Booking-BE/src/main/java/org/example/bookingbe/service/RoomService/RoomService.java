@@ -29,6 +29,11 @@ public class RoomService implements IRoomService {
     private IUserRepo userRepo;
 
 
+    @Override
+    public List<Room> getAvailableRooms() {
+        return roomRepo.findAvailableRooms();
+    }
+
 
     public List<Room> getRoomsByHotel(Long hotelId, Long userId) {
         Optional<User> user = userRepo.findById(userId);
@@ -101,12 +106,10 @@ public class RoomService implements IRoomService {
         }
 
 
-        // Xóa tất cả hình ảnh liên quan đến room
-        imageRepo.deleteByRoomId(roomId);
-        // Xóa dữ liệu trong bảng `status` trước khi xóa `room`
-        statusRepo.deleteByRoomId(roomId);
-        // Xóa dữ liệu trong bảng `review` trước khi xóa `room`
-        reviewRepo.deleteByRoomId(roomId);
+
+
+
+
 
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);

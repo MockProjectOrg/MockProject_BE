@@ -1,12 +1,21 @@
 package org.example.bookingbe.controller;
 
+import org.example.bookingbe.model.Room;
+import org.example.bookingbe.service.RoomService.IRoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 
-public class PageController {
+public class ClientPageController {
+
+
+    @Autowired
+    private IRoomService roomService;
 
 
     @GetMapping("/")
@@ -27,7 +36,9 @@ public class PageController {
         return "client/contactPage";
     }
     @GetMapping("/rooms")
-    public String roomsPage() {
+    public String showAvailableRooms(Model model) {
+        List<Room> availableRooms = roomService.getAvailableRooms();
+        model.addAttribute("rooms", availableRooms);
         return "client/roomsPage";
     }
 
@@ -37,17 +48,6 @@ public class PageController {
     public String managerDashboardPage() {
         return "managerHotel/managerDashboard";
     }
-
-//    @GetMapping("/managerRooms")
-//    public String managerRoomsPage(@RequestParam(required = false) Long userId) {
-//        if (userId == null) {
-//            return "redirect:/login"; // Chuyển về login nếu thiếu userId
-//        }
-//        return "redirect:/managerRooms?userId=" + userId; // Đảm bảo userId được truyền khi load trang
-//    }
-
-
-
 
 
     //Authen

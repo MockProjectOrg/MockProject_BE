@@ -18,4 +18,6 @@ public interface IRoomService {
 
     List<Status> getAllStatuses();
 
+    List<Room> getAvailableRooms();
+
 }

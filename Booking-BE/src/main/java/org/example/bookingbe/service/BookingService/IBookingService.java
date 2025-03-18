@@ -1,8 +1,10 @@
 package org.example.bookingbe.service.BookingService;
 
+import jakarta.transaction.Transactional;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,12 @@ public interface IBookingService {
     void deleteBooking(Long id);
     List<Booking> getBookingsByUserId(Long userId);
     List<Booking> getBookingsByHotelManager(Long managerId);
+
+    @Transactional
+    Booking saveBooking(Long userId, Long roomId, LocalDateTime checkIn, LocalDateTime checkOut, String description);
+
+    void cancelBooking(Long bookingId, Long userId);
+    List<Booking> getBookingsByUser(Long userId);
 
     // Thêm các phương thức mới
     List<Booking> getBookingsByHotelId(Long hotelId);

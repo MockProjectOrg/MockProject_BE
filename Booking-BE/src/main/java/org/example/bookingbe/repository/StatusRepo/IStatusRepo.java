@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface IStatusRepo extends JpaRepository<Status, Long> {
+    @Query("SELECT s FROM Status s WHERE s.statusName = :name")
+    Status findByName(@Param("name") String name);
 
-    void deleteByRoomId(Long roomId);
 }
