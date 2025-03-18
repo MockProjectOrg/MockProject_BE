@@ -3,24 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <title>Room Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
-        .menu { display: flex; gap: 15px; justify-content: flex-end; background-color: #343a40; padding: 10px; }
-        .menu a { color: white; text-decoration: none; font-weight: bold; padding: 8px 12px; }
-        .container { display: flex; gap: 30px; margin: 40px; background: white; padding: 20px; border-radius: 10px; }
-        .image-container { position: relative; width: 50%; height: 400px; }
-        .room-image { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-        .nav-button { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 50%; cursor: pointer; }
+        /* Overall Page Styles */
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f5f5f5;
+          color: #333;
+          margin: 0;
+          padding: 0;
+          min-height: 100vh;
+        }
+        .menu {
+          display: flex;
+          gap: 15px;
+          justify-content: center;
+          background-color: #ffffff;
+          padding: 10px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          flex-wrap: wrap;
+        }
+        .menu a {
+          color: #333;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 8px 12px;
+          transition: color 0.3s ease;
+        }
+        .menu a:hover {
+          color: #00bcd4;
+        }
+        /* Main Container Wrapper */
+        .wrapper {
+          width: 90%;
+          max-width: 1200px;
+          margin: 20px auto;
+        }
+        /* Room Details Section */
+        .container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 30px;
+          background: #ffffff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          margin-bottom: 20px;
+        }
+        .image-container {
+          position: relative;
+          width: 45%;
+          height: 400px;
+        }
+        .room-info {
+          width: 50%;
+        }
+        .room-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 10px;
+        }
+        .nav-button {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0,188,212,0.8);
+          color: white;
+          padding: 10px;
+          border-radius: 50%;
+          cursor: pointer;
+          border: none;
+        }
+        .nav-button:hover {
+          background: rgba(0,188,212,1);
+        }
         .prev { left: 10px; }
         .next { right: 10px; }
-        .room-info { width: 50%; }
-        h3 { font-size: 26px; color: #333; }
-        .btn { display: inline-block; padding: 12px 18px; background: #00bcd4; color: white; border-radius: 5px; }
-        .btn:hover { background: #008c9e; }
-        .user-review { display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; }
-        .user-review img { width: 40px; height: 40px; border-radius: 50%; }
+        .btn {
+          display: inline-block;
+          padding: 10px 20px;
+          font-size: 16px;
+          font-weight: bold;
+          color: white;
+          background-color: #00bcd4;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background 0.3s ease;
+          text-align: center;
+          margin-top: 10px;
+        }
+        .btn:hover {
+          background-color: #0097a7;
+        }
+        @media (max-width: 768px) {
+          .container {
+            flex-direction: column;
+            align-items: center;
+          }
+          .image-container, .room-info {
+            width: 100%;
+          }
+          .room-info {
+            text-align: center;
+          }
+        }
+        /* Review Section */
+        .reviews {
+          background: #fff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          margin-bottom: 20px;
+        }
+        .reviews h3 {
+          text-align: center;
+          margin-top: 0;
+        }
+        .review-form {
+          background: #f9f9f9;
+          padding: 20px;
+          border-radius: 8px;
+          margin-bottom: 30px;
+        }
+        .review-form h3 {
+          margin: 0 0 15px;
+          font-size: 20px;
+          color: #333;
+        }
+        .review-form textarea {
+          width: 100%;
+          min-height: 100px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          resize: vertical;
+          font-size: 14px;
+        }
+        .rating {
+          margin: 10px 0;
+        }
+        .rating i {
+          font-size: 24px;
+          color: #ccc;
+          cursor: pointer;
+          transition: color 0.3s ease;
+          margin-right: 5px;
+        }
+        .rating i:hover, .rating i.active {
+          color: #f5a623;
+        }
+        .user-review {
+          display: flex;
+          align-items: flex-start;
+          gap: 15px;
+          padding: 15px 0;
+          border-bottom: 1px solid #eee;
+        }
+        .user-review:last-child {
+          border-bottom: none;
+        }
+        .user-review img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+        .review-content {
+          flex-grow: 1;
+        }
+        .review-content p {
+          margin: 5px 0;
+        }
+        .stars {
+          color: #fbc02d;
+        }
+        @media (max-width: 600px) {
+          .user-review {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .user-review img {
+            margin-bottom: 10px;
+          }
+        }
     </style>
 </head>
 <body>
@@ -34,31 +205,55 @@
         <a href="#">Contact</a>
     </div>
 </div>
-
-<div class="container">
-    <div class="image-container">
-        <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-        <img alt="Room Image" class="room-image" id="room-image" th:src="${room.images[0]?.imageName ?: 'default.jpg'}">
-        <button class="nav-button next" onclick="nextImage()">&#10095;</button>
+<div class="wrapper">
+    <!-- Room Details Section -->
+    <div class="container">
+        <div class="image-container">
+            <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
+            <img alt="Room Image" class="room-image" id="room-image"
+                 th:src="${room.images[0]?.imageName ?: 'default.jpg'}">
+            <button class="nav-button next" onclick="nextImage()">&#10095;</button>
+        </div>
+        <div class="room-info">
+            <h3>Room Details</h3>
+            <p><strong>Room Name:</strong> <span th:text="${room.name}"></span></p>
+            <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
+            <p><strong>Size:</strong> <span th:text="${room.size}"></span> m²</p>
+            <p><strong>Max Occupancy:</strong> <span th:text="${room.maxOccupancy}"></span> guests</p>
+            <p><strong>Type:</strong> <span th:text="${room.type}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${room.status.getStatusName()}"></span></p>
+            <p><strong>Amenities:</strong> <span th:text="${room.amenities}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
+            <button class="btn btn-primary" th:onclick="'window.location.href=' + @{/update_room/{id}(id=${room.id})}">
+                Booking Now
+            </button>
+        </div>
     </div>
-
-    <div class="room-info">
-        <h3>Room Details</h3>
-        <p><strong>Room Name:</strong> <span th:text="${room.name}"></span></p>
-        <p><strong>Hotel:</strong> <span th:text="${room.hotel.name}"></span></p>
-        <p><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
-        <p><strong>Rating:</strong> <span th:text="${room.hotel.rating}"></span></p>
-        <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
-        <a class="btn" href="#">Booking Now</a>
-    </div>
-</div>
-
-<div class="container">
+    <!-- Reviews Section -->
     <div class="reviews">
         <h3>Reviews</h3>
+        <div class="review-form" th:if="${userHasCheckedOut}">
+            <form method="post" th:action="@{/review}">
+                <label>
+                    <textarea name="content" placeholder="Write your review here..." required></textarea>
+                </label>
+                <div class="rating">
+                    <i class="fas fa-star" data-value="1"></i>
+                    <i class="fas fa-star" data-value="2"></i>
+                    <i class="fas fa-star" data-value="3"></i>
+                    <i class="fas fa-star" data-value="4"></i>
+                    <i class="fas fa-star" data-value="5"></i>
+                </div>
+                <input id="rating-value" name="rating" type="hidden">
+                <button class="btn" type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="user-review" th:if="${#lists.isEmpty(room.reviews)}">
+            <p>No reviews yet. Be the first to review!</p>
+        </div>
         <div class="user-review" th:each="review : ${room.reviews}">
-            <img alt="User Image" th:src="${review.user.avatar ?: 'default-avatar.png'}">
-            <div>
+            <img alt="User Avatar" th:src="${review.user.avatar}">
+            <div class="review-content">
                 <p><strong th:text="${review.user.name}"></strong> - <span
                         th:text="${#dates.format(review.date, 'dd MMM yyyy')}"></span></p>
                 <p th:text="${review.content}"></p>
@@ -66,24 +261,21 @@
         </div>
     </div>
 </div>
-
 <script>
     let images = /*[[${room.images != null ? room.images.![imageName] : []}]]*/ [];
     let currentIndex = 0;
     let imageElement = document.getElementById("room-image");
-
     function prevImage() {
-        if (images.length > 0) {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            imageElement.src = images[currentIndex];
-        }
+      if (images.length > 0) {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        imageElement.src = images[currentIndex] || 'default.jpg';
+      }
     }
-
     function nextImage() {
-        if (images.length > 0) {
-            currentIndex = (currentIndex + 1) % images.length;
-            imageElement.src = images[currentIndex];
-        }
+      if (images.length > 0) {
+        currentIndex = (currentIndex + 1) % images.length;
+        imageElement.src = images[currentIndex] || 'default.jpg';
+      }
     }
 </script>
 </body>

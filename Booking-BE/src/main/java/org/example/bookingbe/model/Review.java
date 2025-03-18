@@ -1,6 +1,10 @@
 package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -10,10 +14,13 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "date_review", columnDefinition = "DATETIME")
+    @CreationTimestamp
+    @Column(name = "date_review", updatable = false)
     private LocalDateTime dateReview;
-    @Column(name = "rate", columnDefinition = "LONG")
-    private Long rate;
+    @NotNull
+    @Min(1)
+    @Max(5)
+    private Integer rate;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     @ManyToOne
@@ -42,11 +49,11 @@ public class Review {
         this.dateReview = dateReview;
     }
 
-    public Long getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(Long rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 
