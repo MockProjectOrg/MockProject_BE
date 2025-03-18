@@ -1,133 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org ">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <title>Room Details</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .menu {
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-            background-color: #343a40;
-            padding: 10px;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            padding: 8px 12px;
-        }
-
-        .container {
-            display: flex;
-            gap: 30px;
-            margin: 40px;
-            align-items: center;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .image-container {
-            position: relative;
-            width: 50%;
-            height: 400px;
-        }
-
-        .room-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .nav-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 50%;
-        }
-
-        .prev {
-            left: 10px;
-        }
-
-        .next {
-            right: 10px;
-        }
-
-        .room-info {
-            width: 50%;
-        }
-
-        h3 {
-            font-size: 26px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .room-info p {
-            margin: 8px 0;
-            font-size: 16px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 18px;
-            background-color: #00bcd4;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #008c9e;
-        }
-
-        .reviews {
-            margin-top: 20px;
-        }
-
-        .user-review {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .user-review img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .user-review p {
-            margin: 0;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
+        .menu { display: flex; gap: 15px; justify-content: flex-end; background-color: #343a40; padding: 10px; }
+        .menu a { color: white; text-decoration: none; font-weight: bold; padding: 8px 12px; }
+        .container { display: flex; gap: 30px; margin: 40px; background: white; padding: 20px; border-radius: 10px; }
+        .image-container { position: relative; width: 50%; height: 400px; }
+        .room-image { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+        .nav-button { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.5); color: white; padding: 10px; border-radius: 50%; cursor: pointer; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .room-info { width: 50%; }
+        h3 { font-size: 26px; color: #333; }
+        .btn { display: inline-block; padding: 12px 18px; background: #00bcd4; color: white; border-radius: 5px; }
+        .btn:hover { background: #008c9e; }
+        .user-review { display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; }
+        .user-review img { width: 40px; height: 40px; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -145,8 +38,7 @@
 <div class="container">
     <div class="image-container">
         <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-        <img alt="Room Image" class="room-image" id="room-image"
-             th:if="${not #lists.isEmpty(room.images)}" th:src="${room.images[0].imageName}">
+        <img alt="Room Image" class="room-image" id="room-image" th:src="${room.images[0]?.imageName ?: 'default.jpg'}">
         <button class="nav-button next" onclick="nextImage()">&#10095;</button>
     </div>
 
@@ -156,12 +48,7 @@
         <p><strong>Hotel:</strong> <span th:text="${room.hotel.name}"></span></p>
         <p><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
         <p><strong>Rating:</strong> <span th:text="${room.hotel.rating}"></span></p>
-        <p><strong>Room Type:</strong> <span th:text="${room.roomType.name}"></span></p>
-        <p><strong>Area:</strong> <span th:text="${room.area}"></span> m²</p>
-        <p><strong>Max Guests:</strong> <span th:text="${room.maxGuests}"></span></p>
-        <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
         <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
-        <p><strong>Status:</strong> <span th:text="${room.status}"></span></p>
         <a class="btn" href="#">Booking Now</a>
     </div>
 </div>
@@ -170,28 +57,18 @@
     <div class="reviews">
         <h3>Reviews</h3>
         <div class="user-review" th:each="review : ${room.reviews}">
-            <img alt="User Image" src="" th:src="${review.user.avatar}">
-            <div class="review-content">
-                <p class="review-header">
-                    <strong th:text="${review.user.name}"></strong> -
-                    <span class="review-date" th:text="${#dates.format(review.date, 'dd MMM yyyy')}"></span>
-                </p>
-                <div class="review-stars">
-                    <span class="star" th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
-                    <span class="star empty" th:each="i : ${#numbers.sequence(review.rating + 1, 5)}">&#9733;</span>
-                </div>
+            <img alt="User Image" th:src="${review.user.avatar ?: 'default-avatar.png'}">
+            <div>
+                <p><strong th:text="${review.user.name}"></strong> - <span
+                        th:text="${#dates.format(review.date, 'dd MMM yyyy')}"></span></p>
                 <p th:text="${review.content}"></p>
-
-                <div class="review-reply" th:if="${review.reply}">
-                    <p><strong>Hotel Manager:</strong> <span th:text="${review.reply}"></span></p>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let images = /*[[${room.images != null ? room.images.![imageName] : '[]'}]]*/ [];
+    let images = /*[[${room.images != null ? room.images.![imageName] : []}]]*/ [];
     let currentIndex = 0;
     let imageElement = document.getElementById("room-image");
 
