@@ -3,6 +3,7 @@ package org.example.bookingbe.service.RoomService;
 import jakarta.transaction.Transactional;
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.Status;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.ImageRepo.IImageRepo;
@@ -110,4 +111,25 @@ public class RoomService implements IRoomService {
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
     }
+
+    @Override
+    public Room updateRoomStatus(Long roomId, Long statusId, Long userId) {
+        Room room = roomRepo.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        if (!room.getHotel().getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized: You cannot update this room's status");
+        }
+
+        room.setStatus(statusRepo.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found")));
+
+        return roomRepo.save(room);
+    }
+
+    @Override
+    public List<Status> getAllStatuses() {
+        return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
+    }
+
 }

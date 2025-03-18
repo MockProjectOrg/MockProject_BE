@@ -14,5 +14,5 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r JOIN FETCH r.roomType WHERE r.hotel.id = :hotelId")
     List<Room> findRoomsByHotel(@Param("hotelId") Long hotelId);
 
-
+    List<Room> findByStatus_Id(Long statusId);
 }

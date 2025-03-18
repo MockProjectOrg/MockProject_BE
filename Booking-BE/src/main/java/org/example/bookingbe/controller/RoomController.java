@@ -3,6 +3,7 @@ package org.example.bookingbe.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.Status;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
@@ -39,36 +40,31 @@ public class RoomController {
     // Danh sách phòng của khách sạn do Manager quản lý
     @GetMapping
     public String listRooms(@RequestParam(defaultValue = "1") int page,
-                            @RequestParam(defaultValue = "10") int pageSize,Model model) {
-        // Lấy thông tin user từ Spring Security
+                            @RequestParam(defaultValue = "10") int pageSize, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
 
         Long userId = userPriciple.getId();
         if (userId == null) {
-            return "redirect:/login"; // Hoặc xử lý lỗi khác
+            return "redirect:/login";
         }
 
-        // Tìm User từ userId
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Tìm danh sách khách sạn mà User này quản lý
         Hotel hotel = hotelRepo.findByUser(user).stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No hotel found for this user"));
 
-        // Lưu hotelId vào session
         session.setAttribute("hotelId", hotel.getId());
 
-        // Lấy danh sách phòng trong khách sạn
         List<Room> rooms = roomService.getRoomsByHotel(hotel.getId(), userId);
 
-        // Kiểm tra xem các room có được load roomType hay không
-        for (Room room : rooms) {
-            System.out.println("Room ID: " + room.getId() + ", RoomType: " + (room.getRoomType() != null ? room.getRoomType().getTypeName() : "NULL"));
-        }
+        // Lấy danh sách tất cả trạng thái phòng để hiển thị
+        List<Status> allStatuses = roomService.getAllStatuses();
+
         model.addAttribute("rooms", rooms);
         model.addAttribute("hotel", hotel);
+        model.addAttribute("allStatuses", allStatuses);
         model.addAttribute("newRoom", new Room());
         model.addAttribute("page", page);
         model.addAttribute("pageSize", pageSize);
@@ -76,6 +72,7 @@ public class RoomController {
 
         return "managerHotel/managerRoom";
     }
+
 
     // Thêm phòng mới
     @PostMapping("/add")
@@ -147,16 +144,21 @@ public class RoomController {
         return "redirect:/managerRooms";
     }
 
-
-
-
-
-
     // Xóa phòng
     @GetMapping("/delete/{id}")
     public String deleteRoom(@RequestParam Long userId, @PathVariable Long id) {
         roomService.deleteRoom(id, userId);
         return "redirect:/managerRooms?userId=" + userId;
+    }
+
+    @PostMapping("/updateStatus/{id}")
+    public String updateRoomStatus(@PathVariable Long id, @RequestParam Long statusId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
+        Long userId = userPriciple.getId();
+
+        roomService.updateRoomStatus(id, statusId, userId);
+        return "redirect:/managerRooms";
     }
 }
 
