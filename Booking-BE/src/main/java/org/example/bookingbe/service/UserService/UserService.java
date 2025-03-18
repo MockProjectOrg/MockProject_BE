@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -31,5 +33,10 @@ public class UserService implements IUserService {
     @Override
     public Boolean exstsEmail(String email) {
         return userRepo.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepo.findByUserName(username);
     }
 }

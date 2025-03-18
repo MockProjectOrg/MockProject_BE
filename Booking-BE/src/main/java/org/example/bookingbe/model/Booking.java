@@ -16,9 +16,10 @@ public class Booking {
     private LocalDateTime checkOut;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;

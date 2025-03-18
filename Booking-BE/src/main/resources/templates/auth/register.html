@@ -2,9 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
-<!--    <link href="../static/register.css" rel="stylesheet">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Sona</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #deb887;
+            --primary-dark: #c49163;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +21,10 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
         }
 
         .navbar {
@@ -20,21 +32,36 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 50px;
-            border-bottom: 2px solid #deb887;
+            border-bottom: 2px solid var(--primary-color);
             position: fixed;
             top: 0;
             width: 100%;
             background-color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #222;
+            color: var(--text-color);
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo a {
+            text-decoration: none;
+            color: var(--text-color);
         }
 
         .logo span {
-            color: #deb887;
+            color: var(--primary-color);
         }
 
         .nav-links {
@@ -43,14 +70,20 @@
         }
 
         .nav-links li {
-            margin: 0 15px;
+            margin: 0 18px;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: #222;
-            font-size: 18px;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 500;
             position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
         }
 
         .nav-links a:hover::after,
@@ -59,10 +92,25 @@
             display: block;
             width: 100%;
             height: 2px;
-            background-color: #deb887;
+            background-color: var(--primary-color);
             position: absolute;
             bottom: -5px;
             left: 0;
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .nav-right {
@@ -71,234 +119,373 @@
         }
 
         .btn-signup {
-            background-color: #deb887;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 22px;
             cursor: pointer;
             font-size: 16px;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
         .btn-signup:hover {
-            background-color: #c49163;
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
         }
 
-        .login-container {
-            width: 500px;
-            height: 500px;
-            padding: 20px;
+        .login-main {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            background-color: var(--light-bg);
         }
 
-        .wrap-login{
+        .wrap-login {
             display: flex;
             background: white;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 900px;
-            height: 620px;
+            margin: 100px auto 50px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 950px;
+            overflow: hidden;
         }
 
-        .img-login img{
-            width: 350px;
-            height: 572px;
+        .img-login {
+            width: 40%;
+            position: relative;
+        }
+
+        .img-login img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
 
+        .img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            color: white;
+        }
+
+        .img-overlay h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .img-overlay p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .login-container {
+            width: 60%;
+            padding: 40px 50px;
+        }
+
         .login-container h2 {
+            font-size: 32px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .slogan {
+            padding-bottom: 25px;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .table-form {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 10px;
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
             display: block;
-            /*font-weight: bold;*/
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
         }
 
-        .input-group input {
+        .input-group input,
+        .option-gender {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus,
+        .option-gender:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(222, 184, 135, 0.25);
+            outline: none;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            top: 14px;
+            left: 15px;
+            color: #aaa;
+        }
+
+        .input-icon input {
+            padding-left: 40px;
         }
 
         .login-btn {
             width: 100%;
-            padding: 10px;
-            background: #deb887;
+            padding: 14px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
         .login-btn:hover {
-            background: #c49163;
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
         }
 
-        .slogan {
-            padding-bottom: 20px;
-            text-align: center;
-            color: #deb887;
-        }
-
-        /*.social-login{*/
-        /*    text-align: center;*/
-        /*    padding-top: 20px;*/
-        /*}*/
-
-        .fb-btn img, .google-btn img {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        .social-login p {
-            margin-bottom: 20px;
-        }
-
-        .table-form{
-            width: 460px;
-        }
-        .table-form input{
-            width: 200px;
-
-        }
-
-        /*.radio-gender{*/
-        /*    display: flex;*/
-        /*    margin: 20px;*/
-        /*}*/
-        .select-gender{
+        .select-gender {
             display: flex;
             flex-direction: column;
         }
-        .select-gender label{
-            margin-bottom: 5px;
+
+        .select-gender label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
         }
-        .option-gender{
-            width: 150px;
-            height: 32px;
+
+        .option-gender {
+            height: 45px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: white;
+            padding: 0 15px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .wrap-login {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .img-login, .login-container {
+                width: 100%;
+            }
+
+            .img-login {
+                height: 200px;
+            }
+
+            .login-container {
+                padding: 30px;
+            }
+
+            .navbar {
+                padding: 10px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 <nav class="navbar">
-    <div class="logo">Sona<span>.</span></div>
-    <ul class="nav-links">
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Rooms</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Pages</a></li>
-        <li><a href="#">News</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
+    <div class="logo">
+        <a href="/home">Sona<span>.</span></a>
+    </div>
+
     <div class="nav-right">
-        <button class="btn-signup" ><a href="/api/login" style="color: white; text-decoration: none">Login</a></button>
+        <button class="btn-signup"><a href="/api/login" style="color: white; text-decoration: none">Đăng nhập</a></button>
     </div>
 </nav>
-<div class="login-main" style="width: 100%; height: 500px">
+
+<div class="login-main">
     <div class="wrap-login">
         <div class="img-login">
             <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D">
+            <div class="img-overlay">
+                <h3>Khám phá thế giới cùng Sona</h3>
+                <p>Những chuyến đi hoàn hảo đang chờ đón bạn</p>
+            </div>
         </div>
         <div class="login-container">
-            <h2>Hi!</h2>
+            <h2>Xin chào!</h2>
             <div class="slogan">
-                <p>Enjoy the perfect trip with us!!</p>
+                <p>Đăng ký tài khoản để trải nghiệm những chuyến đi tuyệt vời</p>
             </div>
             <form action="/api/Doregister" method="post" th:object="${user}" onsubmit="validatePasswords(event)">
                 <table class="table-form">
                     <tr>
                         <td>
                             <div class="input-group">
-                                <label for="firstname">First Name</label>
-                                <input type="text" id="firstname" name="firstname" th:field="*{firstName}" required>
+                                <label for="firstname">Họ</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="firstname" name="firstname" th:field="*{firstName}" required placeholder="Nhập họ của bạn">
+                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
-                                <label for="lastname">Last Name</label>
-                                <input type="text" id="lastname" name="lastname" th:field="*{lastName}" required>
+                                <label for="lastname">Tên</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="lastname" name="lastname" th:field="*{lastName}" required placeholder="Nhập tên của bạn">
+                                </div>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="input-group">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" name="username" th:field="*{userName}" required>
+                                <label for="username">Tên đăng nhập</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-id-card"></i>
+                                    <input type="text" id="username" name="username" th:field="*{userName}" required placeholder="Chọn tên đăng nhập">
+                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <label for="email">Email</label>
-                                <input type="text" id="email" name="email" th:field="*{email}" required>
+                                <div class="input-icon">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" id="email" name="email" th:field="*{email}" required placeholder="example@domain.com">
+                                </div>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="input-group">
-                                <label for="birthday">Birthday</label>
-                                <input type="date" id="birthday" name="birthday" th:field="*{birthday}" required>
+                                <label for="birthday">Ngày sinh</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-calendar"></i>
+                                    <input type="date" id="birthday" name="birthday" th:field="*{birthday}" required>
+                                </div>
                             </div>
                         </td>
                         <td class="select-gender">
-                            <label>Gender</label>
+                            <label>Giới tính</label>
                             <select class="option-gender" name="gender" id="gender" th:field="*{gender}">
-                                <option th:value="1" th:text="Male">Male</option>
-                                <option th:value="2" th:text="Female">Female</option>
-                                <option th:value="3" th:text="Other">Other</option>
+                                <option th:value="1" th:text="Nam">Nam</option>
+                                <option th:value="2" th:text="Nữ">Nữ</option>
+                                <option th:value="3" th:text="Khác">Khác</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="input-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" name="password" th:field="*{password}" required>
+                                <label for="password">Mật khẩu</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password" name="password" th:field="*{password}" required placeholder="Nhập mật khẩu">
+                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
-                                <label for="re-password">Re Password</label>
-                                <input type="password" id="re-password" name="re-password" required>
-                                <span style="color: red" id="password-error"></span>
+                                <label for="re-password">Nhập lại mật khẩu</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="re-password" name="re-password" required placeholder="Nhập lại mật khẩu">
+                                </div>
+                                <span style="color: #ff4d4d; font-size: 13px; display: block; margin-top: 5px;" id="password-error"></span>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="input-group">
-                                <label for="phone">Phone</label>
-                                <input type="text" id="phone" name="phone" th:field="*{phone}" required>
+                                <label for="phone">Số điện thoại</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" id="phone" name="phone" th:field="*{phone}" required placeholder="Nhập số điện thoại">
+                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
-                                <label for="address">Address</label>
-                                <input type="text" id="address" name="address" th:field="*{address}" required>
+                                <label for="address">Địa chỉ</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <input type="text" id="address" name="address" th:field="*{address}" required placeholder="Nhập địa chỉ của bạn">
+                                </div>
                             </div>
                         </td>
                     </tr>
                 </table>
-                <button type="submit" class="login-btn">REGISTER</button>
+                <button type="submit" class="login-btn">ĐĂNG KÝ</button>
             </form>
+            <div class="login-footer">
+                Đã có tài khoản? <a href="/api/login">Đăng nhập ngay</a>
+            </div>
         </div>
     </div>
-
 </div>
-</body>
+
 <script>
     function validatePasswords(event) {
         var password = document.getElementById("password").value;
@@ -313,4 +500,5 @@
         }
     }
 </script>
+</body>
 </html>

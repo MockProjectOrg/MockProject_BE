@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách đặt phòng</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .sidebar {
+        transition: all 0.3s ease;
+    }
+    .table-container {
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .pagination-btn {
+        @apply px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50;
+    }
+    .pagination-btn.active {
+        @apply bg-blue-500 text-white border-blue-500 hover:bg-blue-600;
+    }
+    .pagination-btn.disabled {
+        @apply opacity-50 cursor-not-allowed hover:bg-white;
+    }
+    .fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .hover-scale {
+        transition: transform 0.2s;
+    }
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-roboto">
+<div class="flex">
+  <!-- Sidebar -->
+  <div class="sidebar bg-gradient-to-b from-blue-800 to-blue-900 text-white h-screen w-64 fixed left-0 top-0 overflow-y-auto shadow-lg z-40">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-8 flex items-center">
+        <i class="fas fa-hotel mr-3"></i>
+        <span>Hotel Manager</span>
+      </h2>
+      <ul class="space-y-3">
+        <li>
+          <a th:href="@{/managerRooms}" class="flex items-center p-3 rounded-lg hover:bg-blue-700 transition duration-200">
+            <i class="fas fa-door-open w-5 mr-3"></i> Quản lý phòng
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/managerBookings}" class="flex items-center p-3 rounded-lg bg-blue-700 shadow-md">
+            <i class="fas fa-calendar-alt w-5 mr-3"></i> Danh sách đặt phòng
+          </a>
+        </li>
+        <li class="mt-8 pt-6 border-t border-blue-700">
+          <a th:href="@{/logout}" class="flex items-center p-3 rounded-lg hover:bg-blue-700 transition duration-200">
+            <i class="fas fa-sign-out-alt w-5 mr-3"></i> Đăng xuất
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="ml-64 w-full min-h-screen">
+    <div class="container mx-auto p-8">
+      <!-- Header with booking info -->
+      <div class="bg-white p-6 rounded-xl shadow-md mb-8 fade-in">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-800">
+              <i class="fas fa-calendar-check mr-2 text-blue-500"></i>
+              <span>Danh sách đặt phòng</span>
+            </h2>
+            <p class="text-gray-600 mt-1">Quản lý thông tin đặt phòng</p>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle mr-1"></i>
+              Tổng số đặt phòng: <strong th:text="${#lists.size(bookings)}">0</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons and filter -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm đặt phòng..."
+                   class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64">
+            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          </div>
+          <div class="relative">
+            <input type="date" id="dateFilter"
+                   class="pl-4 pr-10 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <i class="fas fa-calendar-alt absolute right-3 top-3 text-gray-400"></i>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center">
+            <i class="fas fa-print mr-2"></i> In danh sách
+          </button>
+        </div>
+      </div>
+
+      <!-- Table container -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 fade-in">
+        <div class="table-container">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-out</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phòng</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mô tả phòng</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người đặt</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="bookingTableBody">
+            <tr th:each="booking, bookingStat : ${bookings}" class="hover:bg-blue-50 transition duration-150">
+              <td class="py-4 px-6 text-sm font-medium text-gray-900" th:text="${booking.id}"></td>
+              <td class="py-4 px-6 text-sm text-gray-700" th:text="${#temporals.format(booking.checkIn, 'dd/MM/yyyy HH:mm')}"></td>
+              <td class="py-4 px-6 text-sm text-gray-700" th:text="${#temporals.format(booking.checkOut, 'dd/MM/yyyy HH:mm')}"></td>
+              <td class="py-4 px-6 text-sm text-gray-700" th:text="${booking.room != null ? booking.room.id : 'Không có'}"></td>
+              <td class="py-4 px-6 text-sm text-gray-700" th:text="${booking.room != null ? booking.room.description : 'Không có'}"></td>
+              <td class="py-4 px-6 text-sm text-gray-700" th:text="${booking.user != null ? booking.user.userName : 'Không có'}"></td>
+              <td class="py-4 px-6 text-sm">
+                <!-- Calculate status based on dates -->
+                <span th:with="now=${#temporals.createNow()}"
+                      th:class="${booking.checkIn > now ? 'bg-yellow-100 text-yellow-800' :
+                                                (booking.checkOut < now ? 'bg-gray-100 text-gray-800' :
+                                                'bg-green-100 text-green-800')}"
+                      class="px-2 py-1 text-xs font-medium rounded-full">
+                                    <span th:text="${booking.checkIn > now ? 'Sắp tới' :
+                                                  (booking.checkOut < now ? 'Đã hoàn thành' :
+                                                  'Đang lưu trú')}"></span>
+                                </span>
+              </td>
+              <td class="py-4 px-6 text-sm font-medium">
+                <div class="flex space-x-3">
+                  <button class="text-blue-600 hover:text-blue-800 hover-scale">
+                    <i class="fas fa-eye"></i> Xem
+                  </button>
+                  <button class="text-red-600 hover:text-red-800 hover-scale">
+                    <i class="fas fa-trash-alt"></i> Hủy
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+          <div class="text-sm text-gray-500">
+            Hiển thị <span id="startItem">1</span> đến <span id="endItem" th:text="${#lists.size(bookings) < 10 ? #lists.size(bookings) : 10}">10</span> trên tổng số <span id="totalItems" th:text="${#lists.size(bookings)}">0</span> đặt phòng
+          </div>
+          <div class="flex justify-center space-x-1" id="pagination">
+            <button id="prevPage" class="pagination-btn disabled">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button id="nextPage" class="pagination-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Search functionality
+    const searchInput = document.getElementById("searchInput");
+    const dateFilter = document.getElementById("dateFilter");
+    const bookingTableBody = document.getElementById("bookingTableBody");
+
+    // Pagination elements
+    const prevPageBtn = document.getElementById("prevPage");
+    const nextPageBtn = document.getElementById("nextPage");
+    const paginationContainer = document.getElementById("pagination");
+    const startItemEl = document.getElementById("startItem");
+    const endItemEl = document.getElementById("endItem");
+    const totalItemsEl = document.getElementById("totalItems");
+
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    // Tìm kiếm và lọc
+    function filterBookings() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedDate = dateFilter.value;
+        const rows = document.querySelectorAll("#bookingTableBody tr");
+
+        rows.forEach(row => {
+            const roomDesc = row.children[4].textContent.toLowerCase();
+            const username = row.children[5].textContent.toLowerCase();
+            const checkinDate = row.children[1].textContent;
+
+            const matchesSearch = roomDesc.includes(searchTerm) || username.includes(searchTerm);
+            const matchesDate = selectedDate === "" || checkinDate.includes(selectedDate);
+
+            if (matchesSearch && matchesDate) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        // Reset về trang đầu tiên sau khi lọc
+        currentPage = 1;
+        updatePagination();
+    }
+
+    searchInput.addEventListener("input", filterBookings);
+    dateFilter.addEventListener("change", filterBookings);
+
+    // Xử lý phân trang
+    function updatePagination() {
+        const visibleRows = document.querySelectorAll("#bookingTableBody tr:not([style*='display: none'])");
+        const totalRows = visibleRows.length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        // Update pagination display
+        totalItemsEl.textContent = totalRows;
+
+        // Ẩn/hiện các hàng theo trang hiện tại
+        const startIdx = (currentPage - 1) * rowsPerPage;
+        const endIdx = Math.min(startIdx + rowsPerPage, totalRows);
+
+        visibleRows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        // Cập nhật thông tin hiển thị
+        startItemEl.textContent = totalRows === 0 ? 0 : startIdx + 1;
+        endItemEl.textContent = endIdx;
+
+        // Cập nhật nút phân trang
+        paginationContainer.innerHTML = "";
+
+        // Nút Previous
+        const prevBtn = document.createElement("button");
+        prevBtn.className = `pagination-btn ${currentPage === 1 ? "disabled" : ""}`;
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        if (currentPage > 1) {
+            prevBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+        }
+        paginationContainer.appendChild(prevBtn);
+
+        // Tạo các nút số trang
+        const maxPageButtons = 5;
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+        // Điều chỉnh lại nếu không đủ nút bên phải
+        if (endPage - startPage < maxPageButtons - 1) {
+            startPage = Math.max(1, endPage - maxPageButtons + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement("button");
+            pageBtn.className = `pagination-btn ${i === currentPage ? "active" : ""}`;
+            pageBtn.textContent = i;
+            pageBtn.addEventListener("click", () => {
+                currentPage = i;
+                updatePagination();
+            });
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        // Nút Next
+        const nextBtn = document.createElement("button");
+        nextBtn.className = `pagination-btn ${currentPage === totalPages || totalPages === 0 ? "disabled" : ""}`;
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        if (currentPage < totalPages) {
+            nextBtn.addEventListener("click", () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+        }
+        paginationContainer.appendChild(nextBtn);
+    }
+
+    // Khởi tạo phân trang
+    updatePagination();
+
+    // Xử lý các nút hành động
+    document.querySelectorAll("#bookingTableBody button").forEach(button => {
+        button.addEventListener("click", function(e) {
+            const row = this.closest("tr");
+            const bookingId = row.cells[0].textContent;
+
+            if (this.textContent.includes("Xem")) {
+                window.location.href = `/managerBookings/${bookingId}`;
+            } else if (this.textContent.includes("Hủy")) {
+                if (confirm("Bạn có chắc chắn muốn hủy đặt phòng này?")) {
+                    // Tạo form ẩn và submit
+                    const form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = `/managerBookings/delete/${bookingId}`;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            }
+        });
+    });
+
+
+
+    // Xử lý nút in danh sách
+    document.querySelector("button:has(.fa-print)").addEventListener("click", function() {
+        window.open("/managerBookings/print", "_blank", "width=800,height=600");
+    });
+});
+
+
+</script>
+</body>
+</html>

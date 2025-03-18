@@ -10,11 +10,14 @@ public class Status {
     private Long id;
     @Column(name = "status_name", columnDefinition = "varchar(50)")
     private String statusName;
+    @Column(name = "status_code", unique = true, nullable = false)
+    private String statusCode;
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
     public Status() {
+
     }
 
     public Status(Long id, String statusName) {
