@@ -8,18 +8,28 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "hotel_name", columnDefinition = "varchar(100)")
+
+    @Column(name = "hotel_name", columnDefinition = "varchar(100)", nullable = false)
     private String hotelName;
-    @Column(name = "address", columnDefinition = "varchar(150)")
+
+    @Column(name = "address", columnDefinition = "varchar(150)", nullable = false)
     private String address;
+
+    @Column(name = "rating")
+    private int rate;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
     @Column(name = "avatar", columnDefinition = "TEXT")
     private String avatar;
-    @OneToOne
-    @JoinColumn(name = "user_id")
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
-    public Hotel() {}
+
+    public Hotel() {
+    }
 
     public Long getId() {
         return id;
@@ -45,6 +55,14 @@ public class Hotel {
         this.address = address;
     }
 
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -53,19 +71,19 @@ public class Hotel {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getAvatar() {
         return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

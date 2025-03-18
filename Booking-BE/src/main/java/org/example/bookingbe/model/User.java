@@ -12,7 +12,7 @@ public class User {
     private Long id;
     @Column(name = "user_name", columnDefinition = "varchar(100)", unique = true)
     private String userName;
-    @Column(name = "email", columnDefinition = "varchar(50)", unique = true)
+    @Column(name = "email", columnDefinition = "varchar(255)", unique = true)
     private String email;
     @Column(name = "phone", columnDefinition = "varchar(10)")
     private String phone;
@@ -31,8 +31,9 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
-    public User() {}
+    
+    public User() {
+    }
 
     public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
         this.id = id;
@@ -131,4 +132,6 @@ public class User {
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
+
+
 }

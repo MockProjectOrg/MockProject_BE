@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <title>Update Room Details</title>
     <style>
         body {
@@ -207,8 +207,8 @@
         <h1>ADMIN PAGE</h1>
     </div>
     <div class="auth">
-        <a th:if="${session.user == null}" th:href="@{/login}">Login</a>
-        <a th:if="${session.user != null}" th:href="@{/logout}">Logout</a>
+        <a th:href="@{/login}" th:if="${session.user == null}">Login</a>
+        <a th:href="@{/logout}" th:if="${session.user != null}">Logout</a>
     </div>
 </div>
 
@@ -227,16 +227,16 @@
     <div class="container">
         <h3>Room Details</h3>
 
-        <form th:action="@{/admin/rooms/update}" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" th:value="${room.id}" />
+        <form enctype="multipart/form-data" method="post" th:action="@{/admin/rooms/update}">
+            <input name="id" th:value="${room.id}" type="hidden"/>
 
             <label for="name">Room Name:</label>
-            <input type="text" id="name" name="name" th:value="${room.name}" required />
+            <input id="name" name="name" required th:value="${room.name}" type="text"/>
 
             <label for="roomType">Room Type:</label>
             <select id="roomType" name="roomType">
-                <option th:each="type : ${roomTypes}" th:value="${type.id}" 
-                        th:text="${type.name}" th:selected="${room.roomType.id == type.id}">
+                <option th:each="type : ${roomTypes}" th:selected="${room.roomType.id == type.id}"
+                        th:text="${type.name}" th:value="${type.id}">
                 </option>
             </select>
 
@@ -244,12 +244,12 @@
             <textarea id="description" name="description" required th:text="${room.description}"></textarea>
 
             <label for="price">Price:</label>
-            <input type="number" id="price" name="price" th:value="${room.price}" required />
+            <input id="price" name="price" required th:value="${room.price}" type="number"/>
 
             <!-- Buttons -->
             <div class="btn-container">
-                <button type="submit" class="btn btn-save">Save</button>
-                <a href="/admin/rooms" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-save" type="submit">Save</button>
+                <a class="btn btn-cancel" href="/admin/rooms">Cancel</a>
             </div>
         </form>
     </div>

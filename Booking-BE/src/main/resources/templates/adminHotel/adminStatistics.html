@@ -23,7 +23,39 @@
         .sidebar .nav-link.active {
         background: #007bff;
         }
+.user-menu {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
 
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            padding: 5px 0;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            color: black;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
         .content {
         margin-left: 260px;
         }
@@ -42,7 +74,7 @@
         <h4 class="text-center">Admin Panel</h4>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link text-white" href="#">🏠 Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="room_detail.html">🏨 Rooms</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="admin_room_detail.html">🏨 Rooms</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="#">👥 Users</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="#">📅 Bookings</a></li>
             <li class="nav-item"><a class="nav-link text-white active" href="statistics.html">📊 Statistics</a></li>
@@ -53,9 +85,12 @@
     <div class="content p-4 w-100">
 
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Revenue statistics</h2>
-            <button class="btn btn-outline-primary">🔓 Login/Logout</button>
+        <div class="user-menu" onclick="toggleDropdown()">
+            <i class="fas fa-user fa-2x"></i>
+            <div class="dropdown-menu">
+                <a href="#">Profile</a>
+                <a href="#">Logout</a>
+            </div>
         </div>
 
         <!-- Bảng thống kê -->
@@ -63,19 +98,19 @@
             <div class="col-md-4">
                 <div class="card p-3 text-center">
                     <h5>💰 Total Revenue</h5>
-                    <h3>$50,000</h3>
+                    <h3 th:text="${totalRevenue}">$0</h3>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card p-3 text-center">
                     <h5>📋 Total Orders</h5>
-                    <h3>1200</h3>
+                    <h3 th:text="${totalOrders}">0</h3>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card p-3 text-center">
-                    <h5 th:text="room.roomname">🏆 Popular Room</h5>
-                    <h3>Suite VIP</h3>
+                    <h5 th:text="room.getRoomType()">🏆 Popular Room</h5>
+                    <h3 th:text="${popularRoomType}">N/A</h3>
                 </div>
             </div>
         </div>
@@ -96,6 +131,16 @@
 </div>
 
 <script>
+    function toggleDropdown() {
+        document.querySelector(".dropdown-menu").classList.toggle("show");
+    }
+    document.addEventListener("click", function(event) {
+        let dropdown = document.querySelector(".dropdown-menu");
+        let userMenu = document.querySelector(".user-menu");
+        if (!userMenu.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
     // Biểu đồ cột
     var ctx1 = document.getElementById("barChart").getContext("2d");
     new Chart(ctx1, {
@@ -122,6 +167,7 @@
             }]
         }
     });
+
 </script>
 
 </body>

@@ -1,5 +1,8 @@
 package org.example.bookingbe.service.RoomService;
 
 
-public class IRoomService {
+import org.example.bookingbe.model.Room;
+
+public interface IRoomService {
+    Room getRoomById(Long id);
 }

@@ -10,9 +10,6 @@ public class Status {
     private Long id;
     @Column(name = "status_name", columnDefinition = "varchar(50)")
     private String statusName;
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
 
     public Status() {
     }
@@ -36,13 +33,5 @@ public class Status {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
     }
 }

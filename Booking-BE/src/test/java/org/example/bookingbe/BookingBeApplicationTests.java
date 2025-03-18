@@ -8,7 +8,6 @@ class BookingBeApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println("Spring Boot Test is running!");
     }
 
 }
