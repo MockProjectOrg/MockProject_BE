@@ -27,7 +27,7 @@ public class RoomController {
     @ResponseBody
     public ResponseEntity<?> getRoomByHotelId(@PathVariable Long id) {
         List<Room> rooms = roomService.getRoomsByHotel(id);
-        if (rooms.isEmpty()) {
+        if (rooms == null || rooms.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageRespone("Not Found Room Of Hotel"));
         }
         return ResponseEntity.ok(rooms);
@@ -47,7 +47,8 @@ public class RoomController {
         if (principal != null && isAdminHotelOfRoom(principal.getName(), room)) {
             return "adminHotel/admin_room_detail";
         }
-        return "client/auth/room_detail";
+
+        return "client/room_detail";
     }
 
     private boolean isAdminHotelOfRoom(String username, Room room) {

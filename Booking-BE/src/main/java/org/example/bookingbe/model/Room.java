@@ -17,8 +17,8 @@ public class Room {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
     @Column(name = "capacity", nullable = false)
