@@ -26,6 +26,8 @@ public class WebSecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomAuthFailureHandler customAuthFailureHandler;
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -49,13 +51,19 @@ public class WebSecurityConfig {
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
+                .rememberMe(rememberMe -> rememberMe
+                        .key("my-secret-key")
+                        .rememberMeParameter("remember-me")
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // Thời gian lưu (7 ngày)
+                        .userDetailsService(userDetailsService))
                 .formLogin(login -> login
                         .loginPage("/api/")
                         .loginProcessingUrl("/login")
+                        .failureUrl("/api/?error=true")
                         .successHandler(customAuthenticationSuccessHandler())
                 )
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/api/")
-                        .deleteCookies("JSESSIONID"));
+                        .deleteCookies("JSESSIONID", "remember-me"));
 
         return http.build();
     }

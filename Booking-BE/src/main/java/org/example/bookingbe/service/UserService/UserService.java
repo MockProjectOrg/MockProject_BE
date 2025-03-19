@@ -25,6 +25,7 @@ public class UserService implements IUserService {
         Role role = roleRepo.findByRoleName("USER");
         user.setRole(role);
         userRepo.save(user);
+        System.out.println("đã lưu thành công");
         mailRegister.sendEmailRegister(user.getEmail(), user.getFirstName(), user.getLastName());
     }
 
