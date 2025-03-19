@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
@@ -68,11 +69,11 @@
           EN
           <i class="fas fa-chevron-down ml-1"></i>
         </a>
-        <a class="text-white font-semibold" href="#">
+        <a class="text-white font-semibold" th:href="@{/login}">
           <i class="fas fa-user"></i>
           Login
         </a>
-        <a class="text-white font-semibold" href="#">
+        <a class="text-white font-semibold" th:href="@{/register}">
           <i class="fas fa-user-plus"></i>
           Register
         </a>
@@ -140,34 +141,38 @@
       </div>
     </div>
     <div class="flex-grow ml-0 md:ml-8">
+      <!-- Thông báo khi không có phòng nào có sẵn -->
+      <div th:if="${#lists.isEmpty(rooms)}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+        <p>Hiện tại không có phòng nào có sẵn. Vui lòng thử lại sau.</p>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Room 1 -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Lặp qua các phòng có status_id là 4 (Available) -->
+        <div th:each="room : ${rooms}" class="bg-white shadow-lg rounded-lg overflow-hidden">
           <div class="relative">
-            <img alt="Standard Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/_VkA0_rxBfK85Oyeifyunj4wqBgNvw5ZluOxEcN9rGc.jpg" width="400"/>
-            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 2 ROOM LEFT</div>
+            <!-- Chọn ảnh dựa trên loại phòng -->
+            <img th:if="${room.roomType.id == 1}" alt="Standard Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/_VkA0_rxBfK85Oyeifyunj4wqBgNvw5ZluOxEcN9rGc.jpg" width="400"/>
+            <img th:if="${room.roomType.id == 2}" alt="Deluxe Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/8-tN2z-yl0dJLdUxx7FmH4YONPhkHbKVHtabyGkkrc8.jpg" width="400"/>
+            <img th:if="${room.roomType.id == 3}" alt="Premier Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/tj90SkhNleE6Ca2z4SKN4iNLJZm9Cw50Z84VI6QgPvA.jpg" width="400"/>
+            <!-- Mặc định nếu không có loại phòng khớp -->
+            <img th:unless="${room.roomType.id == 1 || room.roomType.id == 2 || room.roomType.id == 3}" alt="Hotel Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/V-UuEUXzqudt45wYgxTaSOTlnyx23j62Rcx5_m4kh_U.jpg" width="400"/>
+
+            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">AVAILABLE</div>
           </div>
           <div class="p-4">
             <div class="flex items-center text-gray-600 text-sm mb-2">
-              <i class="fas fa-user-friends mr-2"></i> 2 Guests
-              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 30 ft
+              <i class="fas fa-user-friends mr-2"></i>
+              <span th:text="${room.roomType.id == 3 ? '4' : '2'}">2</span> Guests
+              <i class="fas fa-ruler-combined ml-4 mr-2"></i>
+              <span th:text="${room.roomType.id == 1 ? '30' : (room.roomType.id == 2 ? '35' : '40')}">30</span> ft
             </div>
-            <h3 class="text-xl font-bold mb-2">Standard Room</h3>
-            <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
-            <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $29</button>
-          </div>
-        </div>
-        <!-- Room 2 -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div class="relative">
-            <img alt="Deluxe Room" class="w-full h-48 object-cover" height="300" src="https://storage.googleapis.com/a1aa/image/8-tN2z-yl0dJLdUxx7FmH4YONPhkHbKVHtabyGkkrc8.jpg" width="400"/>
-            <div class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 text-xs rounded">ONLY 1 ROOM LEFT</div>
-          </div>
-          <div class="p-4">
-            <div class="flex items-center text-gray-600 text-sm mb-2">
-              <i class="fas fa-user-friends mr-2"></i> 2 Guests
-              <i class="fas fa-ruler-combined ml-4 mr-2"></i> 35 ft
+            <h3 class="text-xl font-bold mb-2" th:text="${room.roomType.typeName}">Room Type</h3>
+            <p class="text-gray-600 mb-4" th:text="${#strings.abbreviate(room.description, 100)}">Room description here...</p>
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-bold text-orange-500">$<span th:text="${room.price}">29</span></span>
+              <button class="btn-booknow px-4 py-2 rounded">BOOK NOW</button>
             </div>
+<<<<<<< HEAD
             <h3 class="text-xl font-bold mb-2">Deluxe Room</h3>
             <p class="text-gray-600 mb-4">Most hotels and major hospitality companies have set industry standards to classify hotel types. An...</p>
             <button class="btn-booknow px-4 py-2 rounded">BOOK NOW FOR $39</button>
@@ -175,6 +180,14 @@
         </div>
 
       <div class="flex justify-center items-center mt-8 space-x-4">
+=======
+          </div>
+        </div>
+      </div>
+
+      <!-- Phân trang (nếu cần) -->
+      <div th:if="${!#lists.isEmpty(rooms)}" class="flex justify-center items-center mt-8 space-x-4">
+>>>>>>> 87d779b90034c42ac45ee59d52f3775a9ea11d6b
         <button class="pagination-button">
           <i class="fas fa-chevron-left"></i>
         </button>
@@ -209,7 +222,7 @@
 </footer>
 <script>
   function updatePrice(value) {
-      document.getElementById('priceValue').innerText = '$' + value;
+    document.getElementById('priceValue').innerText = '$' + value;
   }
 </script>
 </body>

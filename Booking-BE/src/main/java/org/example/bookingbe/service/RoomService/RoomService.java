@@ -3,6 +3,7 @@ package org.example.bookingbe.service.RoomService;
 import jakarta.transaction.Transactional;
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.Status;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.ImageRepo.IImageRepo;
@@ -27,6 +28,11 @@ public class RoomService implements IRoomService {
     @Autowired
     private IUserRepo userRepo;
 
+
+    @Override
+    public List<Room> getAvailableRooms() {
+        return roomRepo.findAvailableRooms();
+    }
 
 
     public List<Room> getRoomsByHotel(Long hotelId, Long userId) {
@@ -100,12 +106,10 @@ public class RoomService implements IRoomService {
         }
 
 
-        // Xóa tất cả hình ảnh liên quan đến room
-        imageRepo.deleteByRoomId(roomId);
-        // Xóa dữ liệu trong bảng `status` trước khi xóa `room`
-        statusRepo.deleteByRoomId(roomId);
-        // Xóa dữ liệu trong bảng `review` trước khi xóa `room`
-        reviewRepo.deleteByRoomId(roomId);
+
+
+
+
 
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
@@ -113,8 +117,28 @@ public class RoomService implements IRoomService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<Room> searchRooms(Long hotelId, Long roomTypeId, Double minPrice, Double maxPrice) {
         return roomRepo.searchRooms(hotelId, roomTypeId, minPrice, maxPrice);
+=======
+    public Room updateRoomStatus(Long roomId, Long statusId, Long userId) {
+        Room room = roomRepo.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        if (!room.getHotel().getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized: You cannot update this room's status");
+        }
+
+        room.setStatus(statusRepo.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found")));
+
+        return roomRepo.save(room);
+    }
+
+    @Override
+    public List<Status> getAllStatuses() {
+        return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
+>>>>>>> 87d779b90034c42ac45ee59d52f3775a9ea11d6b
     }
 
 }

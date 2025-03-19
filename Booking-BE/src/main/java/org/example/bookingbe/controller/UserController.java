@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.respone.MessageRespone;
-import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
@@ -21,10 +20,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @Controller
 @RequestMapping("/api")

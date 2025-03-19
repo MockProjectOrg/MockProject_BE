@@ -1,6 +1,7 @@
 package org.example.bookingbe.service.RoomService;
 
 import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,11 @@ public interface IRoomService {
     List<Room> searchRooms(Long hotelId, Long roomTypeId, Double minPrice, Double maxPrice);
 
     Optional<Room> getRoomById(Long roomId);
+
+    Room updateRoomStatus(Long roomId, Long statusId, Long userId);
+
+    List<Status> getAllStatuses();
+
+    List<Room> getAvailableRooms();
+
 }

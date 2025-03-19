@@ -26,7 +26,7 @@ public class Room {
 
     public Room() {}
 
-    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, String imageUrl) {
+    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, String imageUrl, Status status) {
         this.id = id;
         this.price = price;
         this.description = description;
