@@ -1,0 +1,912 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Phòng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .table-container {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .pagination-btn {
+            @apply px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50;
+        }
+        .pagination-btn.active {
+            @apply bg-blue-500 text-white border-blue-500 hover:bg-blue-600;
+        }
+        .pagination-btn.disabled {
+            @apply opacity-50 cursor-not-allowed hover:bg-white;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-scale {
+            transition: transform 0.2s;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .modal {
+            transition: all 0.3s ease;
+        }
+        .modal-content {
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        .modal.hidden .modal-content {
+            transform: translateY(-20px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-roboto">
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-gradient-to-b from-blue-800 to-blue-900 text-white h-screen w-64 fixed left-0 top-0 overflow-y-auto shadow-lg z-40">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-8 flex items-center">
+                <i class="fas fa-hotel mr-3"></i>
+                <span>Hotel Manager</span>
+            </h2>
+            <ul class="space-y-3">
+                <li>
+                    <a th:href="@{/managerRooms}" class="flex items-center p-3 rounded-lg bg-blue-700 shadow-md">
+                        <i class="fas fa-door-open w-5 mr-3"></i> Quản lý phòng
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/managerBookings}" class="flex items-center p-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                        <i class="fas fa-calendar-alt w-5 mr-3"></i> Danh sách đặt phòng
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/managerHotel/notify}" class="flex items-center justify-between p-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-bell w-5 mr-3"></i> Thông báo
+                        </div>
+                        <span id="notificationBadge" class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </a>
+                </li>
+                <li class="mt-8 pt-6 border-t border-blue-700">
+                    <a th:href="@{/logout}" class="flex items-center p-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                        <i class="fas fa-sign-out-alt w-5 mr-3"></i> Đăng xuất
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="ml-64 w-full min-h-screen">
+        <div class="container mx-auto p-8">
+            <!-- Header with hotel info -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8 fade-in">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">
+                            <i class="fas fa-building mr-2 text-blue-500"></i>
+                            <span th:text="${hotel.hotelName}"></span>
+                        </h2>
+                        <p class="text-gray-600 mt-1">Quản lý danh sách phòng</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Tổng số phòng: <strong th:text="${#lists.size(rooms)}"></strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm phòng..."
+                               class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <select id="filterType" class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Tất cả loại phòng</option>
+                        <option value="Single">Single</option>
+                        <option value="Double">Double</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                    <!-- Add status filter dropdown -->
+                    <select id="filterStatus" class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Tất cả trạng thái</option>
+                        <option th:each="status : ${allStatuses}"
+                                th:value="${status.id}"
+                                th:text="${status.statusName}"></option>
+                    </select>
+                </div>
+                <button id="showAddFormBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200 flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Thêm phòng mới
+                </button>
+            </div>
+
+            <!-- Table container -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 fade-in">
+                <div class="table-container">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên Phòng</th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    Giá
+                                    <button id="sortPrice" class="ml-1 text-gray-400 hover:text-gray-600">
+                                        <i class="fas fa-sort"></i>
+                                    </button>
+                                </div>
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loại</th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="roomsTableBody">
+                        <tr th:each="room, roomStat : ${rooms}" class="hover:bg-blue-50 transition duration-150" th:if="${roomStat.index >= (page-1)*pageSize && roomStat.index < page*pageSize}">
+                            <td class="py-4 px-6 text-sm font-medium text-gray-900" th:text="${room.id}"></td>
+                            <td class="py-4 px-6 text-sm text-gray-700" th:text="${room.description}"></td>
+                            <td class="py-4 px-6 text-sm text-gray-700">
+                                <span th:text="${#numbers.formatDecimal(room.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
+                            </td>
+                            <td class="py-4 px-6 text-sm text-gray-700">
+                                <span th:if="${room.roomType != null}" class="px-2 py-1 text-xs font-medium rounded-full"
+                                      th:class="${room.roomType.typeName == 'Single' ? 'bg-green-100 text-green-800' :
+                                            (room.roomType.typeName == 'Double' ? 'bg-blue-100 text-blue-800' :
+                                            'bg-purple-100 text-purple-800')}"
+                                      th:text="${room.roomType.typeName}">
+                                </span>
+                                <span th:unless="${room.roomType != null}" class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                    Không có loại
+                                </span>
+                            </td>
+                            <!-- Add status column -->
+                            <td class="py-4 px-6 text-sm text-gray-700">
+                                <span th:if="${room.status != null}" class="px-2 py-1 text-xs font-medium rounded-full"
+                                      th:class="${room.status.statusName == 'Available' ? 'bg-green-100 text-green-800' :
+                                            (room.status.statusName == 'Occupied' ? 'bg-red-100 text-red-800' :
+                                            (room.status.statusName == 'Maintenance' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'))}"
+                                      th:text="${room.status.statusName}">
+                                </span>
+                                <span th:unless="${room.status != null}" class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                    Không có trạng thái
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-sm font-medium">
+                                <div class="flex space-x-3">
+                                    <button class="text-blue-600 hover:text-blue-800 hover-scale edit-room-btn"
+                                            th:data-room-id="${room.id}"
+                                            th:data-room-description="${room.description}"
+                                            th:data-room-price="${room.price}"
+                                            th:data-room-type="${room.roomType != null ? room.roomType.id : ''}"
+                                            th:data-room-status="${room.status != null ? room.status.id : ''}">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </button>
+                                    <button class="text-orange-600 hover:text-orange-800 hover-scale change-status-btn"
+                                            th:data-room-id="${room.id}"
+                                            th:data-room-status="${room.status != null ? room.status.id : ''}">
+                                        <i class="fas fa-exchange-alt"></i> Trạng thái
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800 hover-scale"
+                                            th:onclick="'confirmDelete(' + ${room.id} + ')'">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                    <div class="text-sm text-gray-500">
+                        Hiển thị <span id="startItem">1</span> đến <span id="endItem">10</span> trên tổng số <span id="totalItems" th:text="${#lists.size(rooms)}"></span> phòng
+                    </div>
+                    <div class="flex justify-center space-x-1" id="pagination">
+                        <button id="prevPage" class="pagination-btn disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <!-- Pagination buttons will be added dynamically -->
+                        <button id="nextPage" class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Room Modal -->
+<div id="addFormContainer" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="modal-content bg-white rounded-xl p-8 max-w-2xl w-full shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-plus-circle text-blue-500 mr-2"></i>
+                Thêm Phòng Mới
+            </h3>
+            <button type="button" id="closeAddFormBtn" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+
+        <form th:action="@{/managerRooms/add}" method="post" class="space-y-6">
+            <input type="hidden" name="hotel.id" th:value="${hotel.id}">
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Tên/Mô tả Phòng:</label>
+                <input type="text" name="description" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Giá (VNĐ):</label>
+                <input type="number" name="price" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Loại Phòng:</label>
+                <select name="roomType.id" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="">-- Chọn loại phòng --</option>
+                    <option value="1">Single</option>
+                    <option value="2">Double</option>
+                    <option value="3">Suite</option>
+                </select>
+            </div>
+            <!-- Add status selection dropdown -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Trạng thái Phòng:</label>
+                <select name="status.id" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="">-- Chọn trạng thái phòng --</option>
+                    <option th:each="status : ${allStatuses}"
+                            th:value="${status.id}"
+                            th:text="${status.statusName}"></option>
+                </select>
+            </div>
+
+            <div class="pt-4 flex space-x-3">
+                <button type="submit"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition duration-200 flex justify-center items-center">
+                    <i class="fas fa-plus mr-2"></i> Thêm Phòng
+                </button>
+                <button type="button" id="cancelAddBtn"
+                        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition duration-200">
+                    Hủy bỏ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Room Modal -->
+<div id="editFormContainer" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="modal-content bg-white rounded-xl p-8 max-w-2xl w-full shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-edit text-blue-500 mr-2"></i>
+                Chỉnh Sửa Thông Tin Phòng
+            </h3>
+            <button type="button" id="closeEditFormBtn" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+
+        <form id="editRoomForm" method="post" class="space-y-6">
+            <!-- Form action will be set dynamically in JavaScript -->
+            <input type="hidden" id="editRoomId" name="id">
+            <input type="hidden" name="hotel.id" th:value="${hotel.id}">
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Tên/Mô tả Phòng:</label>
+                <input type="text" id="editRoomDescription" name="description" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Giá (VNĐ):</label>
+                <input type="number" id="editRoomPrice" name="price" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Loại Phòng:</label>
+                <select id="editRoomType" name="roomType.id" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="">-- Chọn loại phòng --</option>
+                    <option value="1">Single</option>
+                    <option value="2">Double</option>
+                    <option value="3">Suite</option>
+                </select>
+            </div>
+            <!-- Add status selection dropdown to edit form -->
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Trạng thái Phòng:</label>
+                <select id="editRoomStatus" name="status.id" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="">-- Chọn trạng thái phòng --</option>
+                    <option th:each="status : ${allStatuses}"
+                            th:value="${status.id}"
+                            th:text="${status.statusName}"></option>
+                </select>
+            </div>
+
+            <div class="pt-4 flex space-x-3">
+                <button type="submit"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition duration-200 flex justify-center items-center">
+                    <i class="fas fa-save mr-2"></i> Lưu Thay Đổi
+                </button>
+                <button type="button" id="cancelEditBtn"
+                        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition duration-200">
+                    Hủy bỏ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Change Status Modal -->
+<div id="changeStatusModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="modal-content bg-white rounded-xl p-8 max-w-md w-full shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-exchange-alt text-orange-500 mr-2"></i>
+                Thay đổi trạng thái phòng
+            </h3>
+            <button type="button" id="closeStatusModalBtn" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+
+        <form id="changeStatusForm" th:action="@{/managerRooms/updateStatus}" method="post" class="space-y-6">
+            <input type="hidden" id="statusRoomId" name="id">
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Chọn trạng thái mới:</label>
+                <select id="newStatus" name="statusId" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option th:each="status : ${allStatuses}"
+                            th:value="${status.id}"
+                            th:text="${status.statusName}"></option>
+                </select>
+            </div>
+
+            <div class="pt-4 flex space-x-3">
+                <button type="submit"
+                        class="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition duration-200 flex justify-center items-center">
+                    <i class="fas fa-check mr-2"></i> Cập nhật trạng thái
+                </button>
+                <button type="button" id="cancelStatusBtn"
+                        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition duration-200">
+                    Hủy bỏ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+        <h3 class="text-xl font-bold mb-4">Xác nhận xóa phòng</h3>
+        <p class="mb-6 text-gray-600">Bạn có chắc chắn muốn xóa phòng này? Hành động này không thể hoàn tác.</p>
+        <div class="flex space-x-3">
+            <a id="confirmDeleteBtn" href="#" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-center">
+                Xóa phòng
+            </a>
+            <button id="cancelDeleteBtn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg">
+                Hủy bỏ
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add Form Toggle
+        const showAddFormBtn = document.getElementById("showAddFormBtn");
+        const addFormContainer = document.getElementById("addFormContainer");
+        const cancelAddBtn = document.getElementById("cancelAddBtn");
+        const closeAddFormBtn = document.getElementById("closeAddFormBtn");
+
+        function showAddForm() {
+            addFormContainer.classList.remove("hidden");
+        }
+
+        function hideAddForm() {
+            addFormContainer.classList.add("hidden");
+        }
+
+        if (showAddFormBtn) {
+            showAddFormBtn.addEventListener("click", showAddForm);
+        }
+
+        if (cancelAddBtn) {
+            cancelAddBtn.addEventListener("click", hideAddForm);
+        }
+
+        if (closeAddFormBtn) {
+            closeAddFormBtn.addEventListener("click", hideAddForm);
+        }
+
+        // Close modal when clicking outside the form
+        if (addFormContainer) {
+            addFormContainer.addEventListener("click", function(e) {
+                if (e.target === addFormContainer) {
+                    hideAddForm();
+                }
+            });
+        }
+
+        // Change status button handlers
+        const changeStatusBtns = document.querySelectorAll('.change-status-btn');
+        const changeStatusModal = document.getElementById('changeStatusModal');
+        const closeStatusModalBtn = document.getElementById('closeStatusModalBtn');
+        const cancelStatusBtn = document.getElementById('cancelStatusBtn');
+        const statusRoomId = document.getElementById('statusRoomId');
+        const newStatus = document.getElementById('newStatus');
+        const changeStatusForm = document.getElementById('changeStatusForm');
+
+        // Handle opening status change modal
+        changeStatusBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const roomId = this.getAttribute('data-room-id');
+                const currentStatus = this.getAttribute('data-room-status');
+
+                statusRoomId.value = roomId;
+                newStatus.value = currentStatus || '';
+
+                // Update form action with the room ID
+                changeStatusForm.action = `/managerRooms/updateStatus/${roomId}`;
+
+                // Show modal
+                changeStatusModal.classList.remove('hidden');
+            });
+        });
+
+        // Close status modal handlers
+        if (closeStatusModalBtn && cancelStatusBtn) {
+            [closeStatusModalBtn, cancelStatusBtn].forEach(btn => {
+                btn.addEventListener('click', function() {
+                    changeStatusModal.classList.add('hidden');
+                });
+            });
+        }
+
+        // Edit Form Toggle
+        const editButtons = document.querySelectorAll(".edit-room-btn");
+        const editFormContainer = document.getElementById("editFormContainer");
+        const cancelEditBtn = document.getElementById("cancelEditBtn");
+        const closeEditFormBtn = document.getElementById("closeEditFormBtn");
+        const editRoomForm = document.getElementById("editRoomForm");
+        const editRoomId = document.getElementById("editRoomId");
+        const editRoomDescription = document.getElementById("editRoomDescription");
+        const editRoomPrice = document.getElementById("editRoomPrice");
+        const editRoomType = document.getElementById("editRoomType");
+        const editRoomStatus = document.getElementById("editRoomStatus"); // Optional status field
+
+        function hideEditForm() {
+            editFormContainer.classList.add("hidden");
+        }
+
+        // Edit room functionality
+        editButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                // Get room data from data attributes
+                const roomId = this.getAttribute("data-room-id");
+                const roomDescription = this.getAttribute("data-room-description");
+                const roomPrice = this.getAttribute("data-room-price");
+                const roomType = this.getAttribute("data-room-type");
+                const roomStatus = this.getAttribute("data-room-status"); // Optional status
+
+                // Fill form with room data
+                editRoomId.value = roomId;
+                editRoomDescription.value = roomDescription;
+                editRoomPrice.value = roomPrice;
+                editRoomType.value = roomType;
+
+                // Set status if field exists
+                if (editRoomStatus && roomStatus) {
+                    editRoomStatus.value = roomStatus;
+                }
+
+                // Set the correct form action URL with the room ID
+                editRoomForm.action = `/managerRooms/update/${roomId}`;
+
+                // Show edit form
+                editFormContainer.classList.remove("hidden");
+            });
+        });
+
+        if (cancelEditBtn) {
+            cancelEditBtn.addEventListener("click", hideEditForm);
+        }
+
+        if (closeEditFormBtn) {
+            closeEditFormBtn.addEventListener("click", hideEditForm);
+        }
+
+        // Close modal when clicking outside the form
+        if (editFormContainer) {
+            editFormContainer.addEventListener("click", function(e) {
+                if (e.target === editFormContainer) {
+                    hideEditForm();
+                }
+            });
+        }
+
+        // Delete Room Functionality
+        const deleteButtons = document.querySelectorAll(".delete-room-btn");
+        const deleteModal = document.getElementById("deleteModal") || document.getElementById("deleteRoomModal");
+        const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+        const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+        const closeDeleteModalBtn = document.getElementById("closeDeleteModalBtn");
+        const deleteRoomId = document.getElementById("deleteRoomId");
+        const deleteRoomForm = document.getElementById("deleteRoomForm");
+
+        // Function to confirm delete
+        window.confirmDelete = function(roomId) {
+            if (deleteModal) {
+                deleteModal.classList.remove("hidden");
+
+                // Handle both types of delete implementations
+                if (confirmDeleteBtn) {
+                    confirmDeleteBtn.href = `/managerRooms/delete/${roomId}?userId=[[${hotel.user.id}]]`;
+                }
+
+                if (deleteRoomId && deleteRoomForm) {
+                    deleteRoomId.value = roomId;
+                    deleteRoomForm.action = `/managerRooms/delete/${roomId}`;
+                }
+            }
+        };
+
+        // Direct delete button handlers
+        if (deleteButtons.length > 0 && deleteModal) {
+            deleteButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const roomId = this.getAttribute("data-room-id");
+                    window.confirmDelete(roomId);
+                });
+            });
+        }
+
+        // Close delete modal buttons
+        const deleteModalCloseButtons = [cancelDeleteBtn, closeDeleteModalBtn].filter(Boolean);
+        deleteModalCloseButtons.forEach(btn => {
+            if (btn) {
+                btn.addEventListener("click", function() {
+                    deleteModal.classList.add("hidden");
+                });
+            }
+        });
+
+        // Close modal when clicking outside
+        if (deleteModal) {
+            deleteModal.addEventListener("click", function(e) {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.add("hidden");
+                }
+            });
+        }
+
+        // Pagination
+        const pageSize = 5; // Number of items per page
+        let currentPage = 1;
+        const totalItemsElement = document.getElementById("totalItems");
+
+        if (totalItemsElement) {
+            const totalItems = parseInt(totalItemsElement.textContent);
+            const totalPages = Math.ceil(totalItems / pageSize);
+
+            const paginationContainer = document.getElementById("pagination");
+            const prevPageBtn = document.getElementById("prevPage");
+            const nextPageBtn = document.getElementById("nextPage");
+            const startItemSpan = document.getElementById("startItem");
+            const endItemSpan = document.getElementById("endItem");
+
+            // Generate pagination buttons
+            function generatePaginationButtons() {
+                if (!paginationContainer) return;
+
+                // Clear existing page buttons (but not prev/next)
+                const pageButtons = document.querySelectorAll(".page-button");
+                pageButtons.forEach(button => button.remove());
+
+                // Determine which page buttons to show
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+
+                // Adjust when near end
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+
+                // Insert page buttons before next button
+                for (let i = startPage; i <= endPage; i++) {
+                    const button = document.createElement("button");
+                    button.classList.add("pagination-btn", "page-button");
+                    button.textContent = i;
+
+                    if (i === currentPage) {
+                        button.classList.add("active");
+                    }
+
+                    button.addEventListener("click", () => {
+                        goToPage(i);
+                    });
+
+                    paginationContainer.insertBefore(button, nextPageBtn);
+                }
+            }
+
+            // Update display to show items for current page
+            function updateDisplay() {
+                const rows = document.querySelectorAll("#roomsTableBody tr");
+                const startIndex = (currentPage - 1) * pageSize;
+                const endIndex = Math.min(startIndex + pageSize, totalItems);
+
+                // Show items for current page, hide others
+                rows.forEach((row, index) => {
+                    if (index >= startIndex && index < endIndex) {
+                        row.classList.remove("hidden");
+                    } else {
+                        row.classList.add("hidden");
+                    }
+                });
+
+                // Update item count display
+                if (startItemSpan && endItemSpan) {
+                    startItemSpan.textContent = startIndex + 1;
+                    endItemSpan.textContent = endIndex;
+                }
+
+                // Update prev/next button states
+                if (prevPageBtn && nextPageBtn) {
+                    prevPageBtn.classList.toggle("disabled", currentPage === 1);
+                    nextPageBtn.classList.toggle("disabled", currentPage === totalPages);
+                }
+            }
+
+            // Go to specific page
+            function goToPage(page) {
+                if (page < 1 || page > totalPages || page === currentPage) {
+                    return;
+                }
+
+                currentPage = page;
+                updateDisplay();
+                generatePaginationButtons();
+            }
+
+            // Event listeners for pagination
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener("click", () => {
+                    if (currentPage > 1) {
+                        goToPage(currentPage - 1);
+                    }
+                });
+            }
+
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener("click", () => {
+                    if (currentPage < totalPages) {
+                        goToPage(currentPage + 1);
+                    }
+                });
+            }
+
+            // Initialize pagination
+            generatePaginationButtons();
+            updateDisplay();
+        }
+
+        // Search and filter functionality
+        const searchInput = document.getElementById("searchInput") || document.getElementById("searchRoom");
+        const filterType = document.getElementById("filterType");
+        const filterStatus = document.getElementById("filterStatus");
+
+        function filterRooms() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const selectedType = filterType ? filterType.value : '';
+            const selectedStatus = filterStatus ? filterStatus.value : '';
+            const rows = document.querySelectorAll("#roomsTableBody tr");
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                // Find the relevant cells for filtering
+                const roomName = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+                const roomNumber = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+                const roomType = row.querySelector("td:nth-child(4)") ?
+                    row.querySelector("td:nth-child(4)").textContent.trim() : '';
+                const roomStatus = row.querySelector("td:nth-child(5) span") ?
+                    row.querySelector("td:nth-child(5) span").textContent.trim() : '';
+
+                const matchesSearch = !searchTerm ||
+                    roomName.includes(searchTerm) ||
+                    roomNumber.includes(searchTerm);
+                const matchesType = !selectedType || roomType.includes(selectedType);
+                const matchesStatus = !selectedStatus || roomStatus.includes(selectedStatus);
+
+                if (matchesSearch && matchesType && matchesStatus) {
+                    row.dataset.visible = "true";
+                    visibleCount++;
+                } else {
+                    row.dataset.visible = "false";
+                }
+            });
+
+            // Re-calculate pagination based on filtered items
+            const newTotalPages = Math.ceil(visibleCount / pageSize);
+            if (currentPage > newTotalPages) {
+                currentPage = Math.max(1, newTotalPages);
+            }
+
+            const totalItemsElement = document.getElementById("totalItems");
+            if (totalItemsElement) {
+                totalItemsElement.textContent = visibleCount;
+            }
+
+            updateFilteredDisplay();
+
+            if (document.getElementById("pagination")) {
+                generatePaginationButtons();
+            }
+        }
+
+        function updateFilteredDisplay() {
+            const rows = document.querySelectorAll("#roomsTableBody tr");
+            let visibleRows = Array.from(rows).filter(row => row.dataset.visible === "true");
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, visibleRows.length);
+
+            // Handle simple filtering without pagination
+            if (!document.getElementById("pagination")) {
+                rows.forEach(row => {
+                    if (row.dataset.visible === "true") {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                return;
+            }
+
+            // Hide all rows first
+            rows.forEach(row => {
+                row.classList.add("hidden");
+            });
+
+            // Show only filtered rows for current page
+            visibleRows.slice(startIndex, endIndex).forEach(row => {
+                row.classList.remove("hidden");
+            });
+
+            // Update item count display
+            const startItemSpan = document.getElementById("startItem");
+            const endItemSpan = document.getElementById("endItem");
+
+            if (startItemSpan && endItemSpan) {
+                startItemSpan.textContent = visibleRows.length > 0 ? startIndex + 1 : 0;
+                endItemSpan.textContent = endIndex;
+            }
+        }
+
+        // Add event listeners for filtering if elements exist
+        if (searchInput) {
+            searchInput.addEventListener("input", filterRooms);
+        }
+
+        if (filterType) {
+            filterType.addEventListener("change", filterRooms);
+        }
+
+        if (filterStatus) {
+            filterStatus.addEventListener("change", filterRooms);
+        }
+
+        // Price sorting
+        const sortPriceBtn = document.getElementById("sortPrice");
+        if (sortPriceBtn) {
+            let priceAscending = true;
+
+            sortPriceBtn.addEventListener("click", function() {
+                const rows = Array.from(document.querySelectorAll("#roomsTableBody tr"));
+
+                rows.sort((a, b) => {
+                    const priceA = parseFloat(a.children[2].textContent.replace(/[^\d.-]/g, ''));
+                    const priceB = parseFloat(b.children[2].textContent.replace(/[^\d.-]/g, ''));
+
+                    return priceAscending ? priceA - priceB : priceB - priceA;
+                });
+
+                const tbody = document.getElementById("roomsTableBody");
+                rows.forEach(row => tbody.appendChild(row));
+
+                // Toggle sort direction and update icon
+                priceAscending = !priceAscending;
+                this.innerHTML = priceAscending ?
+                    '<i class="fas fa-sort-up"></i>' :
+                    '<i class="fas fa-sort-down"></i>';
+
+                // Reset to page 1 after sorting
+                currentPage = 1;
+                if (document.getElementById("pagination")) {
+                    updateDisplay();
+                    generatePaginationButtons();
+                }
+            });
+        }
+
+        // Form validation for room prices
+        const validatePriceInput = (input) => {
+            const value = parseFloat(input.value);
+            if (isNaN(value) || value <= 0) {
+                input.setCustomValidity('Price must be a positive number');
+            } else {
+                input.setCustomValidity('');
+            }
+        };
+
+        if (editRoomPrice) {
+            editRoomPrice.addEventListener('input', function() {
+                validatePriceInput(this);
+            });
+        }
+
+        const addRoomPrice = document.getElementById('addRoomPrice');
+        if (addRoomPrice) {
+            addRoomPrice.addEventListener('input', function() {
+                validatePriceInput(this);
+            });
+        }
+
+        // Load notification count
+        function loadNotificationCount() {
+            fetch('/managerHotel/notify/count')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationBadge = document.getElementById('notificationBadge');
+                    if (notificationBadge) {
+                        if (data.count > 0) {
+                            notificationBadge.textContent = data.count;
+                            notificationBadge.classList.remove('hidden');
+                        } else {
+                            notificationBadge.classList.add('hidden');
+                        }
+                    }
+                })
+                .catch(error => console.error('Error loading notification count:', error));
+        }
+
+        // Initialize notification count
+        loadNotificationCount();
+
+        // Refresh notification count every minute
+        setInterval(loadNotificationCount, 60000);
+    });
+</script>

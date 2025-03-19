@@ -12,21 +12,25 @@ public class Room {
     private Double price;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
     public Room() {}
 
-    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel) {
+    public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, Status status) {
         this.id = id;
         this.price = price;
         this.description = description;
         this.roomType = roomType;
         this.hotel = hotel;
+        this.status = status;
     }
 
     public Long getId() {
@@ -61,7 +65,13 @@ public class Room {
         this.roomType = roomType;
     }
 
+    public Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public Hotel getHotel() {
         return hotel;

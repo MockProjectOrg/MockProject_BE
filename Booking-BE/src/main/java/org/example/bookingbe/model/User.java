@@ -45,7 +45,7 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public User() {}
+    public User(Long userId) {}
 
     public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
         this.id = id;
@@ -56,6 +56,11 @@ public class User {
         this.address = address;
         this.role = role;
     }
+
+    public User() {
+
+    }
+
 
     public Long getId() {
         return id;

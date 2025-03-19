@@ -1,324 +1,92 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-<!--    <link href="../static/register.css" rel="stylesheet">-->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 50px;
-            border-bottom: 2px solid #deb887;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: white;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #222;
-        }
-
-        .logo span {
-            color: #deb887;
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-        }
-
-        .nav-links li {
-            margin: 0 15px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #222;
-            font-size: 18px;
-            position: relative;
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 2px;
-            background-color: #deb887;
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-signup {
-            background-color: #deb887;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .btn-signup:hover {
-            background-color: #c49163;
-        }
-
-        .login-container {
-            width: 500px;
-            height: 500px;
-            padding: 20px;
-        }
-
-        .wrap-login{
-            display: flex;
-            background: white;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 900px;
-            height: 620px;
-        }
-
-        .img-login img{
-            width: 350px;
-            height: 572px;
-            display: block;
-        }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            /*font-weight: bold;*/
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 10px;
-            background: #deb887;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .login-btn:hover {
-            background: #c49163;
-        }
-
-        .slogan {
-            padding-bottom: 20px;
-            text-align: center;
-            color: #deb887;
-        }
-
-        /*.social-login{*/
-        /*    text-align: center;*/
-        /*    padding-top: 20px;*/
-        /*}*/
-
-        .fb-btn img, .google-btn img {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        .social-login p {
-            margin-bottom: 20px;
-        }
-
-        .table-form{
-            width: 460px;
-        }
-        .table-form input{
-            width: 200px;
-
-        }
-
-        /*.radio-gender{*/
-        /*    display: flex;*/
-        /*    margin: 20px;*/
-        /*}*/
-        .select-gender{
-            display: flex;
-            flex-direction: column;
-        }
-        .select-gender label{
-            margin-bottom: 5px;
-        }
-        .option-gender{
-            width: 150px;
-            height: 32px;
-        }
-    </style>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
 </head>
-<body>
-<nav class="navbar">
-    <div class="logo">Sona<span>.</span></div>
-    <ul class="nav-links">
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Rooms</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Pages</a></li>
-        <li><a href="#">News</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-    <div class="nav-right">
-        <button class="btn-signup" ><a href="/api/login" style="color: white; text-decoration: none">Login</a></button>
-    </div>
-</nav>
-<div class="login-main" style="width: 100%; height: 500px">
-    <div class="wrap-login">
-        <div class="img-login">
-            <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D">
+<body class="font-roboto">
+<div class="min-h-screen flex">
+  <!-- Left Section -->
+  <div class="w-full lg:w-1/2 flex flex-col justify-center items-center bg-white p-8">
+    <div class="w-full max-w-md">
+      <div class="flex items-center mb-8">
+        <img alt="Company Logo" class="mr-2" height="30" src="https://storage.googleapis.com/a1aa/image/algcnwnFLdd5rTZH31dhqj6-TW33g8O3BPNzvRiycow.jpg" width="30"/>
+        <span class="text-xl font-bold">
+       Werdience Inc
+      </span>
+      </div>
+      <h1 class="text-3xl font-bold text-blue-900 mb-2">
+        Nice to meet you!
+      </h1>
+      <p class="text-lg text-gray-600 mb-8">
+        Let’s Sign In Your Account
+      </p>
+      <form>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700">
+              Username
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="text"/>
+          </div>
+          <div>
+            <label class="block text-gray-700">
+              Nick Name
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="text"/>
+          </div>
+          <div>
+            <label class="block text-gray-700">
+              Phone Number
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="text"/>
+          </div>
+          <div>
+            <label class="block text-gray-700">
+              Email
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="email"/>
+          </div>
+          <div>
+            <label class="block text-gray-700">
+              Password
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="password"/>
+          </div>
+          <div>
+            <label class="block text-gray-700">
+              Confirm Password
+            </label>
+            <input class="w-full p-3 border-2 border-yellow-500 rounded-md focus:outline-none focus:border-yellow-600" type="password"/>
+          </div>
         </div>
-        <div class="login-container">
-            <h2>Hi!</h2>
-            <div class="slogan">
-                <p>Enjoy the perfect trip with us!!</p>
-            </div>
-            <form action="/api/Doregister" method="post" th:object="${user}" onsubmit="validatePasswords(event)">
-                <table class="table-form">
-                    <tr>
-                        <td>
-                            <div class="input-group">
-                                <label for="firstname">First Name</label>
-                                <input type="text" id="firstname" name="firstname" th:field="*{firstName}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <label for="lastname">Last Name</label>
-                                <input type="text" id="lastname" name="lastname" th:field="*{lastName}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="input-group">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" name="username" th:field="*{userName}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <label for="email">Email</label>
-                                <input type="text" id="email" name="email" th:field="*{email}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="input-group">
-                                <label for="birthday">Birthday</label>
-                                <input type="date" id="birthday" name="birthday" th:field="*{birthday}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></p>
-                            </div>
-                        </td>
-                        <td class="select-gender">
-                            <label>Gender</label>
-                            <select class="option-gender" name="gender" id="gender" th:field="*{gender}">
-                                <option th:value="1" th:text="Male">Male</option>
-                                <option th:value="2" th:text="Female">Female</option>
-                                <option th:value="3" th:text="Other">Other</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="input-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" name="password" th:field="*{password}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <label for="re-password">Re Password</label>
-                                <input type="password" id="re-password" name="re-password" required>
-                                <span style="color: red" id="password-error"></span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="input-group">
-                                <label for="phone">Phone</label>
-                                <input type="text" id="phone" name="phone" th:field="*{phone}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <label for="address">Address</label>
-                                <input type="text" id="address" name="address" th:field="*{address}" required>
-                                <p style="color: red" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <button type="submit" class="login-btn">REGISTER</button>
-            </form>
+        <div class="flex justify-between items-center mb-4">
+          <a class="text-sm text-gray-600" href="#">
+            Already have an account?
+            <span class="text-blue-600">
+         Login Now
+        </span>
+          </a>
         </div>
+        <button class="w-full bg-blue-900 text-white p-3 rounded-md" type="submit">
+          Sign In
+        </button>
+      </form>
+      <div class="flex justify-between items-center mt-8 text-sm text-gray-600">
+        <a href="#">
+          Privacy Policy
+        </a>
+        <a href="#">
+          Cookies Settings
+        </a>
+      </div>
     </div>
-
+  </div>
+  <!-- Right Section -->
+  <div class="hidden lg:flex w-1/2 bg-blue-900 items-center justify-center">
+    <img alt="Illustration of people analyzing data on a large screen and a laptop" class="max-w-full h-auto" height="600" src="https://storage.googleapis.com/a1aa/image/dCAHCwrvm-QU0oQW49RsKz73ZOuBXHcEAZRWRCZ4t7A.jpg" width="600"/>
+  </div>
 </div>
 </body>
-<script>
-    function validatePasswords(event) {
-        var password = document.getElementById("password").value;
-        var repassword = document.getElementById("re-password").value;
-        var errorSpan = document.getElementById("password-error");
-
-        if (password !== repassword) {
-            errorSpan.textContent = "Mật khẩu không trùng khớp!";
-            event.preventDefault();
-        } else {
-            errorSpan.textContent = "";
-        }
-    }
-</script>
 </html>

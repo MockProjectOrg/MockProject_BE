@@ -12,6 +12,8 @@ public class Notify {
     private Long id;
     @Column(name = "date_notify", columnDefinition = "DATETIME")
     private LocalDateTime dateNotify;
+    @Column(name = "is_read")
+    private Boolean isRead = false;
 
     public Notify() {
     }
@@ -30,5 +32,13 @@ public class Notify {
 
     public void setDateNotify(LocalDateTime dateNotify) {
         this.dateNotify = dateNotify;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 }
