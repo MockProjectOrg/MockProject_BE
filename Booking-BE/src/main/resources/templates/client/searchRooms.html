@@ -1,53 +1,260 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
   <meta charset="UTF-8">
-  <title>Danh sách khách sạn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSeaside Hotel</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    .slider-container {
+      padding: 20px;
+    }
+    .price-input {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .price-input input {
+      width: 45%;
+      text-align: center;
+      font-weight: bold;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .header-title {
+        font-family: 'Playfair Display', serif;
+    }
+    .btn-booknow {
+        background-color: white;
+        color: black;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .btn-booknow:hover {
+        background-color: #FFA500;
+        color: white;
+    }
+    .pagination-button {
+        background-color: #FFA500;
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+    }
+    .pagination-button:hover {
+        background-color: #FF8C00;
+    }
+  </style>
 </head>
 <body>
-<div class="container mt-4">
-  <h2>Danh sách khách sạn</h2>
-  <form action="/hotels" method="get">
-    <input type="text" name="search" placeholder="Search by name or location" class="form-control" value="${search}">
-    <button type="submit" class="btn btn-primary mt-2">Search</button>
-  </form>
+<header class="relative">
+  <img alt="Hotel room background" class="w-full h-96 object-cover" height="500" src="https://storage.googleapis.com/a1aa/image/V-UuEUXzqudt45wYgxTaSOTlnyx23j62Rcx5_m4kh_U.jpg" width="1920"/>
+  <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col items-center justify-center">
+    <div class="container mx-auto px-4 flex justify-between items-center py-4">
+      <div class="text-white text-3xl font-bold header-title">
 
-  <table class="table table-bordered">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Tên khách sạn</th>
-      <th>Địa chỉ</th>
-      <th>Mô tả</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="hotel : ${hotels}">
-      <td th:text="${hotel.id}"></td>
-      <td th:text="${hotel.hotelName}"></td>
-      <td th:text="${hotel.address}"></td>
-      <td th:text="${hotel.description}"></td>
-    </tr>
-    </tbody>
-  </table>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-tripadvisor"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a class="bg-orange-500 text-white px-4 py-2 rounded font-semibold" href="#">
+          BOOKING NOW
+        </a>
+        <a class="text-white font-semibold flex items-center" href="#">
+          <img alt="Flag of the United Kingdom" class="inline-block mr-1" height="20" src="https://storage.googleapis.com/a1aa/image/pVnxoppQCf5vNH8CvFsuY-FJxueNX2Zke3sWRZG4Dg4.jpg" width="20"/>
+          EN
+          <i class="fas fa-chevron-down ml-1"></i>
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fas fa-user"></i>
+          Login
+        </a>
+        <a class="text-white font-semibold" href="#">
+          <i class="fas fa-user-plus"></i>
+          Register
+        </a>
+      </div>
+    </div>
+    <nav class="relative z-20 w-full">
+      <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <a class="text-3xl font-bold hero-text text-white" th:href="@{/home}">
+          Sona.
+        </a>
+        <ul class="flex space-x-6">
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/home}">
+              Home
+            </a>
+          </li>
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/about}">
+              About Us
+            </a>
+          </li>
+          <li>
+            <a class="text-white hover:text-orange-500" th:href="@{/contact}">
+              Contact
+            </a>
+          </li>
+        </ul>
+        <div class="relative">
+          <input class="border border-orange-500 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." type="text"/>
+          <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+        </div>
+      </div>
+    </nav>
+    <div class="text-center mt-10">
+      <h1 class="text-5xl text-white header-title">Select</h1>
+      <h2 class="text-4xl text-white header-title">ROOMS</h2>
+    </div>
+  </div>
+</header>
+<div class="container mt-5">
+  <div class="row">
+    <!-- Cột bên trái: Form tìm kiếm -->
+    <div class="col-md-4">
+      <div class="card p-4 shadow-sm">
+        <h4 class="text-center">Bộ lọc tìm kiếm</h4>
+        <form action="/api/user/searchRooms" method="get">
+          <div class="mb-3">
+            <label for="hotel" class="form-label">Khách sạn:</label>
+            <input type="number" id="hotel" name="hotelId" class="form-control" placeholder="Nhập ID khách sạn">
+          </div>
+          <div class="mb-3">
+            <label for="roomType" class="form-label">Loại phòng:</label>
+            <input type="number" id="roomType" name="roomTypeId" class="form-control" placeholder="Nhập ID loại phòng">
+          </div>
 
-  <h3>Thêm khách sạn mới</h3>
-  <form action="/add-hotel" method="post">
-    <div class="mb-3">
-      <label class="form-label">Tên khách sạn</label>
-      <input type="text" name="hotelName" class="form-control" required>
+          <!-- Thanh trượt giá -->
+          <div class="mb-3">
+            <label class="form-label">Khoảng giá (VNĐ):</label>
+            <div class="slider-container">
+              <div id="price-slider"></div>
+            </div>
+            <div class="price-input">
+              <input type="text" id="minPrice" name="minPrice" readonly>
+              <span> - </span>
+              <input type="text" id="maxPrice" name="maxPrice" readonly>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label">Địa chỉ</label>
-      <input type="text" name="address" class="form-control" required>
+
+    <!-- Cột bên phải: Kết quả tìm kiếm -->
+    <div class="col-md-8">
+      <h3 class="text-center mb-4">🏠 Kết quả tìm kiếm</h3>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" th:each="room : ${rooms}">
+          <div class="card shadow-lg border-0 rounded-4">
+            <!-- Hiển thị hình ảnh -->
+            <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="card-img-top rounded-top" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+              <h5 class="card-title text-primary fw-bold">Phòng #<span th:text="${room.id}"></span></h5>
+              <p class="card-text"><strong>💰 Giá:</strong> <span th:text="${room.price} + ' VNĐ'"></span></p>
+              <p class="card-text"><strong>📜 Mô tả:</strong> <span th:text="${room.description}"></span></p>
+              <div class="text-end">
+                <a href="#" class="btn btn-primary btn-sm">Chi tiết</a>
+                <a href="#" class="btn btn-success btn-sm">Đặt phòng</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label">Mô tả</label>
-      <textarea name="description" class="form-control" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Thêm khách sạn</button>
-  </form>
+
+
+  </div>
 </div>
+
+<footer class="bg-gray-800 text-white py-8">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 class="text-xl font-bold mb-2">Seaside Hotel</h3>
+        <p class="text-gray-400">123 Beach Avenue, Seaside City, CA 12345</p>
+        <p class="text-gray-400">Phone: (123) 456-7890</p>
+        <p class="text-gray-400">Email: info@seasidehotel.com</p>
+      </div>
+      <div class="space-x-4">
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-facebook-f"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-twitter"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-instagram"></i></a>
+        <a class="text-gray-400 hover:text-white" href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <p class="text-gray-400">&copy; 2023 Seaside Hotel. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    let minPrice = 0;
+    let maxPrice = 8000000; // Giới hạn cao nhất, có thể thay đổi
+
+    $("#price-slider").slider({
+      range: true,
+      min: minPrice,
+      max: maxPrice,
+      values: [minPrice, maxPrice],
+      step: 10000,
+      slide: function (event, ui) {
+        $("#minPrice").val(ui.values[0].toLocaleString('vi-VN') + " đ");
+        $("#maxPrice").val(ui.values[1].toLocaleString('vi-VN') + " đ");
+      }
+    });
+
+    // Cập nhật giá trị ban đầu
+    $("#minPrice").val($("#price-slider").slider("values", 0).toLocaleString('vi-VN') + " đ");
+    $("#maxPrice").val($("#price-slider").slider("values", 1).toLocaleString('vi-VN') + " đ");
+
+    // Xử lý form trước khi gửi request
+    $("form").on("submit", function () {
+      let min = $("#minPrice").val().replace(/\D/g, ""); // Loại bỏ mọi ký tự không phải số
+      let max = $("#maxPrice").val().replace(/\D/g, "");
+
+      $("#minPrice").val(min);
+      $("#maxPrice").val(max);
+    });
+  });
+
+  function updatePrice(value) {
+      document.getElementById('priceValue').innerText = '$' + value;
+  }
+</script>
+
+
 </body>
 </html>

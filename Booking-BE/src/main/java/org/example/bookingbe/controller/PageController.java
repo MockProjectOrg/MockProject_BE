@@ -14,7 +14,7 @@ public class PageController {
         return "redirect:/home";
     }
     //HomePage
-    @GetMapping("/home")
+    @GetMapping("/homePage")
     public String homePage() {
         return "client/homePage";
     }
@@ -45,8 +45,6 @@ public class PageController {
 //        }
 //        return "redirect:/managerRooms?userId=" + userId; // Đảm bảo userId được truyền khi load trang
 //    }
-
-
 
 
 

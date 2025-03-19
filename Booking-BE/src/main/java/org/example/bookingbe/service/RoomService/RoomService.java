@@ -109,5 +109,12 @@ public class RoomService implements IRoomService {
 
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
+
     }
+
+    @Override
+    public List<Room> searchRooms(Long hotelId, Long roomTypeId, Double minPrice, Double maxPrice) {
+        return roomRepo.searchRooms(hotelId, roomTypeId, minPrice, maxPrice);
+    }
+
 }

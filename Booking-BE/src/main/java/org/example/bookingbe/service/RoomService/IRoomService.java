@@ -11,5 +11,7 @@ public interface IRoomService {
     Room updateRoom(Long roomId, Room updatedRoom, Long userId);
     void deleteRoom(Long roomId, Long userId);
 
+    List<Room> searchRooms(Long hotelId, Long roomTypeId, Double minPrice, Double maxPrice);
+
     Optional<Room> getRoomById(Long roomId);
 }

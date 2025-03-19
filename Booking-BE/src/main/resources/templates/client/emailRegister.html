@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chào Mừng Bạn Đến Với Nền Tảng Booking Của Chúng Tôi</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border: 1px solid #dddddd;
+        overflow: hidden;
+        margin: 30px auto;
+    }
+
+    .header img {
+        width: 100%;
+        height: 350px;
+        display: block;
+        object-fit: cover;
+    }
+
+    .content {
+        padding: 20px 30px;
+        text-align: center;
+    }
+
+    .content h1 {
+        font-size: 26px;
+        font-weight: bold;
+        color: #f48023;
+        margin-bottom: 10px;
+    }
+
+    .content p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .username-box {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .username-box p {
+        margin: 8px 0;
+        font-size: 15px;
+        color: #333;
+    }
+
+    .username-box .username {
+        font-size: 18px;
+        font-weight: bold;
+        color: #222;
+    }
+
+    .button {
+        background: #f48023;
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+        color: white;
+        text-decoration: none;
+
+    }
+
+    .button:hover {
+        background: #d4691f;
+    }
+
+    .email-footer {
+        background: #f4f4f4;
+        padding: 15px;
+        text-align: center;
+        font-size: 13px;
+        color: #888;
+    }
+
+    .email-footer a {
+        color: #f48023;
+        text-decoration: none;
+    }
+
+    .email-footer a:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <!-- Header Section -->
+  <div class="header">
+    <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D"
+         alt="Background image with various game characters">
+  </div>
+
+  <!-- Main Content Section -->
+  <div class="content">
+    <h1>Chào Mừng Bạn Đến Với Nền Tảng Đặt Phòng Của Chúng Tôi</h1>
+    <p>Chúc mừng! Bạn đã tạo tài khoản thành công.</p>
+    <div class="username-box">
+      <p>Chào <strong th:text="${name}"></strong></p>
+      <p>Cảm ơn bạn đã đăng ký tài khoản trên diễn đàn công nghệ của chúng tôi. Tài khoản của bạn đã được kích hoạt thành công!</p>
+      <p>Bạn có thể bắt đầu khám phá các chủ đề thú vị, đặt câu hỏi và thảo luận ngay bây giờ.</p>
+    </div>
+    <a style="color: white" href="http://localhost:8080/api/login" class="button">Truy cập diễn đàn</a>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="email-footer">
+    <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ chúng tôi qua <a href="mailto:iamdev2k3@gmail.com">iamdev2k3@gmail.com</a>.</p>
+    <p>&copy; 2024 Diễn đàn Công nghệ. All rights reserved.</p>
+  </div>
+</div>
+</body>
+
+</html>

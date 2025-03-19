@@ -14,5 +14,13 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r JOIN FETCH r.roomType WHERE r.hotel.id = :hotelId")
     List<Room> findRoomsByHotel(@Param("hotelId") Long hotelId);
 
-
+    @Query("SELECT r FROM Room r WHERE " +
+            "(:hotelId IS NULL OR r.hotel.id = :hotelId) AND " +
+            "(:roomTypeId IS NULL OR r.roomType.id = :roomTypeId) AND " +
+            "(:minPrice IS NULL OR r.price >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR r.price <= :maxPrice)")
+    List<Room> searchRooms(@Param("hotelId") Long hotelId,
+                           @Param("roomTypeId") Long roomTypeId,
+                           @Param("minPrice") Double minPrice,
+                           @Param("maxPrice") Double maxPrice);
 }
