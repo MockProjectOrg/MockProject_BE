@@ -140,4 +140,10 @@ public class RoomService implements IRoomService {
         return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
 
     }
+
+    @Override
+    public List<Room> getAvailableRoomsByHotel(Long hotelId) {
+        return roomRepo.findByHotelIdAndStatusId(hotelId, 4L);
+    }
+
 }

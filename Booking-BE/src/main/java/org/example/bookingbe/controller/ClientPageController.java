@@ -23,7 +23,7 @@ public class ClientPageController {
         return "redirect:/home";
     }
     //HomePage
-    @GetMapping("/homePage")
+    @GetMapping("/home")
     public String homePage() {
         return "client/homePage";
     }

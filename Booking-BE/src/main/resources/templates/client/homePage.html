@@ -61,26 +61,16 @@
         <i class="fas fa-chevron-down">
         </i>
       </a>
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a th:if="${username == null}" class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a th:if="${username == null}" class="nav-link" href="/register">Register</a>
-        </li>
-        <li class="nav-item dropdown" th:if="${username != null}">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <span th:text="${username}"></span>
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li th:if="${session.userId != null}">
-              <a href="/api/user/userProfile" th:text="${user != null ? user.userName : 'Profile'}">Profile</a>
-            </li>
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-
+      <a class="text-white font-semibold" th:href="@{/api/login}">
+        <i class="fas fa-user">
+        </i>
+        Login
+      </a>
+      <a class="text-white font-semibold" th:href="@{/api/register}">
+        <i class="fas fa-user-plus">
+        </i>
+        Register
+      </a>
     </div>
   </div>
 
@@ -111,10 +101,11 @@
           </a>
         </li>
       </ul>
-      <a th:href="@{/api/user/searchRooms}" class="bg-orange-500 text-white py-2 px-4 rounded-full flex items-center">
-        <i class="fas fa-search mr-2"></i> Search
-      </a>
-
+      <div class="relative">
+        <input class="border border-orange-500 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." type="text"/>
+        <i class="fas fa-search absolute left-3 top-3 text-gray-500">
+        </i>
+      </div>
     </div>
   </nav>
 </header>
@@ -135,7 +126,7 @@
     </div>
     <div class="bg-white p-8 rounded-lg shadow-lg mt-[150px]">
 
-      <h2 class="text-2xl font-bold mb-4">
+    <h2 class="text-2xl font-bold mb-4">
         Booking Your Hotel 123
       </h2>
       <form>
