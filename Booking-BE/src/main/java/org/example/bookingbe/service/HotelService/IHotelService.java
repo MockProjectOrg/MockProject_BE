@@ -6,5 +6,9 @@ import java.util.List;
 
 public interface IHotelService {
 
+    HotelDTO createHotel(HotelDTO hotelDTO);
     List<HotelDTO> findAllHotels();
+    HotelDTO findHotelById(Long id);
+    HotelDTO updateHotel(Long id, HotelDTO hotelDTO);
+    void deleteHotel(Long id);
 }

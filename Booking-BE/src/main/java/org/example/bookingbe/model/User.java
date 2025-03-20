@@ -16,7 +16,7 @@ public class User {
     private String email;
     @Column(name = "phone", columnDefinition = "varchar(10)")
     private String phone;
-    @Column(name = "password", columnDefinition = "varchar(50)")
+    @Column(name = "password", columnDefinition = "varchar(255)")
     private String password;
     @Column(name = "address", columnDefinition = "varchar(155)")
     private String address;
@@ -94,4 +94,5 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
 }

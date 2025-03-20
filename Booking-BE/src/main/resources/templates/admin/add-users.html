@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add New User - Camel Travel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<style>
+    .no-click {
+        pointer-events: none;
+        background-color: #e9ecef; /* Màu nền xám giống input bị disable */
+        cursor: not-allowed;
+    }
+</style>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/img/camel-logo-50.png" alt="Logo" width="40" height="40" class="me-2">
+            <strong>Camel Travel</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/dashboard}">
+                        <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/admin/users}">
+                        <i class="fas fa-users me-1"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item ms-2">
+                    <a class="nav-link logout" href="#">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Breadcrumb & Page Title -->
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/admin/users}" class="text-decoration-none">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add New User</li>
+        </ol>
+    </nav>
+</div>
+
+<!-- User Adding Form -->
+<div class="container py-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card content-card">
+                <div class="card-header">
+                    <h4 class="card-title text-center">
+                        <i class="fas fa-user-plus me-2"></i> Add New User
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" th:action="@{/admin/users/add}" th:object="${user}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating position-relative">
+                                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" required>
+                                    <label for="email">Email Address</label>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating position-relative">
+                                    <input type="text" class="form-control" id="userName" th:field="*{userName}" placeholder="Username" required>
+                                    <label for="userName">Username</label>
+                                    <i class="fas fa-user input-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating position-relative">
+                                <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Password" required>
+                                <label for="password">Password</label>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+
+                            <div class="form-floating position-relative">
+                                <input type="text" class="form-control"  id="address" th:field="*{address}" placeholder="Address" required>
+                                <label for="address">Address</label>
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-floating position-relative">
+                                <input type="text" class="form-control" id="phone" th:field="*{phone}"  placeholder="Phone Number" required>
+                                <label for="phone">Phone Number</label>
+                                <i class="fas fa-phone input-icon"></i>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/admin/users}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Add User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-md-start">
+                <strong>Camel Travel</strong> - Hệ thống quản lý tour du lịch
+            </div>
+            <div class="col-md-6 text-md-end">
+                © 2025 Hdoan. All rights reserved.
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

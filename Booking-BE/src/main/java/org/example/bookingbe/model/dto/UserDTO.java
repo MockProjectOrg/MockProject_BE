@@ -3,30 +3,37 @@ package org.example.bookingbe.model.dto;/*
  * @author Huy
  */
 
-import org.example.bookingbe.model.Role;
 
-import java.util.Arrays;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserDTO {
 
     private Long id;
-    private String email;
+
+    @NotBlank(message = "Username is required")
+    @Size(max = 100, message = "Username must not exceed 100 characters")
     private String userName;
 
-    private String password;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
+    @Size(max = 50, message = "Email must not exceed 50 characters")
+    private String email;
 
-    private String address;
-
-    private String role;
-
+    @NotBlank(message = "Phone number is required")
+    @Size(max = 10, message = "Phone number must not exceed 10 characters")
     private String phone;
 
-    public UserDTO(Long id, String userName, String email, String role) {
-        this.id = id;
-        this.userName = userName;
-        this.email = email;
-        this.role = role;
-    }
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
+    private String password;
+
+    @NotBlank(message = "Address is required")
+    @Size(max = 155, message = "Address must not exceed 155 characters")
+    private String address;
+
+    private String role; // Có thể là "manager" hoặc "admin"
 
     public Long getId() {
         return id;
@@ -52,20 +59,20 @@ public class UserDTO {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getAddress() {
@@ -76,11 +83,11 @@ public class UserDTO {
         this.address = address;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getRole() {
+        return role;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -1,8 +1,6 @@
 package org.example.bookingbe.controller;
 
 import jakarta.validation.Valid;
-import org.example.bookingbe.model.User;
-import org.example.bookingbe.model.dto.HotelDTO;
 import org.example.bookingbe.model.dto.UserDTO;
 import org.example.bookingbe.service.HotelService.IHotelService;
 import org.example.bookingbe.service.UserService.IUserService;
@@ -37,41 +35,30 @@ public class UserController {
         return "admin/users";
     }
 
-    @GetMapping("/users/edit/{id}")
-    public String showEditUserForm(@PathVariable Long id, Model model) {
-        UserDTO userDTO = userService.findUserById(id);
-        model.addAttribute("user", userDTO);
-        return "admin/users-edit";
+    @GetMapping("/users/add")
+    public String showFormAddUser(Model model) {
+        model.addAttribute("user", new UserDTO());
+        return "admin/add-users";
     }
 
-    @PostMapping("/users/edit/{id}")
-    public String editUser(@PathVariable Long id, @Valid @ModelAttribute("user") UserDTO userDTO,
-                           BindingResult result,
-                           RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "admin/users-edit";
-        }
-        try {
-            userService.updateUser(userDTO);
-        } catch (Exception e) {
-            result.rejectValue("username", "user.exists", "Username is already registered!");
-            return "admin/users-edit";
+    @PostMapping("/users/add")
+    public String addUser(@ModelAttribute @Valid  UserDTO user,
+                          BindingResult bindingResult,
+                          RedirectAttributes redirectAttributes,
+                          Model model) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error ->
+                    System.out.println("Validation Error: " + error.getDefaultMessage()));
+            return "admin/add-users";
         }
 
-        redirectAttributes.addFlashAttribute("updatedUserId", userDTO.getId());
-        return "redirect:/admin/users?success";
-    }
+        user.setRole("Manager");
 
-    @GetMapping("/hotels")
-    public String listHotels(Model model) {
-        List<HotelDTO> hotelDTOList = hotelService.findAllHotels();
-        model.addAttribute("hotels", hotelDTOList);
-        return "admin/hotels";
-    }
+        userService.createUser(user);
 
-    @GetMapping("/bookings")
-    public String listBookings() {
-        return "admin/bookings";
+        redirectAttributes.addFlashAttribute("successMessage", "User added successfully!");
+
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/users/delete/{id}")

@@ -6,24 +6,20 @@ package org.example.bookingbe.model.dto;/*
 public class HotelDTO {
 
     private Long id;
-    private String userName;
-    private String userId;
+    private String hotelName;
+    private String address;
+    private String description;
+    private Long userId;
 
-    public HotelDTO(Long id, String userName, String userId) {
-        this.id = id;
-        this.userName = userName;
-        this.userId = userId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getHotelName() { return hotelName; }
+    public void setHotelName(String hotelName) { this.hotelName = hotelName; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }
