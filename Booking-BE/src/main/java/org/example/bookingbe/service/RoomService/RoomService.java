@@ -106,11 +106,6 @@ public class RoomService implements IRoomService {
         }
 
 
-
-
-
-
-
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
     }
@@ -133,6 +128,11 @@ public class RoomService implements IRoomService {
     @Override
     public List<Status> getAllStatuses() {
         return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
+    }
+
+    @Override
+    public List<Room> getAvailableRoomsByHotel(Long hotelId) {
+        return roomRepo.findByHotelIdAndStatusId(hotelId, 4L);
     }
 
 }

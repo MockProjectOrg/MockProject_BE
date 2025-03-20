@@ -24,4 +24,6 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r WHERE r.status.id = 4")
     List<Room> findAvailableRooms();
 
+    List<Room> findByHotelIdAndStatusId(Long hotelId, Long statusId);
+
 }
