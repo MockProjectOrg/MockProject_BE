@@ -12,12 +12,54 @@
   <style>
     body {
        font-family: 'Libre Baskerville', serif;
-
      }
 
      .hero-text {
        font-family: 'Halminton Grand', serif;
      }
+
+     .hotel-slide {
+       transition: transform 0.5s ease;
+     }
+
+     .hotel-rooms {
+       max-height: 0;
+       overflow: hidden;
+       transition: max-height 0.5s ease;
+     }
+
+     .hotel-rooms.active {
+       max-height: 1000px;
+     }
+
+     .slide-btn {
+       cursor: pointer;
+       user-select: none;
+     }
+
+     .hotel-indicator {
+       width: 10px;
+       height: 10px;
+       border-radius: 50%;
+       background-color: #d1d5db;
+       cursor: pointer;
+     }
+
+     .hotel-indicator.active {
+       background-color: #f97316;
+     }
+
+    /* Thêm vào CSS */
+    .hotel-rooms {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+    }
+
+    .hotel-rooms.active {
+      max-height: 2000px; /* Giá trị đủ lớn để chứa nội dung */
+      transition: max-height 0.5s ease-in;
+    }
   </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -61,16 +103,40 @@
         <i class="fas fa-chevron-down">
         </i>
       </a>
-      <a class="text-white font-semibold" th:href="@{/api/login}">
-        <i class="fas fa-user">
-        </i>
-        Login
-      </a>
-      <a class="text-white font-semibold" th:href="@{/api/register}">
-        <i class="fas fa-user-plus">
-        </i>
-        Register
-      </a>
+      <nav class="d-flex align-items-center">
+        <!-- Nếu chưa đăng nhập -->
+        <div th:if="${session.userId == null}" class="d-flex gap-3">
+          <a class="text-white font-semibold" th:href="@{/api/login}">
+            <i class="fas fa-sign-in-alt me-1"></i> Login
+          </a>
+          <a class="text-white font-semibold" th:href="@{/api/register}">
+            <i class="fas fa-user-plus me-1"></i> Register
+          </a>
+        </div>
+
+        <!-- Nếu đã đăng nhập -->
+        <div th:if="${session.userId != null}" class="dropdown">
+          <a class="text-white font-semibold dropdown-toggle" href="#" id="userDropdown" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle me-1"></i>
+            <span th:text="${user != null ? user.userName : 'User'}"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" th:href="@{/api/user/userProfile}">
+                <i class="fas fa-user me-2"></i> Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item text-danger" th:href="@{/api/logout}">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+
     </div>
   </div>
 
@@ -101,11 +167,9 @@
           </a>
         </li>
       </ul>
-      <div class="relative">
-        <input class="border border-orange-500 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search..." type="text"/>
-        <i class="fas fa-search absolute left-3 top-3 text-gray-500">
-        </i>
-      </div>
+      <a th:href="@{/api/user/searchRooms}" class="bg-orange-500 text-white py-2 px-4 rounded-full flex items-center">
+        <i class="fas fa-search mr-2"></i> Search
+      </a>
     </div>
   </nav>
 </header>
@@ -124,113 +188,196 @@
       </p>
 
     </div>
-    <div class="bg-white p-8 rounded-lg shadow-lg mt-[150px]">
+  </div>
+</section>
 
-    <h2 class="text-2xl font-bold mb-4">
-        Booking Your Hotel 123
-      </h2>
-      <form>
-        <div class="mb-4">
-          <label class="block text-gray-700" for="checkin">
-            Check In:
-          </label>
-          <input class="w-full border border-gray-300 p-2 rounded" id="checkin" type="date"/>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700" for="checkout">
-            Check Out:
-          </label>
-          <input class="w-full border border-gray-300 p-2 rounded" id="checkout" type="date"/>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700" for="guests">
-            Guests:
-          </label>
-          <select class="w-full border border-gray-300 p-2 rounded" id="guests">
-            <option>
-              2 ADULTS
-            </option>
-            <option>
-              1 ADULT
-            </option>
-            <option>
-              3 ADULTS
-            </option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700" for="room">
-            Room:
-          </label>
-          <select class="w-full border border-gray-300 p-2 rounded" id="room">
-            <option>
-              1 ROOM
-            </option>
-            <option>
-              2 ROOMS
-            </option>
-            <option>
-              3 ROOMS
-            </option>
-          </select>
-        </div>
-        <button class="w-full bg-orange-500 text-white py-2 rounded" type="submit">
-          CHECK AVAILABILITY
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
-<section class="container mx-auto py-12 px-6">
-  <h2 class="text-3xl font-bold text-center mb-8">
-    Room Type
+<!-- New Hotel Slideshow Section -->
+<section class="container mx-auto py-16 px-6">
+  <h2 class="text-4xl font-bold text-center mb-12 font-serif">
+    Our <span class="text-orange-500">Luxury</span> Hotels and Rooms
   </h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <img alt="Deluxe Room with a king-sized bed and modern amenities" class="w-full h-48 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/Xq9GuOCINeA4xGw3LK36Q3rLY2vDth9toagT47o-cFM.jpg" width="600">
-      <div class="p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Deluxe Room
-        </h3>
-        <p class="text-gray-700 mb-4">
-          A luxurious room with a beautiful view, king-sized bed, and modern amenities.
-        </p>
-        <a class="text-orange-500 hover:underline" href="#">
-          View more
-        </a>
+
+  <th:block th:if="${hotels != null and not #lists.isEmpty(hotels)}">
+    <div class="relative">
+      <!-- Slideshow container with enhanced shadow and rounded corners -->
+      <div class="overflow-hidden rounded-xl shadow-2xl">
+        <div class="flex transition-transform duration-700 ease-in-out" id="hotel-slider">
+          <!-- Dynamically generate hotel slides -->
+          <th:block th:each="hotel, hotelStat : ${hotels}">
+            <div class="hotel-slide min-w-full">
+              <div class="bg-white overflow-hidden cursor-pointer group"
+                   th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
+
+                <!-- Hotel image with hover effect -->
+                <div class="relative overflow-hidden h-80">
+                  <img th:src="${hotel.avatar != null and hotel.avatar != '' ? hotel.avatar : 'https://storage.googleapis.com/a1aa/image/default-hotel.jpg'}"
+                       th:alt="${hotel.hotelName}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
+
+                  <!-- Overlay with hotel name -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                    <h3 th:text="${hotel.hotelName}" class="text-white text-3xl font-bold p-8">Hotel Name</h3>
+                  </div>
+                </div>
+
+                <div class="p-8">
+                  <div class="flex items-center mb-4">
+                    <div class="flex text-orange-500">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <span class="ml-2 text-gray-600">5-Star Luxury</span>
+                  </div>
+
+                  <p class="text-gray-700 mb-6 leading-relaxed" th:text="${hotel.description}">
+                    Hotel description with a more elegant presentation and additional space.
+                  </p>
+
+                  <div class="flex items-center justify-between">
+                    <div class="flex space-x-4">
+                      <span class="flex items-center text-gray-600"><i class="fas fa-wifi mr-2"></i> Free WiFi</span>
+                      <span class="flex items-center text-gray-600"><i class="fas fa-swimming-pool mr-2"></i> Pool</span>
+                      <span class="flex items-center text-gray-600"><i class="fas fa-utensils mr-2"></i> Restaurant</span>
+                    </div>
+                    <button class="text-orange-500 flex items-center font-medium group-hover:text-orange-600 transition-colors">
+                      View rooms <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Phần HTML cho phần xem phòng cải tiến -->
+              <div class="hotel-rooms bg-gray-50 border-t border-gray-200" th:id="'hotel' + ${hotelStat.index} + '-rooms'">
+                <div class="p-8 relative">
+                  <!-- Thanh điều hướng sticky khi cuộn -->
+                  <div class="sticky top-0 bg-white shadow-md p-4 rounded-lg flex justify-between items-center mb-6 z-10">
+                    <h4 class="text-2xl font-bold text-gray-800">Available Rooms</h4>
+                  </div>
+
+                  <!-- Nội dung phòng với phân trang -->
+                  <div class="room-pagination mb-6 flex justify-between items-center">
+                    <div class="flex items-center">
+                      <span class="text-gray-600">Showing <span class="room-count-visible">3</span> of <span class="room-count-total" th:text="${#lists.size(availableRoomsMap[hotel.id])}">9</span> rooms</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <button class="pagination-prev w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <div class="flex space-x-1 room-pagination-buttons" th:attr="data-hotel-index=${hotelStat.index}"></div>
+                      <button class="pagination-next w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <th:block th:if="${availableRoomsMap[hotel.id] != null and not #lists.isEmpty(availableRoomsMap[hotel.id])}">
+                      <div th:each="room : ${availableRoomsMap[hotel.id]}"
+                           class="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-xl">
+
+                        <div class="relative">
+                          <img src="https://storage.googleapis.com/a1aa/image/default-room.jpg"
+                               th:alt="${room.roomType?.typeName}" class="w-full h-56 object-cover"/>
+                          <div class="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                            <span th:text="'$' + ${room.price}">$199</span> / night
+                          </div>
+                          <!-- Badge cho phòng đặc biệt -->
+                          <div th:if="${room.price > 200}" class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                            Premium
+                          </div>
+                        </div>
+
+                        <div class="p-6">
+                          <h5 th:text="${room.roomType != null ? room.roomType.typeName : 'Unknown'}"
+                              class="text-xl font-bold mb-2 text-gray-800">Room Type</h5>
+
+                          <div class="flex flex-wrap items-center mb-4 text-sm text-gray-600">
+                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-users mr-2"></i> 2 Guests</span>
+                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-bed mr-2"></i> 1 King Bed</span>
+                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-bath mr-2"></i> En-suite</span>
+                            <span class="flex items-center mb-2"><i class="fas fa-wifi mr-2"></i> Free WiFi</span>
+                          </div>
+
+                          <p class="text-gray-700 mb-6" th:text="${room.description}">Room description with better spacing.</p>
+
+                          <div class="flex flex-col space-y-3">
+                            <a th:href="@{/rooms(id=${room.id})}"
+                               class="block w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
+                              Book Now <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                            <button class="w-full bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-3 rounded text-center transition-colors">
+                              View Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </th:block>
+
+                    <!-- Thông báo không có phòng khả dụng với thiết kế tốt hơn -->
+                    <div th:if="${availableRoomsMap[hotel.id] == null or #lists.isEmpty(availableRoomsMap[hotel.id])}"
+                         class="col-span-3 text-center py-10">
+                      <div class="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
+                        <i class="fas fa-bed text-5xl text-gray-300 mb-4"></i>
+                        <h5 class="text-xl font-bold mb-2 text-gray-800">No Rooms Available</h5>
+                        <p class="text-gray-500 mb-6">All rooms at this hotel are currently booked.</p>
+                        <div class="flex flex-col space-y-3">
+                          <button class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
+                            Join Waiting List
+                          </button>
+                          <button class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded text-center transition-colors"
+                                  th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+            </div>
+          </th:block>
+        </div>
       </div>
-      </img>
-    </div>
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <img alt="Suite Room with a separate living area and luxurious bathroom" class="w-full h-48 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/S-dl17IckDQyiZPMpa2Yn13BEDue1kQQqOyzBZgG5vc.jpg" width="600"/>
-      <div class="p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Suite Room
-        </h3>
-        <p class="text-gray-700 mb-4">
-          A spacious suite with a separate living area, luxurious bathroom, and premium services.
-        </p>
-        <a class="text-orange-500 hover:underline" href="#">
-          View more
-        </a>
+
+      <!-- Improved Slider Controls with larger, more elegant buttons -->
+      <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 left-4 transform -translate-y-1/2">
+        <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110" onclick="prevSlide()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 right-4 transform -translate-y-1/2">
+        <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110" onclick="nextSlide()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Improved Slide Indicators -->
+      <div th:if="${#lists.size(hotels) > 1}" class="flex justify-center mt-8">
+        <th:block th:each="hotel, hotelStat : ${hotels}">
+          <div th:classappend="${hotelStat.index == 0 ? 'active bg-orange-500 w-12' : 'w-8 bg-gray-300'}"
+               class="hotel-indicator h-2 mx-1 rounded-full transition-all duration-300 hover:bg-orange-400"
+               th:onclick="'goToSlide(' + ${hotelStat.index} + ')'"></div>
+        </th:block>
       </div>
     </div>
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <img alt="Standard Room with essential amenities for a pleasant stay" class="w-full h-48 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/7Q-uM5ijvFtZiVqlfzZrAtJ96gcU4jYNQaOZWi6qdp4.jpg" width="600"/>
-      <div class="p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Standard Room
-        </h3>
-        <p class="text-gray-700 mb-4">
-          A comfortable room with all the essential amenities for a pleasant stay.
-        </p>
-        <a class="text-orange-500 hover:underline" href="#">
-          View more
-        </a>
-      </div>
-    </div>
+  </th:block>
+
+  <!-- Improved empty state message -->
+  <div th:if="${hotels == null or #lists.isEmpty(hotels)}" class="text-center py-16 bg-gray-50 rounded-xl">
+    <i class="fas fa-hotel text-5xl text-gray-300 mb-4"></i>
+    <h3 class="text-2xl font-bold text-gray-700 mb-2">No Hotels Available</h3>
+    <p class="text-gray-500 max-w-md mx-auto">We're currently updating our hotel inventory. Please check back later for exciting new options.</p>
   </div>
 </section>
+
+
+
 <section class="bg-gray-100 py-12">
   <div class="container mx-auto px-6">
     <h2 class="text-3xl font-bold text-center mb-8">
@@ -377,3 +524,433 @@
 </footer>
 </body>
 </html>
+
+<script>
+  // Hotel Slideshow Enhanced JavaScript
+// Main state variables
+let currentSlide = 0;
+const totalSlides = /*[[${#lists.size(hotels)}]]*/ 10;
+let slideInterval;
+let isRoomViewOpen = false;
+let touchStartX = 0;
+let touchEndX = 0;
+
+// DOM elements
+let slider;
+let indicators;
+
+// Constants
+const SLIDE_INTERVAL_DURATION = 5000;
+const SWIPE_THRESHOLD = 50;
+const ROOMS_PER_PAGE = 3;
+
+/**
+ * Initialize the slider and all related functionality
+ */
+function initializeSlider() {
+  slider = document.getElementById('hotel-slider');
+  indicators = document.querySelectorAll('.hotel-indicator');
+
+  if (!slider) return;
+
+  // Setup initial state
+  updateSlider();
+  setupEventListeners();
+  addCloseButtons();
+
+  // Add initial fade-in effect
+  slider.style.opacity = '0';
+  setTimeout(() => {
+    slider.style.transition = 'opacity 0.5s ease-in-out';
+    slider.style.opacity = '1';
+  }, 100);
+
+  // Start automatic slideshow
+  startSlideInterval();
+
+  // Initialize pagination for all hotels
+  document.querySelectorAll('[id^="hotel"]').forEach(hotel => {
+    const hotelIndex = hotel.id.match(/hotel(\d+)/)?.[1];
+    if (hotelIndex) paginateRooms(hotelIndex, 1);
+  });
+
+  // Initialize pagination for any already open room views
+  const openRooms = document.querySelector('.hotel-rooms.active');
+  if (openRooms) {
+    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (hotelIndex) paginateRooms(hotelIndex, 1);
+  }
+}
+
+/**
+ * Set up all event listeners
+ */
+function setupEventListeners() {
+  // Slider hover events
+  slider.addEventListener('mouseenter', pauseSlideInterval);
+  slider.addEventListener('mouseleave', () => {
+    if (!isRoomViewOpen) startSlideInterval();
+  });
+
+  // Touch events for mobile
+  slider.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  slider.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (isRoomViewOpen) return;
+
+    if (e.key === 'ArrowLeft') {
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      nextSlide();
+    }
+  });
+
+  // Scroll event to pause slideshow when out of view
+  window.addEventListener('scroll', () => {
+    if (!slider) return;
+
+    const sliderRect = slider.getBoundingClientRect();
+    if (sliderRect.bottom < 0 || sliderRect.top > window.innerHeight) {
+      pauseSlideInterval();
+    } else if (!isRoomViewOpen) {
+      startSlideInterval();
+    }
+  });
+
+  // Click outside to close room view
+  document.addEventListener('click', e => {
+    if (isRoomViewOpen &&
+        !e.target.closest('.hotel-rooms') &&
+        !e.target.closest('[onclick^="toggleRooms"]')) {
+
+      const openRooms = document.querySelector('.hotel-rooms.active');
+      if (openRooms) {
+        const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+        if (hotelIndex) toggleRooms('hotel' + hotelIndex);
+      }
+    }
+  });
+}
+
+/**
+ * Handle swipe gestures for mobile devices
+ */
+function handleSwipe() {
+  if (isRoomViewOpen) return;
+
+  if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
+    nextSlide(); // Swipe left
+  } else if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
+    prevSlide(); // Swipe right
+  }
+}
+
+/**
+ * Start automatic slideshow timer
+ */
+function startSlideInterval() {
+  if (isRoomViewOpen || totalSlides <= 1) return;
+
+  clearInterval(slideInterval);
+  slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_DURATION);
+}
+
+/**
+ * Pause automatic slideshow
+ */
+function pauseSlideInterval() {
+  clearInterval(slideInterval);
+}
+
+/**
+ * Navigate to the next slide
+ */
+function nextSlide() {
+  if (isRoomViewOpen) return;
+
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateSlider();
+}
+
+/**
+ * Navigate to the previous slide
+ */
+function prevSlide() {
+  if (isRoomViewOpen) return;
+
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlider();
+}
+
+/**
+ * Go to a specific slide
+ * @param {number} index - The slide index to go to
+ */
+function goToSlide(index) {
+  // Close any open room views first
+  const openRooms = document.querySelector('.hotel-rooms.active');
+  if (openRooms) {
+    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (hotelIndex) toggleRooms('hotel' + hotelIndex);
+  }
+
+  currentSlide = index;
+  updateSlider();
+}
+
+/**
+ * Update the slider position and indicators
+ */
+function updateSlider() {
+  if (!slider) return;
+
+  // Update slider position
+  slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+  // Update indicators
+  updateIndicators();
+}
+
+/**
+ * Update the indicator styling
+ */
+function updateIndicators() {
+  indicators.forEach((indicator, index) => {
+    if (index === currentSlide) {
+      indicator.classList.add('active', 'bg-orange-500', 'w-12');
+      indicator.classList.remove('bg-gray-300', 'w-8');
+    } else {
+      indicator.classList.remove('active', 'bg-orange-500', 'w-12');
+      indicator.classList.add('bg-gray-300', 'w-8');
+    }
+  });
+}
+
+/**
+ * Toggle room visibility for a hotel
+ * @param {string} hotelId - The hotel ID
+ */
+function toggleRooms(hotelId) {
+  const roomsElement = document.getElementById(hotelId + '-rooms');
+  if (!roomsElement) return;
+
+  const isOpening = !roomsElement.classList.contains('active');
+  roomsElement.classList.toggle('active');
+
+  // Update chevron icon
+  const hotelElement = document.querySelector(`[onclick="toggleRooms('${hotelId}')"]`);
+  const chevronIcon = hotelElement?.querySelector('.fa-chevron-down, .fa-chevron-up');
+
+  if (chevronIcon) {
+    if (roomsElement.classList.contains('active')) {
+      chevronIcon.classList.add('transform', 'rotate-180');
+    } else {
+      chevronIcon.classList.remove('transform', 'rotate-180');
+    }
+  }
+
+  // Update room view state
+  isRoomViewOpen = roomsElement.classList.contains('active');
+
+  // Pause/resume slideshow based on room view state
+  if (isRoomViewOpen) {
+    pauseSlideInterval();
+
+    // Initialize pagination
+    const hotelIndex = hotelId.replace('hotel', '');
+    paginateRooms(hotelIndex, 1);
+  } else {
+    startSlideInterval();
+  }
+
+  // Smooth scroll to rooms when opened
+  if (isOpening) {
+    setTimeout(() => {
+      roomsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+/**
+ * Handle room pagination
+ * @param {string} hotelIndex - The hotel index
+ * @param {number} pageNumber - The page number to display
+ */
+function paginateRooms(hotelIndex, pageNumber) {
+  const hotelRoomsContainer = document.getElementById(`hotel${hotelIndex}-rooms`);
+  if (!hotelRoomsContainer) return;
+
+  // Find all room cards
+  const roomCards = hotelRoomsContainer.querySelectorAll('.grid > div');
+  if (!roomCards.length) return;
+
+  const totalPages = Math.ceil(roomCards.length / ROOMS_PER_PAGE);
+
+  // Validate page number
+  pageNumber = Math.max(1, Math.min(pageNumber, totalPages));
+
+  // Update pagination buttons
+  updatePaginationControls(hotelRoomsContainer, hotelIndex, pageNumber, totalPages);
+
+  // Update room visibility
+  const startIndex = (pageNumber - 1) * ROOMS_PER_PAGE;
+  const endIndex = startIndex + ROOMS_PER_PAGE - 1;
+  let visibleCount = 0;
+
+  roomCards.forEach((room, index) => {
+    if (index >= startIndex && index <= endIndex) {
+      room.style.display = 'block';
+      visibleCount++;
+    } else {
+      room.style.display = 'none';
+    }
+  });
+
+  // Update room count display
+  const roomCountVisible = hotelRoomsContainer.querySelector('.room-count-visible');
+  if (roomCountVisible) {
+    roomCountVisible.textContent = visibleCount;
+  }
+}
+
+/**
+ * Update pagination controls
+ * @param {HTMLElement} container - The container element
+ * @param {string} hotelIndex - The hotel index
+ * @param {number} currentPage - The current page
+ * @param {number} totalPages - The total number of pages
+ */
+function updatePaginationControls(container, hotelIndex, currentPage, totalPages) {
+  // Update prev/next buttons
+  const prevButton = container.querySelector('.pagination-prev');
+  const nextButton = container.querySelector('.pagination-next');
+
+  if (prevButton) {
+    prevButton.disabled = currentPage <= 1;
+    prevButton.onclick = function(e) {
+      e.stopPropagation();
+      if (currentPage > 1) {
+        paginateRooms(hotelIndex, currentPage - 1);
+      }
+    };
+  }
+
+  if (nextButton) {
+    nextButton.disabled = currentPage >= totalPages;
+    nextButton.onclick = function(e) {
+      e.stopPropagation();
+      if (currentPage < totalPages) {
+        paginateRooms(hotelIndex, currentPage + 1);
+      }
+    };
+  }
+
+  // Update page number buttons
+  const paginationButtonsContainer = container.querySelector('.room-pagination-buttons');
+  if (paginationButtonsContainer) {
+    paginationButtonsContainer.innerHTML = '';
+
+    for (let i = 0; i < totalPages; i++) {
+      const button = document.createElement('button');
+      button.className = `w-8 h-8 flex items-center justify-center rounded ${
+        i + 1 === currentPage ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+      }`;
+      button.textContent = i + 1;
+      button.onclick = function(e) {
+        e.stopPropagation();
+        paginateRooms(hotelIndex, i + 1);
+      };
+      paginationButtonsContainer.appendChild(button);
+    }
+  }
+}
+
+/**
+ * Add close buttons to all room sections
+ */
+function addCloseButtons() {
+  const roomSections = document.querySelectorAll('.hotel-rooms');
+
+  roomSections.forEach(section => {
+    // Skip if already has a close button
+    if (section.querySelector('.close-room-button')) return;
+
+    const hotelIndex = section.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (!hotelIndex) return;
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-room-button absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10';
+    closeButton.innerHTML = '<i class="fas fa-times"></i>';
+    closeButton.onclick = function(e) {
+      e.stopPropagation();
+      toggleRooms('hotel' + hotelIndex);
+    };
+
+    const contentDiv = section.querySelector('div');
+    if (contentDiv) {
+      contentDiv.style.position = 'relative';
+      contentDiv.prepend(closeButton);
+    }
+  });
+}
+
+/**
+ * Safe document ready handler with fallback
+ */
+function onDocumentReady(callback) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+  } else {
+    callback();
+  }
+}
+
+/**
+ * Preload images and initialize the slider
+ */
+function preloadImagesAndInitialize() {
+  const images = document.querySelectorAll('img');
+
+  if (images.length === 0) {
+    initializeSlider();
+    return;
+  }
+
+  let imagesLoaded = 0;
+  const totalImages = images.length;
+
+  const handleImageLoad = () => {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+      initializeSlider();
+    }
+  };
+
+  images.forEach(img => {
+    if (img.complete) {
+      handleImageLoad();
+    } else {
+      img.addEventListener('load', handleImageLoad);
+      img.addEventListener('error', handleImageLoad); // Handle image error as loaded
+    }
+  });
+
+  // Fallback in case images don't load properly
+  setTimeout(initializeSlider, 1000);
+}
+
+// Initialize everything when the document is ready
+onDocumentReady(preloadImagesAndInitialize);
+
+// Make functions globally accessible
+window.goToSlide = goToSlide;
+window.toggleRooms = toggleRooms;
+</script>

@@ -58,26 +58,6 @@ public class UserController {
         return "auth/login";
     }
 
-    @PostMapping("/dologin")
-    public String doLogin(@ModelAttribute("user") User user, HttpSession session, Model model) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword())
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            UserPriciple userPrinciple = (UserPriciple) authentication.getPrincipal();
-
-            // Lưu userId vào session
-            session.setAttribute("userId", userPrinciple.getId());
-
-            return "redirect:/api/user/userProfile";
-        } catch (Exception e) {
-            model.addAttribute("message", new MessageRespone("Invalid username or password"));
-            return "auth/login";
-        }
-    }
-
 
     @GetMapping("/register")
     public String register(Model model, HttpServletRequest request){
