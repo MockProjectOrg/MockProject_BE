@@ -9,6 +9,8 @@ public interface IUserService {
     void registerUser(User user) throws MessagingException;
     Boolean existsUser(String username);
     Boolean exstsEmail(String email);
+    User getUserById(Long id);
+    void saveUser(User user);
 
     Optional<User> findByUsername(String username);
 }

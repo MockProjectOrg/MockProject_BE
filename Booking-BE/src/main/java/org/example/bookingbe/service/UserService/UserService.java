@@ -44,4 +44,15 @@ public class UserService implements IUserService {
     public Optional<User> findByUsername(String username) {
         return userRepo.findByUserName(username);
     }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepo.save(user);  // Lưu thông tin user đã chỉnh sửa
+    }
+
 }

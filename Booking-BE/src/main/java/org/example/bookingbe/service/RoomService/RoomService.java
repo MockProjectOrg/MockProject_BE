@@ -14,8 +14,10 @@ import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService implements IRoomService {
@@ -27,6 +29,9 @@ public class RoomService implements IRoomService {
 
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    private IStatusRepo statusRepo;
 
 
     @Override
@@ -87,16 +92,7 @@ public class RoomService implements IRoomService {
         return roomRepo.save(existingRoom);
     }
 
-    @Autowired
-    private IStatusRepo statusRepo; // Inject repository của Status
 
-    @Autowired
-    private IReviewRepo reviewRepo;
-    @Autowired
-    private IImageRepo imageRepo;
-
-    @Override
-    @Transactional
     public void deleteRoom(Long roomId, Long userId) {
         Room room = roomRepo.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -106,16 +102,25 @@ public class RoomService implements IRoomService {
         }
 
 
-
-
-
-
-
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
+
     }
 
     @Override
+    public List<Room> searchRooms(String hotelName, String typeName, Double minPrice, Double maxPrice, LocalDateTime checkIn, LocalDateTime checkOut) {
+        List<Room> rooms = roomRepo.searchRooms(hotelName, typeName, minPrice, maxPrice);
+
+        if (checkIn != null && checkOut != null) {
+            rooms = rooms.stream()
+                    .filter(room -> roomRepo.isRoomAvailable(room.getId(), checkIn, checkOut))
+                    .collect(Collectors.toList());
+        }
+
+        return rooms;
+    }
+
+
     public Room updateRoomStatus(Long roomId, Long statusId, Long userId) {
         Room room = roomRepo.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -133,6 +138,12 @@ public class RoomService implements IRoomService {
     @Override
     public List<Status> getAllStatuses() {
         return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
+
+    }
+
+    @Override
+    public List<Room> getAvailableRoomsByHotel(Long hotelId) {
+        return roomRepo.findByHotelIdAndStatusId(hotelId, 4L);
     }
 
 }

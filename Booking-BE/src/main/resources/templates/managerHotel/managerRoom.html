@@ -146,6 +146,7 @@
                         <tr>
                             <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                             <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên Phòng</th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hình ảnh</th>
                             <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <div class="flex items-center">
                                     Giá
@@ -160,22 +161,26 @@
                         </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="roomsTableBody">
-                        <tr th:each="room, roomStat : ${rooms}" class="hover:bg-blue-50 transition duration-150" th:if="${roomStat.index >= (page-1)*pageSize && roomStat.index < page*pageSize}">
+                        <tr th:each="room, roomStat : ${rooms}" class="hover:bg-blue-50 transition duration-150"
+                            th:if="${roomStat.index >= (page-1)*pageSize && roomStat.index < page*pageSize}">
                             <td class="py-4 px-6 text-sm font-medium text-gray-900" th:text="${room.id}"></td>
                             <td class="py-4 px-6 text-sm text-gray-700" th:text="${room.description}"></td>
+                            <td class="py-4 px-6 text-sm text-gray-700">
+                                <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="w-16 h-16 object-cover rounded">
+                            </td>
                             <td class="py-4 px-6 text-sm text-gray-700">
                                 <span th:text="${#numbers.formatDecimal(room.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
                             </td>
                             <td class="py-4 px-6 text-sm text-gray-700">
-                                <span th:if="${room.roomType != null}" class="px-2 py-1 text-xs font-medium rounded-full"
-                                      th:class="${room.roomType.typeName == 'Single' ? 'bg-green-100 text-green-800' :
-                                            (room.roomType.typeName == 'Double' ? 'bg-blue-100 text-blue-800' :
-                                            'bg-purple-100 text-purple-800')}"
-                                      th:text="${room.roomType.typeName}">
-                                </span>
+            <span th:if="${room.roomType != null}" class="px-2 py-1 text-xs font-medium rounded-full"
+                  th:class="${room.roomType.typeName == 'Single' ? 'bg-green-100 text-green-800' :
+                        (room.roomType.typeName == 'Double' ? 'bg-blue-100 text-blue-800' :
+                        'bg-purple-100 text-purple-800')}"
+                  th:text="${room.roomType.typeName}">
+            </span>
                                 <span th:unless="${room.roomType != null}" class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
-                                    Không có loại
-                                </span>
+                Không có loại
+            </span>
                             </td>
                             <!-- Add status column -->
                             <td class="py-4 px-6 text-sm text-gray-700">
@@ -249,7 +254,7 @@
             </button>
         </div>
 
-        <form th:action="@{/managerRooms/add}" method="post" class="space-y-6">
+        <form th:action="@{/managerRooms/add}" method="post" class="space-y-6" enctype="multipart/form-data">
             <input type="hidden" name="hotel.id" th:value="${hotel.id}">
 
             <div>
@@ -271,6 +276,11 @@
                     <option value="2">Double</option>
                     <option value="3">Suite</option>
                 </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Giá (USD):</label>
+                <input type="file" name="imageFile" accept="image/*" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             </div>
             <!-- Add status selection dropdown -->
             <div>

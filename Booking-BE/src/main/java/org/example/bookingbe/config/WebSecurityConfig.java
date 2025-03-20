@@ -19,9 +19,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -34,6 +37,7 @@ public class WebSecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())

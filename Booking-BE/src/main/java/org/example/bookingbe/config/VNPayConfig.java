@@ -1,6 +1,5 @@
 package org.example.bookingbe.config;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
@@ -123,4 +122,3 @@ public class VNPayConfig {
         return sb.toString();
     }
 }
-

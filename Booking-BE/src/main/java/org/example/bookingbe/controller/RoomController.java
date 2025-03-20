@@ -7,6 +7,7 @@ import org.example.bookingbe.model.Status;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
+import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserDetail.CustomUserDetailService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
@@ -16,7 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -36,6 +39,9 @@ public class RoomController {
 
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     // Danh sách phòng của khách sạn do Manager quản lý
     @GetMapping
@@ -76,7 +82,7 @@ public class RoomController {
 
     // Thêm phòng mới
     @PostMapping("/add")
-    public String addRoom(@ModelAttribute Room room) {
+    public String addRoom(@ModelAttribute Room room, @RequestParam("imageFile") MultipartFile imageFile) {
         // Lấy thông tin người dùng từ Spring Security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
@@ -103,6 +109,14 @@ public class RoomController {
 
         Hotel hotel = hotelRepo.findById(hotelId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách sạn"));
+
+        try {
+            // Upload ảnh phòng lên Cloudinary (lưu vào thư mục "room_images")
+            String imageUrl = cloudinaryService.uploadFile(imageFile, "room_images", "room_" + System.currentTimeMillis());
+            room.setImageUrl(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi khi upload ảnh lên Cloudinary", e);
+        }
 
         room.setHotel(hotel);
         roomService.createRoom(room, userId);
@@ -143,6 +157,7 @@ public class RoomController {
         roomService.updateRoom(id, updatedRoom, userId);
         return "redirect:/managerRooms";
     }
+
 
     // Xóa phòng
     @GetMapping("/delete/{id}")
