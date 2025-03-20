@@ -12,7 +12,6 @@ public class Status {
     private String statusName;
 
 
-
     public Status() {
 
     }

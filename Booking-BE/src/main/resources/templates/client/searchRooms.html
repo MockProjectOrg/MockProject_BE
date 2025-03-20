@@ -86,14 +86,7 @@
           EN
           <i class="fas fa-chevron-down ml-1"></i>
         </a>
-        <a class="text-white font-semibold" href="#">
-          <i class="fas fa-user"></i>
-          Login
-        </a>
-        <a class="text-white font-semibold" href="#">
-          <i class="fas fa-user-plus"></i>
-          Register
-        </a>
+
       </div>
     </div>
     <nav class="relative z-20 w-full">
@@ -135,20 +128,20 @@
     <!-- Cột bên trái: Form tìm kiếm -->
     <div class="col-md-4">
       <div class="card p-4 shadow-sm">
-        <h4 class="text-center">Bộ lọc tìm kiếm</h4>
+        <h4 class="text-center">Search Filter</h4>
         <form action="/api/user/searchRooms" method="get">
           <div class="mb-3">
-            <label for="hotel" class="form-label">Khách sạn:</label>
-            <input type="number" id="hotel" name="hotelId" class="form-control" placeholder="Nhập ID khách sạn">
+            <label for="hotelName" class="form-label">Hotel:</label>
+            <input type="text" id="hotelName" name="hotelName" class="form-control" placeholder="Enter hotel name">
           </div>
           <div class="mb-3">
-            <label for="roomType" class="form-label">Loại phòng:</label>
-            <input type="number" id="roomType" name="roomTypeId" class="form-control" placeholder="Nhập ID loại phòng">
+            <label for="typeName" class="form-label">Room Type:</label>
+            <input type="text" id="typeName" name="typeName" class="form-control" placeholder="Enter room type">
           </div>
 
           <!-- Thanh trượt giá -->
           <div class="mb-3">
-            <label class="form-label">Khoảng giá (VNĐ):</label>
+            <label class="form-label">Price: </label>
             <div class="slider-container">
               <div id="price-slider"></div>
             </div>
@@ -159,35 +152,75 @@
             </div>
           </div>
 
+          <!-- Thêm trường tìm kiếm theo checkIn và checkOut -->
+          <div class="mb-3">
+            <label for="checkIn" class="form-label">Check In Date:</label>
+            <input type="datetime-local" id="checkIn" name="checkIn" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="checkOut" class="form-label">Check Out Date:</label>
+            <input type="datetime-local" id="checkOut" name="checkOut" class="form-control">
+          </div>
+
           <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+            <button type="submit" class="btn btn-primary w-100">Search</button>
           </div>
         </form>
       </div>
     </div>
 
+
+
     <!-- Cột bên phải: Kết quả tìm kiếm -->
     <div class="col-md-8">
-      <h3 class="text-center mb-4">🏠 Kết quả tìm kiếm</h3>
+      <h3 class="text-center mb-4">🏠 Search Result</h3>
+
+      <!-- Nếu danh sách phòng trống, hiển thị thông báo -->
+      <div th:if="${#lists.isEmpty(rooms)}" class="alert alert-warning text-center">
+        No suitable rooms found. Please try again!
+      </div>
+
       <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4" th:each="room : ${rooms}">
           <div class="card shadow-lg border-0 rounded-4">
             <!-- Hiển thị hình ảnh -->
-            <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="card-img-top rounded-top" style="height: 200px; object-fit: cover;">
+            <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="card-img-top rounded-top"
+                 style="height: 200px; object-fit: cover;">
             <div class="card-body">
-              <h5 class="card-title text-primary fw-bold">Phòng #<span th:text="${room.id}"></span></h5>
-              <p class="card-text"><strong>💰 Giá:</strong> <span th:text="${room.price} + ' VNĐ'"></span></p>
-              <p class="card-text"><strong>📜 Mô tả:</strong> <span th:text="${room.description}"></span></p>
+              <h5 class="card-title text-primary fw-bold">
+                Room #<span th:text="${room.id}"></span>
+              </h5>
+
+              <p class="card-text">
+                <strong>🏨 Hotel:</strong> <span th:text="${room.hotel.hotelName}"></span>
+              </p>
+
+              <p class="card-text">
+                <strong>🛏️ Room Type:</strong> <span th:text="${room.roomType.typeName}"></span>
+              </p>
+
+              <p class="card-text">
+                <strong>💰 Price:</strong> <span th:text="${room.price} + ' VNĐ'"></span>
+              </p>
+
+              <p class="card-text">
+                <strong>📜 Description:</strong> <span th:text="${room.description}"></span>
+              </p>
+
+              <p class="card-text">
+                <strong>🟢 Status:</strong>
+                <span class="text-success fw-bold">Available</span>
+              </p>
+
               <div class="text-end">
-                <a href="#" class="btn btn-primary btn-sm">Chi tiết</a>
-                <a href="#" class="btn btn-success btn-sm">Đặt phòng</a>
+                <a href="#" class="btn btn-primary btn-sm">Detail</a>
+                <a href="#" class="btn btn-success btn-sm">Book</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
 
   </div>
 </div>

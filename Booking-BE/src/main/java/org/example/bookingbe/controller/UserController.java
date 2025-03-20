@@ -4,11 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +23,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +45,9 @@ public class UserController {
 
     @Autowired
     private IRoomService roomService;
+
+    @Autowired
+    private IRoomRepo roomRepo;
 
 
     @GetMapping("/")
@@ -137,16 +145,40 @@ public class UserController {
 
 
     @GetMapping("/user/searchRooms")
-    public String searchRooms(@RequestParam(required = false) Long hotelId,
-                              @RequestParam(required = false) Long roomTypeId,
-                              @RequestParam(required = false) Double minPrice,
-                              @RequestParam(required = false) Double maxPrice,
-                              Model model) {
+    public String searchAvailableRooms(
+            @RequestParam(required = false) String hotelName,
+            @RequestParam(required = false) String typeName,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkIn,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOut,
+            Model model) {
 
-        List<Room> rooms = roomService.searchRooms(hotelId, roomTypeId, minPrice, maxPrice); // Đúng
+        List<Room> rooms;
+
+        // Nếu có điều kiện tìm kiếm -> lọc danh sách phòng theo điều kiện
+        if (hotelName != null || typeName != null || minPrice != null || maxPrice != null || checkIn != null || checkOut != null ) {
+            rooms = roomService.searchRooms(hotelName, typeName, minPrice, maxPrice, checkIn, checkOut)
+                    .stream()
+                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 1) // Chỉ lấy phòng available
+                    .collect(Collectors.toList());
+        } else {
+            // Nếu không có điều kiện tìm kiếm -> chỉ lấy danh sách phòng available
+            rooms = roomService.getAvailableRooms();
+        }
+
+        // Nếu có checkIn và checkOut -> Lọc phòng trống trong khoảng thời gian đó
+        if (checkIn != null && checkOut != null) {
+            rooms = rooms.stream()
+                    .filter(room -> roomRepo.isRoomAvailable(room.getId(), checkIn, checkOut))
+                    .collect(Collectors.toList());
+        }
+
         model.addAttribute("rooms", rooms);
         return "client/searchRooms";
     }
+
+
 
     @GetMapping("/user/home")
     public String getUser(){
