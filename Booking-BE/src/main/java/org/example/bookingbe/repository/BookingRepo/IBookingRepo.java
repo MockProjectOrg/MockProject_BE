@@ -68,6 +68,9 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
             "ORDER BY COUNT(b) DESC")
     List<Object[]> getTopPackages();
 
+    @Query(value = "SELECT MONTH(booking_date) AS month, COUNT(*) AS total FROM bookings GROUP BY MONTH(booking_date)", nativeQuery = true)
+    List<Object[]> getBookingCountsByMonth();
+
     // Thống kê tổng hợp
     @Query("SELECT new map(" +
             "(SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NULL) AS totalBookings, " +

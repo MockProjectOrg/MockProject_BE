@@ -71,4 +71,15 @@ public class BookingService implements IBookingService {
         }
         return topPackages;
     }
+
+    @Override
+    public List<Integer> getBookingCountsByMonth() {
+        List<Object[]> results = bookingRepo.getBookingCountsByMonth();
+        List<Integer> bookingCounts = new ArrayList<>();
+
+        for (Object[] row : results) {
+            bookingCounts.add(((Number) row[1]).intValue()); // Giả sử row[1] là số lượng đặt phòng
+        }
+        return bookingCounts;
+    }
 }

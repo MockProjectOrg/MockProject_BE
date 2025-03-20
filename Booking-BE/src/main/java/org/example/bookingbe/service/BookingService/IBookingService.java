@@ -22,4 +22,6 @@ public interface IBookingService {
     Map<String, Object> getStatistics(); // Tổng hợp số liệu
 
     Object getTopPackages();
+
+    List<Integer> getBookingCountsByMonth();
 }
