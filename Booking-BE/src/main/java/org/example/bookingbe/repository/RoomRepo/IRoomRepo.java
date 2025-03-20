@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IRoomRepo extends JpaRepository<Room, Long> {
-    List<Room> findByHotelId(Long hotelId);
+    List<Room> findByHotel_Id(Long hotelId);
 }

@@ -33,6 +33,7 @@ public class WebSecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())
@@ -44,7 +45,7 @@ public class WebSecurityConfig {
                         .expiredUrl("/api/login?expired")
                         .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login","/api/register","/api/Doregister", "/api/current-user", "/api/session-info").permitAll()
+                        .requestMatchers("/api/login", "/api/register", "/api/Doregister", "/api/current-user", "/api/session-info", "/api/room/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()

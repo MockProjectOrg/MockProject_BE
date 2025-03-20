@@ -33,22 +33,21 @@ public class RoomController {
         return ResponseEntity.ok(rooms);
     }
 
+
     @GetMapping("/{id}")
     public String viewRoomDetails(@PathVariable Long id, Model model, Principal principal) {
-        Room room = roomService.getRoomById(id);
-        if (room == null) {
-            model.addAttribute("error", "Room not found!");
+        try {
+            Room room = roomService.getRoomById(id);
+            model.addAttribute("room", room);
+            // Kiểm tra quyền truy cập phòng
+            if (principal != null && isAdminHotelOfRoom(principal.getName(), room)) {
+                return "adminHotel/adminRoom_detail";
+            }
+            return "client/room_detail";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
             return "error-page";
         }
-
-        model.addAttribute("room", room);
-        model.addAttribute("hotel", room.getHotel());
-
-        if (principal != null && isAdminHotelOfRoom(principal.getName(), room)) {
-            return "adminHotel/admin_room_detail";
-        }
-
-        return "client/room_detail";
     }
 
     private boolean isAdminHotelOfRoom(String username, Room room) {

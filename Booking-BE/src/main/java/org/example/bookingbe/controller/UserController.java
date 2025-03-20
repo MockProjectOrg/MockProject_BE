@@ -7,12 +7,7 @@ import org.example.bookingbe.model.User;
 import org.example.bookingbe.respone.MessageRespone;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,16 +25,16 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
-    public String login(HttpServletRequest request){
-        if(request.getUserPrincipal() !=null){
+    public String login(HttpServletRequest request) {
+        if (request.getUserPrincipal() != null) {
             return "redirect:/api/user/home";
         }
         return "auth/login";
     }
 
     @GetMapping("/register")
-    public String register(Model model, HttpServletRequest request){
-        if(request.getUserPrincipal() !=null){
+    public String register(Model model, HttpServletRequest request) {
+        if (request.getUserPrincipal() != null) {
             return "redirect:/api/user/home";
         }
         model.addAttribute("user", new User());
@@ -48,7 +43,7 @@ public class UserController {
 
     @PostMapping("/Doregister")
     public String doRegister(@ModelAttribute("user") User user, Model model) throws MessagingException {
-        if(userService.existsUser(user.getUserName()) || userService.exstsEmail(user.getEmail())){
+        if (userService.existsUser(user.getUserName()) || userService.exstsEmail(user.getEmail())) {
             model.addAttribute("message", new MessageRespone("User or Email already exists"));
             return "register";
         }
@@ -57,21 +52,16 @@ public class UserController {
     }
 
     @GetMapping("/user/home")
-    public String getUser(){
+    public String getUser() {
         return "client/homePage";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session != null){
+        if (session != null) {
             session.invalidate();
         }
         return "redirect:/api/login";
     }
-
-
-
-
-
 }
