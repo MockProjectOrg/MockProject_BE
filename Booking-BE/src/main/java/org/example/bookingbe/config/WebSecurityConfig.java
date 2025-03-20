@@ -42,10 +42,10 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .sessionFixation().newSession()
                         .maximumSessions(1)
-                        .expiredUrl("/api/login?expired")
+                        .expiredUrl("/api/?expired")
                         .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/","/api/register","/api/Doregister").permitAll()
+                        .requestMatchers("/api/","/api/register","/api/Doregister","/api/booking/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/managerHotel/**", "/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER")
@@ -84,7 +84,7 @@ public class WebSecurityConfig {
             } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_HOTEL_MANAGER"))) {
                 response.sendRedirect("/managerRooms");
             } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
-                response.sendRedirect("/api/user/userProfile");
+                response.sendRedirect("/home");
             } else {
                 response.sendRedirect("/default-home");
             }

@@ -1,68 +1,282 @@
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-    Login Page
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-  <style>
-    body {
-             font-family: 'Roboto', sans-serif;
-         }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .navigation {
+            width: 100%;
+            height: 84px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            background-color: white;
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        .wrap-content-nav {
+            width: 1400px;
+            height: 84px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: auto auto;
+        }
+
+        .wrap-icon-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 170px;
+            height: 100%;
+        }
+
+        .wrap-icon-text div h2 {
+            color: #F48023;
+            margin: 0;
+        }
+
+
+        .btn-signup {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #F48023;
+            color: white;
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-signup.loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .loading-text {
+            display: none;
+        }
+
+        .btn-signup.loading .loading-text {
+            display: inline-block;
+        }
+
+        .btn-signup.loading .original-text {
+            display: none;
+        }
+
+        .conntent-left {
+            width: 50%;
+            height: 100vh;
+            float: left;
+        }
+
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            width: 540px;
+            height: auto;
+            padding: 60px;
+            transform: translate(-50%, -50%);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-text {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        /* From Uiverse.io by micaelgomestavares */
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #ffffff;
+            width: 450px;
+            border-radius: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        ::placeholder {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .form button {
+            align-self: flex-end;
+        }
+
+        .flex-column>label {
+            color: #151717;
+            font-weight: 600;
+        }
+
+        .inputForm {
+            border: 1.5px solid #ecedec;
+            border-radius: 10px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .input {
+            margin-left: 10px;
+            border-radius: 10px;
+            border: none;
+            width: 85%;
+            height: 100%;
+        }
+
+        .input:focus {
+            outline: none;
+        }
+
+        .inputForm:focus-within {
+            border: 1.5px solid #F48023;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+
+        .flex-row>div>label {
+            font-size: 14px;
+            color: black;
+            font-weight: 400;
+        }
+
+        .flex-row a {
+            font-size: 14px;
+            margin-left: 5px;
+            color: #2d79f3;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .confirm-login {
+            width: 100%;
+            border-radius: 5px;
+            height: 50px;
+            background-color: #F48023;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .confirm-login:disabled {
+            background-color: #d4d4d4;
+            cursor: not-allowed;
+        }
+
+        .banner-right {
+            float: right;
+            width: 50%;
+            height: 100vh;
+        }
+
+        .banner-right img {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+        .wrap-banner{
+            width: 100%;
+            height: 30%;
+            display: flex;
+        }
+
+        .banner1, .banner2 {
+            width: 50%;
+            height: 100%;
+        }
+
+        .slick-slider div img,
+        .slick-slider2 div img {
+            width: 100%;
+            object-fit: cover;
+            height: 293px;
+        }
+    </style>
 </head>
-<body class="bg-white flex items-center justify-center min-h-screen">
-<div class="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
-  <div class="flex-1 flex items-center justify-center p-6">
-    <img alt="Illustration of people interacting with data visualizations and charts" height="400" src="https://storage.googleapis.com/a1aa/image/1yNXQbrSF9rZ_nNZgUYzEk7rRWnv2QS5_ijZcHrKm6A.jpg" width="600"/>
-  </div>
-  <div class="flex-1 bg-blue-900 text-white p-8 flex flex-col justify-center">
-    <h1 class="text-3xl font-bold mb-4">
-      Hello!
-      <br/>
-      Welcome back!
-    </h1>
-    <p class="mb-6">
-      Let's Login to Your Account
-    </p>
-    <form class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium" for="username">
-          Username
-        </label>
-        <input class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" id="username" type="text"/>
-      </div>
-      <div>
-        <label class="block text-sm font-medium" for="password">
-          Password
-        </label>
-        <input class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" id="password" type="password"/>
-      </div>
-      <button class="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition duration-300" type="submit">
-        Login
-      </button>
-    </form>
-    <div class="mt-4 text-sm">
-      <p>
-        Don't have an account?
-        <a class="text-blue-300 underline" href="#">
-          Sign in now
-        </a>
-      </p>
+<body>
+
+    <div class="conntent-left">
+        <div class="login-box">
+            <div class="login-text">
+                <h3><strong>Chào Bạn!</strong></h3>
+                <label>Hãy cùng nhau tạo ra cộng đồng lớn mạnh với chúng tôi!</label>
+            </div>
+            <form class="form" th:action="@{/login}" method="post">
+                <div class="alert alert-danger" role="alert" th:if="${param.error}">
+                    Wrong username or password
+                </div>
+                <div class="inputForm">
+                    <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg">
+                        <g id="Layer_3" data-name="Layer 3">
+                            <path
+                                    d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z">
+                            </path>
+                        </g>
+                    </svg>
+                    <input type="text" class="input" placeholder="User Name" name="username" >
+                </div>
+                <div class="inputForm">
+                    <svg height="20" viewBox="-64 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                                d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0">
+                        </path>
+                        <path
+                                d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0">
+                        </path>
+                    </svg>
+                    <input [type]="showpass ? 'text' : 'password'" type="password" class="input"
+                           placeholder="Password" name="password">
+
+                </div>
+                <div class="flex-row">
+                    <div>
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">remember me</label>
+                    </div>
+                    <a  class="span">dang ki?</a>
+                </div>
+                <button class="confirm-login" type="submit">Đăng nhập</button>
+            </form>
+        </div>
     </div>
-    <div class="mt-8 text-xs flex justify-between">
-      <a class="text-blue-300 underline" href="#">
-        Privacy Policy
-      </a>
-      <a class="text-blue-300 underline" href="#">
-        Cookies Settings
-      </a>
+
+
+    <div class="banner-right">
+
+        <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D"
+             alt="" />
+
     </div>
-  </div>
-</div>
+
 </body>
 </html>
+

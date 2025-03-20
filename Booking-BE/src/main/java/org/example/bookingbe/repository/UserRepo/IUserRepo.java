@@ -1,5 +1,6 @@
 package org.example.bookingbe.repository.UserRepo;
 
+import org.example.bookingbe.dto.UserDto;
 import org.example.bookingbe.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,7 @@ public interface IUserRepo extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN u.role r JOIN Hotel h ON h.user = u WHERE h.id = :hotelId AND r.roleName = 'HOTEL_MANAGER'")
     List<User> findManagersByHotelId(@Param("hotelId") Long hotelId);
+
+    @Query(value = "Select u.id, u.last_name, u.first_name, u.email, u.phone, u.birthday, u.address, u.gender from user as u where u.id = :id", nativeQuery = true)
+    UserDto findUserById(Long id);
 }

@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/")
     public String login(HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
-            return "redirect:/api/user/home";
+            return "redirect:/";
         }
         return "auth/login";
     }
@@ -58,7 +58,6 @@ public class UserController {
 
     @GetMapping("/user/userProfile")
     public String getUser(HttpSession session, Model model) {
-        // Lấy userId từ session
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
@@ -66,8 +65,9 @@ public class UserController {
         }
 
         model.addAttribute("userId", userId);
-        return "profile";
+        return "auth/profile";
     }
+
 
 
 

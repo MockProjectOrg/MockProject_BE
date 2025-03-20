@@ -1,13 +1,15 @@
 package org.example.bookingbe.service.BookingService;
 
 import jakarta.transaction.Transactional;
-import org.example.bookingbe.model.Booking;
-import org.example.bookingbe.model.Room;
-import org.example.bookingbe.model.Status;
-import org.example.bookingbe.model.User;
+import org.example.bookingbe.dto.BookingDto;
+import org.example.bookingbe.dto.BookingInterface;
+import org.example.bookingbe.dto.UserDto;
+import org.example.bookingbe.model.*;
 import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
+import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.repository.StatusRepo.IStatusRepo;
+import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,12 @@ public class BookingService implements IBookingService {
 
     @Autowired
     private IStatusRepo statusRepo;
+
+    @Autowired
+    private IHotelRepo hotelRepo;
+
+    @Autowired
+    private IUserRepo userRepo;
 
     @Transactional
     @Override
@@ -118,5 +126,28 @@ public class BookingService implements IBookingService {
     @Override
     public boolean isBookingBelongToHotel(Long bookingId, Long hotelId) {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
+    }
+
+    @Override
+    public BookingDto getBooking(Long id) {
+        BookingInterface projection = bookingRepo.getBooking(id);
+        if (projection == null) {
+            return null;
+        }
+        System.out.println(projection.getHotelId());
+        System.out.println(projection.getCheckIn());
+        System.out.println(projection.getRoomId());
+        System.out.println(projection.getUserId());
+        Optional<Hotel> hotel = hotelRepo.findById(projection.getHotelId());
+        Optional<Room> room = roomRepo.findById(projection.getRoomId());
+        UserDto user = userRepo.findUserById(projection.getUserId());
+        return new BookingDto(
+                hotel,
+                room,
+                user,
+                projection.getCheckIn(),
+                projection.getCheckOut(),
+                projection.getDescription()
+        );
     }
 }

@@ -3,7 +3,7 @@ package org.example.bookingbe.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.example.bookingbe.customAnnotation.AgeOver18;
+import org.example.bookingbe.custom.annotationValidate.AgeOver18;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ public class User {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number up to 10 digits")
     private String phone;
     @Column(name = "password", columnDefinition = "TEXT")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "example: user_123 or Password123!")
+//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "example: user_123 or Password123!")
     private String password;
     @Column(name = "address", columnDefinition = "varchar(155)")
     @Size(min = 20, max = 150, message = "address minimum 20 characters")
@@ -46,6 +46,17 @@ public class User {
     private Role role;
 
     public User(Long userId) {}
+
+    public User(Long id, String email, String phone, String address, Integer gender, String firstName, String lastName, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.gender = gender;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+    }
 
     public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
         this.id = id;

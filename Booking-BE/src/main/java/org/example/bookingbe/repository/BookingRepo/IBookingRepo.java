@@ -1,5 +1,7 @@
 package org.example.bookingbe.repository.BookingRepo;
 
+import org.example.bookingbe.dto.BookingDto;
+import org.example.bookingbe.dto.BookingInterface;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -36,6 +38,7 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     List<Booking> findUpcomingCheckouts(@Param("startDate") LocalDateTime startDate,
                                         @Param("endDate") LocalDateTime endDate);
 
-
+    @Query(value = "SELECT b.id as id, b.check_in, b.check_out, b.description, b.room_id as roomId , b.user_id as userId, h.id as hotelId FROM Booking AS b  join Room as r on b.room_id = r.id join Hotel AS h on r.hotel_id = h.id where r.id = :id", nativeQuery = true)
+    BookingInterface getBooking(Long id);
 
 }

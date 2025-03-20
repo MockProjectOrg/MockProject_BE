@@ -1,8 +1,10 @@
 package org.example.bookingbe.service.BookingService;
 
 import jakarta.transaction.Transactional;
+import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,4 +27,6 @@ public interface IBookingService {
     // Thêm các phương thức mới
     List<Booking> getBookingsByHotelId(Long hotelId);
     boolean isBookingBelongToHotel(Long bookingId, Long hotelId);
+
+    BookingDto getBooking(Long id);
 }

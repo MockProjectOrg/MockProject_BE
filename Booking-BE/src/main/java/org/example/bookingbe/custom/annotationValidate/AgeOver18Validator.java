@@ -1,4 +1,4 @@
-package org.example.bookingbe.customAnnotation;
+package org.example.bookingbe.custom.annotationValidate;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
