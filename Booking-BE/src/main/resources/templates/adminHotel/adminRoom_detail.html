@@ -163,20 +163,20 @@
         <div class="room-container">
             <div class="image-container">
                 <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-                <img alt="Room Image" class="room-image"
-                     id="room-image"
-                     src="" th:src="${not #lists.isEmpty(room.images) ? room.images[0].image_url : 'default.jpg'}"/>
+                <div th:if="${room.image != null and not #lists.isEmpty(room.image)}">
+                    <img alt="Room Image" class="room-image" th:src="${room.image[0].imageUrl}">
+                </div>
+                <p th:if="${#lists.isEmpty(room.image)}">No images available</p>
                 <button class="nav-button next" onclick="nextImage()">&#10095;</button>
             </div>
             <div class="room-info">
-                <h3 th:text="${user.hotel.name}">Hotel Name</h3>
-                <p><strong>Room Name:</strong> <span th:text="${room.name}"></span></p>
+                <h3 th:text="${user.hotel.hotelName}">Hotel Name</h3>
+                <p><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
+                <p><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span> stars</p>
                 <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
-                <p><strong>Size:</strong> <span th:text="${room.size}"></span> m²</p>
-                <p><strong>Max Occupancy:</strong> <span th:text="${room.maxOccupancy}"></span> guests</p>
-                <p><strong>Type:</strong> <span th:text="${room.type}"></span></p>
-                <p><strong>Status:</strong> <span th:text="${room.status.getStatusName()}"></span></p>
-                <p><strong>Amenities:</strong> <span th:text="${room.amenities}"></span></p>
+                <p><strong>Capacity:</strong> <span th:text="${room.capacity}"></span> guests</p>
+                <p><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
                 <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
                 <div class="btn-container">
                     <button class="btn btn-primary"

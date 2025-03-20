@@ -4,7 +4,7 @@ import org.example.bookingbe.model.Room;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService implements IRoomService {
@@ -16,13 +16,15 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Room getRoomById(Long id) {
-        return roomRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Room not found with id: " + id));
+    public Optional<Room> getRoomById(Long id) {
+        return roomRepo.findById(id).map(room -> {
+            room.getImages().size();
+            return room;
+        });
     }
 
-
     @Override
-    public List<Room> getRoomsByHotel(Long hotelId) {
-        return roomRepo.findByHotel_Id(hotelId);
+    public Room findById(Long id) {
+        return roomRepo.findById(id).orElse(null);
     }
 }

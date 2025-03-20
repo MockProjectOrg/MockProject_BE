@@ -22,4 +22,14 @@ public class HotelService implements IHotelService {
         }
         return hotelRepo.findByUser(user);
     }
+
+    @Override
+    public Hotel findById(Long id) {
+        return hotelRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return null;
+    }
 }

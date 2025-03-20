@@ -10,39 +10,42 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "user_name", columnDefinition = "varchar(100)", unique = true)
     private String userName;
+
     @Column(name = "email", columnDefinition = "varchar(255)", unique = true)
     private String email;
+
     @Column(name = "phone", columnDefinition = "varchar(10)")
     private String phone;
+
     @Column(name = "password", columnDefinition = "TEXT")
     private String password;
+
     @Column(name = "address", columnDefinition = "varchar(155)")
     private String address;
+
     @Column(name = "gender")
     private Integer gender;
+
     @Column(name = "first_name", columnDefinition = "varchar(50)")
     private String firstName;
+
     @Column(name = "last_name", columnDefinition = "varchar(50)")
     private String lastName;
+
     @Column(name = "birthday")
     private LocalDate birthday;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public User() {
-    }
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Hotel hotel;
 
-    public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
-        this.id = id;
-        this.userName = userName;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.address = address;
-        this.role = role;
+    public User() {
     }
 
     public Long getId() {
@@ -133,5 +136,11 @@ public class User {
         this.birthday = birthday;
     }
 
+    public Hotel getHotel() {
+        return hotel;
+    }
 
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 }

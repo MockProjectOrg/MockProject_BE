@@ -3,10 +3,10 @@ package org.example.bookingbe.service.RoomService;
 
 import org.example.bookingbe.model.Room;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface IRoomService {
-    Room getRoomById(Long id);
+    Optional<Room> getRoomById(Long id);
 
-    List<Room> getRoomsByHotel(Long hotelId);
+    Room findById(Long id);
 }
