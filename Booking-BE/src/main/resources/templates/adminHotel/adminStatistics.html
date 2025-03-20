@@ -97,12 +97,11 @@
                 <div class="text-3xl font-bold">
                     <span th:text="${totalOrders}"></span>
                     <span class="text-red-500 text-sm" th:if="${percentageChange < 0}">
-    ↓ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
-</span>
+                        ↓ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
+                    </span>
                     <span class="text-green-500 text-sm" th:if="${percentageChange > 0}">
-    ↑ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
-</span>
-
+                        ↑ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
+                    </span>
                 </div>
                 <div class="flex justify-between mt-4">
                     <div>
@@ -110,7 +109,7 @@
                             THIS MONTH
                         </div>
                         <div class="text-xl font-bold">
-                            1913
+                            <span th:text="${monthlyRevenue}"></span>
                         </div>
                     </div>
                     <div>
@@ -118,7 +117,7 @@
                             THIS WEEK
                         </div>
                         <div class="text-xl font-bold">
-                            1125
+                            <span th:text="${weeklyRevenue}"></span>
                         </div>
                     </div>
                 </div>
@@ -128,7 +127,7 @@
                     Rooms Available
                 </div>
                 <div class="text-3xl font-bold">
-                    312
+                    <span th:text="${countRoomAvailable}"></span>
                 </div>
                 <div class="flex justify-between mt-4">
                     <div>
@@ -136,7 +135,7 @@
                             BOOKED (W)
                         </div>
                         <div class="text-xl font-bold">
-                            913
+                            <span th:text="${bookedRoomsWeekly}"></span>
                         </div>
                     </div>
                     <div>
@@ -144,7 +143,7 @@
                             BOOKED (M)
                         </div>
                         <div class="text-xl font-bold">
-                            125
+                            <span th:text="${bookedRoomsMonthly}"></span>
                         </div>
                     </div>
                 </div>
@@ -188,129 +187,70 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            Starter Package
+                    <th:block th:each="package : ${topPackages}">
+                        <div class="flex justify-between items-center">
+                            <div class="text-gray-500" th:text="${package.packageName}"></div>
+                            <div class="text-gray-500" th:text="${package.percentage} + '%'"></div>
                         </div>
-                        <div class="text-gray-500">
-                            56%
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="h-2.5 rounded-full"
+                                 th:style="'width:' + ${package.percentage} + '%; background-color:' + ${package.color}"></div>
                         </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 56%">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            Honeymoon Package
-                        </div>
-                        <div class="text-gray-500">
-                            45%
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-purple-600 h-2.5 rounded-full" style="width: 45%">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            Vacation Package
-                        </div>
-                        <div class="text-gray-500">
-                            32%
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-yellow-600 h-2.5 rounded-full" style="width: 32%">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            Continental Package
-                        </div>
-                        <div class="text-gray-500">
-                            29%
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-pink-600 h-2.5 rounded-full" style="width: 29%">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            Spring Package
-                        </div>
-                        <div class="text-gray-500">
-                            18.49%
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-orange-600 h-2.5 rounded-full" style="width: 18.49%">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray-500">
-                            All suite Package
-                        </div>
-                        <div class="text-gray-500">
-                            16%
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 16%">
-                        </div>
-                    </div>
+                    </th:block>
                 </div>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        Sales Revenue
-                    </div>
-                    <div class="text-gray-500">
-                        30 Days
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <div class="text-gray-500">
-                            Monthly
-                        </div>
-                        <div class="text-2xl font-bold">
-                            9.28K
-                            <span class="text-green-500 text-sm">
-          ↑ 7.46%
-         </span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            Weekly
-                        </div>
-                        <div class="text-2xl font-bold">
-                            2.69K
-                            <span class="text-red-500 text-sm">
-          ↓ 1.92%
-         </span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            Daily (Avg)
-                        </div>
-                        <div class="text-2xl font-bold">
-                            0.94K
-                            <span class="text-green-500 text-sm">
-          ↑ 3.45%
-         </span>
-                        </div>
-                    </div>
-                </div>
-                <img alt="Sales Revenue Chart" class="w-full" height="200"
-                     src="https://storage.googleapis.com/a1aa/image/K_qDynisksiWbw9hve-nqR2ZMaK-AMLFb8p7cHv1ZlE.jpg"
-                     width="400"/>
             </div>
         </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-gray-500">
+                    Sales Revenue
+                </div>
+                <div class="text-gray-500">
+                    30 Days
+                </div>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <div class="text-gray-500">
+                        Monthly
+                    </div>
+                    <div class="text-2xl font-bold">
+                        <span th:text="${monthlyRevenue}"></span>K
+                        <span th:class="${monthlyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
+                    <span th:text="${monthlyChange >= 0 ? '↑' : '↓'}"></span>
+                    <span th:text="${#numbers.formatDecimal(monthlyChange, 1, 2)} + '%'"></span>
+                </span>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-gray-500">
+                        Weekly
+                    </div>
+                    <div class="text-2xl font-bold">
+                        <span th:text="${weeklyRevenue}"></span>K
+                        <span th:class="${weeklyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
+                    <span th:text="${weeklyChange >= 0 ? '↑' : '↓'}"></span>
+                    <span th:text="${#numbers.formatDecimal(weeklyChange, 1, 2)} + '%'"></span>
+                </span>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-gray-500">
+                        Daily (Avg)
+                    </div>
+                    <div class="text-2xl font-bold">
+                        <span th:text="${dailyRevenue}"></span>K
+                        <span th:class="${dailyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
+                    <span th:text="${dailyChange >= 0 ? '↑' : '↓'}"></span>
+                    <span th:text="${#numbers.formatDecimal(dailyChange, 1, 2)} + '%'"></span>
+                </span>
+                    </div>
+                </div>
+            </div>
+            <img alt="Sales Revenue Chart" class="w-full" height="200"
+                 th:src="${salesChartUrl}" width="400"/>
+        </div>
+
         <!-- Room Booking Chart and Income vs Expenses -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div class="bg-white p-6 rounded-lg shadow">
@@ -322,46 +262,7 @@
                         30 Days
                     </div>
                 </div>
-                <img alt="Room Booking Chart" class="w-full" height="200"
-                     src="https://storage.googleapis.com/a1aa/image/FAaehLnzEtp1YMRLZEXCiwNvBFa-DTz7zJj3xoinfmQ.jpg"
-                     width="400"/>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        Income vs Expenses
-                    </div>
-                    <div class="text-gray-500">
-                        30 Days
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <div class="text-gray-500">
-                            Income
-                        </div>
-                        <div class="text-2xl font-bold">
-                            2.57K
-                            <span class="text-red-500 text-sm">
-          ↓ 12.27%
-         </span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            Expenses
-                        </div>
-                        <div class="text-2xl font-bold">
-                            3.5K
-                            <span class="text-red-500 text-sm">
-          ↓ 8.37%
-         </span>
-                        </div>
-                    </div>
-                </div>
-                <img alt="Income vs Expenses Chart" class="w-full" height="200"
-                     src="https://storage.googleapis.com/a1aa/image/UtUN5_Uh7ccbJ_0R9IJhhop4dTSGed-8g8So9a6NvtU.jpg"
-                     width="400"/>
+                <iframe class="w-full" height="800" src="BookingChart.html" style="border:none;" width="400"></iframe>
             </div>
         </div>
         <!-- New Customer and Recent Activities -->
@@ -372,170 +273,46 @@
                         New Customer
                     </div>
                     <div class="text-blue-500">
-                        View All
+                        <a href="/customers">View All</a>
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <div class="flex items-center">
+                    <div class="flex items-center" th:each="customer : ${newCustomers}">
                         <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg"
-                             width="40"/>
+                             th:src="${customer.avatarUrl}" width="40"/>
                         <div>
-                            <div class="text-gray-700 font-semibold">
-                                Abu Bin Ishtiyak
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                info@softnio.com
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Sharon Walker
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                sharon@softnio.com
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Gloria Oliver
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                gloria_72@example.com
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Phillip Sullivan
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                phillip55@example.com
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/3g_WU435omVA1hdWfne4Mky3HWymzP4wzyiNkti86mE.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Tasnim Ifrat
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                tasif45@example.com
-                            </div>
+                            <div class="text-gray-700 font-semibold" th:text="${customer.name}"></div>
+                            <div class="text-gray-500 text-sm" th:text="${customer.email}"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow">
                 <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        Recent Activities
-                    </div>
-                    <div class="text-blue-500">
-                        Cancel All
-                    </div>
+                    <div class="text-gray-500">Recent Activities</div>
+                    <div class="text-blue-500 cursor-pointer hover:underline">Cancel All</div>
                 </div>
-                <div class="space-y-4">
-                    <div class="flex items-center">
-                        <img alt="Activity Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Keith Jensen
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                requested for room.
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                2 hours ago
+                <div class="space-y-4" th:if="${not #lists.isEmpty(recentActivities)}">
+                    <th:block th:each="activity : ${recentActivities}">
+                        <div class="flex items-center gap-4">
+                            <img alt="Activity Avatar" class="rounded-full" height="40"
+                                 th:src="${activity.avatarUrl} ?: 'default-avatar.png'"
+                                 width="40"/>
+                            <div>
+                                <div class="text-gray-700 font-semibold w-32 truncate"
+                                     th:text="${activity.username}"></div>
+                                <div class="text-gray-500 text-sm" th:text="${activity.action}"></div>
+                                <div class="text-gray-400 text-xs" th:text="${activity.timestamp}"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Activity Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Harry Simpson
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                placed a Order.
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                2 hours ago
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Activity Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Stephanie Marshall
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                cancelled booking.
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                2 hours ago
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Activity Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Nicholas Carr
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                confirmed booking.
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                2 hours ago
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <img alt="Activity Avatar" class="rounded-full mr-4" height="40"
-                             src="https://storage.googleapis.com/a1aa/image/QWbdCWXHyozeLy44ZwB5PS8jwMhyvTaXqwo1rac7ZIA.jpg"
-                             width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold">
-                                Timothy Moreno
-                            </div>
-                            <div class="text-gray-500 text-sm">
-                                placed a Order.
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                2 hours ago
-                            </div>
-                        </div>
-                    </div>
+                    </th:block>
+                </div>
+                <div class="text-gray-400 text-sm text-center" th:if="${#lists.isEmpty(recentActivities)}">
+                    No recent activities.
                 </div>
             </div>
         </div>
+
         <!-- Footer -->
         <div class="mt-6 text-center text-gray-500 text-sm">
             © 2024 DashLite. Template by Softnio

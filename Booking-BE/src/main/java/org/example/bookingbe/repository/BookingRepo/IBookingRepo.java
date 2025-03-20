@@ -1,64 +1,79 @@
 package org.example.bookingbe.repository.BookingRepo;
 
 import org.example.bookingbe.model.Booking;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface IBookingRepo extends JpaRepository<Booking, Long> {
 
-    @Query("SELECT COUNT(b) FROM Booking b")
-    long countTotalBookings();
+    // Tổng số lượt đặt phòng
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NULL")
+    Double countTotalBookings();
 
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status.statusName = :statusName AND b.bookingCancel IS NULL")
-    Double getTotalRevenue(@Param("statusName") String statusName);
+    // Tổng doanh thu từ các booking hoàn thành
+    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL")
+    Double getTotalRevenue();
 
+    // Doanh thu trong tháng hiện tại
     @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
             "WHERE FUNCTION('MONTH', b.bookingDate) = FUNCTION('MONTH', CURRENT_DATE) " +
             "AND FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE) " +
-            "AND b.status.statusName = :statusName AND b.bookingCancel IS NULL")
-    Double getRevenueThisMonth(@Param("statusName") String statusName);
+            "AND b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL")
+    Double getRevenueThisMonth();
 
+    // Doanh thu trong tuần hiện tại
     @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
             "WHERE b.bookingDate BETWEEN :startOfWeek AND :endOfWeek " +
-            "AND b.status.statusName = :statusName AND b.bookingCancel IS NULL")
-    Double getRevenueThisWeek(@Param("statusName") String statusName,
-                              @Param("startOfWeek") LocalDate startOfWeek,
-                              @Param("endOfWeek") LocalDate endOfWeek);
+            "AND b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL")
+    Double getRevenueCurrentWeek();
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NOT NULL")
-    long countCanceledBookings();
+    // Doanh thu theo tháng của năm hiện tại
+    @Query("SELECT FUNCTION('MONTH', b.bookingDate), COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+            "WHERE FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE) " +
+            "AND b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL " +
+            "GROUP BY FUNCTION('MONTH', b.bookingDate) " +
+            "ORDER BY FUNCTION('MONTH', b.bookingDate)")
+    List<Object[]> getMonthlyRevenue();
 
-    // 🔹 Lấy loại phòng được đặt nhiều nhất
+    // Doanh thu theo quý của năm hiện tại
+    @Query("SELECT FUNCTION('QUARTER', b.bookingDate), COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+            "WHERE FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE) " +
+            "AND b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL " +
+            "GROUP BY FUNCTION('QUARTER', b.bookingDate) " +
+            "ORDER BY FUNCTION('QUARTER', b.bookingDate)")
+    List<Object[]> getQuarterlyRevenue();
+
+    // Doanh thu theo năm
+    @Query("SELECT FUNCTION('YEAR', b.bookingDate), COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+            "WHERE b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL " +
+            "GROUP BY FUNCTION('YEAR', b.bookingDate) " +
+            "ORDER BY FUNCTION('YEAR', b.bookingDate)")
+    List<Object[]> getYearlyRevenue();
+
+    // Loại phòng phổ biến nhất
     @Query("SELECT b.room.roomType FROM Booking b " +
             "GROUP BY b.room.roomType " +
-            "ORDER BY COUNT(b) DESC LIMIT 1")
-    String getMostPopularRoomType();
+            "ORDER BY COUNT(b) DESC")
+    List<String> getMostPopularRoomType(Pageable pageable);
 
-    // 🔹 Lấy doanh thu theo năm
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
-            "WHERE FUNCTION('YEAR', b.bookingDate) = :year " +
-            "AND b.status.statusName = 'COMPLETED' " +
-            "AND b.bookingCancel IS NULL")
-    Double getRevenueByYear(@Param("year") int year);
+    // Gói đặt phòng phổ biến nhất
+    @Query("SELECT b.room.roomType, COUNT(b) FROM Booking b " +
+            "GROUP BY b.room.roomType " +
+            "ORDER BY COUNT(b) DESC")
+    List<Object[]> getTopPackages();
 
-    // 🔹 Lấy doanh thu theo quý
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
-            "WHERE FUNCTION('QUARTER', b.bookingDate) = :quarter " +
-            "AND FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE) " +
-            "AND b.status.statusName = 'COMPLETED' " +
-            "AND b.bookingCancel IS NULL")
-    Double getRevenueByQuarter(@Param("quarter") int quarter);
-
-    // 🔹 Lấy doanh thu theo tháng
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
-            "WHERE FUNCTION('MONTH', b.bookingDate) = :month " +
-            "AND FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE) " +
-            "AND b.status.statusName = 'COMPLETED' " +
-            "AND b.bookingCancel IS NULL")
-    Double getRevenueByMonth(@Param("month") int month);
+    // Thống kê tổng hợp
+    @Query("SELECT new map(" +
+            "(SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NULL) AS totalBookings, " +
+            "(SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NOT NULL) AS canceledBookings, " +
+            "(SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL) AS totalRevenue, " +
+            "(SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.bookingDate = CURRENT_DATE AND b.status.statusName = 'COMPLETED' AND b.bookingCancel IS NULL) AS revenueToday " +
+            ")")
+    Map<String, Object> getStatistics();
 }

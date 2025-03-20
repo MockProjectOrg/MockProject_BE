@@ -35,7 +35,7 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll() // 🚀 Cho phép truy cập vào /error
-                        .requestMatchers("/api/login", "/api/register", "/api/Doregister", "/api/current-user", "/api/session-info", "/api/room/**").permitAll()
+                        .requestMatchers("/api/login", "/api/register", "/api/Doregister", "/api/current-user", "/api/session-info", "/api/room/**", "/api/booking/admin/Dashboard").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/api/login")
                         .loginProcessingUrl("/login")
-                        .successHandler(authenticationSuccessHandler()) // ✅ Sử dụng hàm hợp lệ
+                        .successHandler(authenticationSuccessHandler())
                 )
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/api/login")
                         .deleteCookies("JSESSIONID"));

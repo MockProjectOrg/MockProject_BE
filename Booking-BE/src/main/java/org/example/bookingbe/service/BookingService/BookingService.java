@@ -1,22 +1,40 @@
 package org.example.bookingbe.service.BookingService;
 
 import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookingService implements IBookingService {
 
-    @Autowired
-    private IBookingRepo bookingRepo;
+    private final IBookingRepo bookingRepo;
+
+    public BookingService(IBookingRepo bookingRepo) {
+        this.bookingRepo = bookingRepo;
+    }
+
+    @Override
+    public Double getTotalBookings() {
+        return bookingRepo.countTotalBookings();
+    }
 
     @Override
     public Double getTotalRevenue() {
-        return bookingRepo.getTotalRevenue("COMPLETED");
+        return bookingRepo.getTotalRevenue();
+    }
+
+    @Override
+    public Double getRevenueCurrentWeek() {
+        return bookingRepo.getRevenueCurrentWeek();
+    }
+
+    @Override
+    public List<Object[]> getMonthlyRevenue() {
+        return bookingRepo.getMonthlyRevenue();
     }
 
     @Override
@@ -24,33 +42,33 @@ public class BookingService implements IBookingService {
         return (double) bookingRepo.countTotalBookings();
     }
 
+    @Override
+    public List<Object[]> getQuarterlyRevenue() {
+        return bookingRepo.getQuarterlyRevenue();
+    }
+
+    @Override
+    public List<Object[]> getYearlyRevenue() {
+        return bookingRepo.getYearlyRevenue();
+    }
+
+    @Override
     public Map<String, Object> getStatistics() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("totalRevenue", bookingRepo.getTotalRevenue("COMPLETED"));
-        data.put("totalOrders", bookingRepo.countTotalBookings());
-
-        String popularRoom = Optional.ofNullable(bookingRepo.getMostPopularRoomType()).orElse("N/A");
-        data.put("popularRoom", popularRoom);
-
-        return data;
+        return bookingRepo.getStatistics();
     }
 
-    public List<Double> getMonthlyRevenue() {
-        return IntStream.rangeClosed(1, 12)
-                .mapToObj(i -> Optional.ofNullable(bookingRepo.getRevenueByMonth(i)).orElse(0.0))
-                .collect(Collectors.toList());
-    }
+    @Override
+    public List<Map<String, Object>> getTopPackages() {
+        List<Object[]> results = bookingRepo.getTopPackages();
+        List<Map<String, Object>> topPackages = new ArrayList<>();
 
-    public List<Double> getQuarterlyRevenue() {
-        return IntStream.rangeClosed(1, 4)
-                .mapToObj(i -> Optional.ofNullable(bookingRepo.getRevenueByQuarter(i)).orElse(0.0))
-                .collect(Collectors.toList());
-    }
+        for (Object[] row : results) {
+            Map<String, Object> packageData = new HashMap<>();
+            packageData.put("packageName", row[0]);
+            packageData.put("totalBookings", row[1]);
 
-    public List<Double> getYearlyRevenue() {
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        return IntStream.range(0, 5)
-                .mapToObj(i -> Optional.ofNullable(bookingRepo.getRevenueByYear(currentYear - i)).orElse(0.0))
-                .collect(Collectors.toList());
+            topPackages.add(packageData);
+        }
+        return topPackages;
     }
 }

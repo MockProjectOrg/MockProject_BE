@@ -37,7 +37,7 @@ public class User {
 
     @Column(name = "birthday")
     private LocalDate birthday;
-
+    
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

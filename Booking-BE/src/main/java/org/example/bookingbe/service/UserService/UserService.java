@@ -13,13 +13,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private IUserRepo userRepo;
+    private static IUserRepo userRepo;
     @Autowired
     private IRoleRepo roleRepo;
     @Autowired
     private MailRegister mailRegister;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public static User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
     public void registerUser(User user) throws MessagingException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepo.findByRoleName("USER");

@@ -12,16 +12,28 @@ import java.util.Map;
 @Controller
 @RequestMapping("/api/booking")
 public class BookingController {
+
+    private final BookingService bookingService;
+
     @Autowired
-    private BookingService bookingService;
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @GetMapping("/admin/Dashboard")
     public String getDashboard(Model model) {
+        // Gọi một lần duy nhất
         Map<String, Object> statistics = bookingService.getStatistics();
+
+        // Thêm dữ liệu vào model
         model.addAttribute("totalRevenue", statistics.get("totalRevenue"));
         model.addAttribute("totalOrders", statistics.get("totalOrders"));
         model.addAttribute("popularRoom", statistics.get("popularRoom"));
+        model.addAttribute("countRoomAvailable", statistics.get("countRoomAvailable"));
+        model.addAttribute("bookedRoomsWeekly", statistics.get("bookedRoomsWeekly"));
+        model.addAttribute("bookedRoomsMonthly", statistics.get("bookedRoomsMonthly"));
+        model.addAttribute("topPackages", bookingService.getTopPackages());
 
-        return "adminStatistics";
+        return "adminHotel/adminStatistics";
     }
 }
