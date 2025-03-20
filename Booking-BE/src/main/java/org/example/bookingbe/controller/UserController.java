@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,9 +77,6 @@ public class UserController {
             return "redirect:/api/login";
         }
 
-        model.addAttribute("userId", userId);
-        return "auth/profile";
-        // Lấy User từ database
         User user = userService.getUserById(userId);
         if (user == null) {
             return "redirect:/api/login";
