@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>Project</title>
@@ -216,7 +216,7 @@
         <li><a href="#">News</a></li>
         <li><a href="#">Contact</a></li>
     </ul>
-    <div class="avt_func">
+    <div class="avt_func" th:object="${room}">
         <div class="d-flex align-items-center">
             <img src="https://firebasestorage.googleapis.com/v0/b/photo-archive-a0523i1.appspot.com/o/imgLanding%2Fz5572534439426_12e9a1d7d2b51721634af3d654e8c21b.jpg?alt=media&token=6fa5eb7d-4293-4552-b680-c8951492269d"
                  alt="Avatar">
@@ -230,7 +230,7 @@
     </div>
 </nav>
 <div class="container">
-    <form class="wrap-form">
+    <form class="wrap-form" method="post" action="/api/pay" >
 
         <div class="form-info">
             <h2>Thông tin liên hệ</h2>
@@ -238,23 +238,23 @@
                 email của mình.</p>
             <div class="row g-3 needs-validation" novalidate>
                 <div class="col-md-4">
-                    <label for="validationCustom01" class="form-label">First name</label>
-                    <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+                    <label for="validationCustom01" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="validationCustom01"  value="Mark" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label">Last name</label>
-                    <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
+                    <label for="validationCustom02" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="validationCustom02"  value="Otto" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <label for="validationCustom03" class="form-label">SDT</label>
-                    <input type="text" class="form-control" id="validationCustom03" required>
+                    <label for="validationCustom03" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="validationCustom03"   required>
                     <div class="invalid-feedback">
                         Please provide a valid city.
                     </div>
@@ -262,22 +262,22 @@
                 <div class="col-md-6">
                     <label for="validationCustomUsername" class="form-label">Email</label>
                     <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
                         <input type="text" class="form-control" id="validationCustomUsername"
-                               aria-describedby="inputGroupPrepend" required>
+                               aria-describedby="inputGroupPrepend"  required>
                         <div class="invalid-feedback">
                             Please choose a username.
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label for="validationCustom04" class="form-label">Discount</label>
-                    <select class="form-select" id="validationCustom04" required>
-                        <option selected disabled value="">Choose...</option>
-                        <option>...</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please select a valid state.
+                    <label for="validationCustom04" class="form-label">Address</label>
+                    <div class="input-group has-validation">
+
+                        <input type="text" class="form-control" id="validationCustom04"
+                               aria-describedby="inputGroupPrepend"   required>
+                        <div class="invalid-feedback">
+                            Please choose a username.
+                        </div>
                     </div>
                 </div>
 
@@ -285,27 +285,28 @@
         </div>
 
         <div class="form-info">
-            <h2>Chi tiết giá</h2>
+            <h2>Price Details</h2>
             <div class="wrap-form-price">
-                <p>Giá phòng:</p>
+                <p>Room price:</p>
                 <div class="d-flex justify-content-between">
-                    <p>(1x) Deluxe King - Ro (2 đêm)</p>
-                    <p>163.069 VND</p>
+                    <p th:text="${room.get().getRoomType().getTypeName()}">(1x) Deluxe King - Ro (2 đêm)</p>
+                    <p th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></p>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <h2>Tổng giá</h2>
-                <h2 style="color: orangered" th:text="${booking.getRoom().get().getPrice()}" ></h2>
+                <h2>Total</h2>
+                <input type="hidden" name="price" th:value="${totalPrice}" >
+                <h2 style="color: orangered" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}" ></h2>
             </div>
 
 
-                <button class="btn-book" type="submit">Submit form</button>
+                <button class="btn-book" type="submit">Pay</button>
         </div>
 
 
     </form>
 
-    <div class="room-info" th:object="${booking}">
+    <div class="room-info" >
         <div style="padding: 10px">
             <h4>Orchide'es Ocean Hotel</h4>
         </div>
@@ -317,8 +318,8 @@
                     <p>Nhận phòng</p>
                 </div>
                 <div>
-                    <b><p style="margin: 0" th:text="${booking.getCheckIn()}"></p></b>
-                    <p>Từ 14:00</p>
+                    <b><p style="margin: 0" th:text="${dateCheckIn}"></p></b>
+                    <p th:text="${timeCheckIn}"></p>
                 </div>
             </div>
 
@@ -327,14 +328,14 @@
                     <p>Trả phòng</p>
                 </div>
                 <div>
-                    <b><p style="margin: 0" th:text="${booking.getCheckOut()}">Thứ 5, 20 thg 3 2025</p></b>
-                    <p>Đến 14:00</p>
+                    <b><p style="margin: 0" th:text="${dateCheckOut}"></p></b>
+                    <p th:text="${timeCheckOut}"></p>
                 </div>
             </div>
 
             <div class="d-flex justify-content-between">
-                <b> <h3>Gia: </h3></b>
-                <b><h4 th:text="${booking.getRoom().get().getPrice()}"></h4></b>
+                <b> <h3>Price: </h3></b>
+                <b><h4 th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></h4></b>
             </div>
 
         </div>

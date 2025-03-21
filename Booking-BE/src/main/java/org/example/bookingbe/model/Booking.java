@@ -1,6 +1,7 @@
 package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -19,11 +20,31 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
+    @Column(name = "status_book", columnDefinition = "BIT")
+    @ColumnDefault("0")
+    private Boolean status;
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
     public Booking() {}
+
+    public Booking(Long id, LocalDateTime checkIn, LocalDateTime checkOut, String description, User user, Boolean status, Room room) {
+        this.id = id;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.description = description;
+        this.user = user;
+        this.status = status;
+        this.room = room;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;

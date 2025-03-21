@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                         .expiredUrl("/api/?expired")
                         .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/","/api/register","/api/Doregister","/api/booking/**").permitAll()
+                        .requestMatchers("/api/","/api/register","/api/Doregister").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/managerHotel/**", "/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER")

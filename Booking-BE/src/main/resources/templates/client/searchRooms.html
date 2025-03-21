@@ -155,11 +155,11 @@
           <!-- Thêm trường tìm kiếm theo checkIn và checkOut -->
           <div class="mb-3">
             <label for="checkIn" class="form-label">Check In Date:</label>
-            <input type="datetime-local" id="checkIn" name="checkIn" class="form-control">
+            <input type="datetime-local" id="checkIn" name="checkIn" class="form-control" th:value="${checkIn}">
           </div>
           <div class="mb-3">
             <label for="checkOut" class="form-label">Check Out Date:</label>
-            <input type="datetime-local" id="checkOut" name="checkOut" class="form-control">
+            <input type="datetime-local" id="checkOut" name="checkOut" class="form-control" th:value="${checkOut}">
           </div>
 
           <div class="text-center mt-3">
@@ -214,7 +214,9 @@
 
               <div class="text-end">
                 <a href="#" class="btn btn-primary btn-sm">Detail</a>
-                <a href="#" class="btn btn-success btn-sm">Book</a>
+                <a th:href="@{/api/booking/{id}(id=${room.id},
+                                        checkIn=${#temporals.format(checkIn, 'dd/MM/yyyy HH:mm')},
+                                        checkOut=${#temporals.format(checkOut, 'dd/MM/yyyy HH:mm')})}" class="btn btn-success btn-sm">Book</a>
               </div>
             </div>
           </div>

@@ -113,7 +113,7 @@ public class RoomController {
         try {
             // Upload ảnh phòng lên Cloudinary (lưu vào thư mục "room_images")
             String imageUrl = cloudinaryService.uploadFile(imageFile, "room_images", "room_" + System.currentTimeMillis());
-            room.setImageUrl(imageUrl);
+//            room.setImageUrl(imageUrl);
         } catch (IOException e) {
             throw new RuntimeException("Lỗi khi upload ảnh lên Cloudinary", e);
         }

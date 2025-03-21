@@ -145,6 +145,8 @@ public class UserController {
         }
 
         model.addAttribute("rooms", rooms);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
     }
 
