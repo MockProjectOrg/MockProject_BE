@@ -4,179 +4,117 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Room Details</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <style>
-        /* Overall Page Styles */
-        body {
-          font-family: Arial, sans-serif;
-          background-color: #f5f5f5;
-          color: #333;
-          margin: 0;
-          padding: 0;
-          min-height: 100vh;
-        }
-        .menu {
-          display: flex;
-          gap: 15px;
-          justify-content: center;
-          background-color: #ffffff;
-          padding: 10px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          flex-wrap: wrap;
-        }
-        .menu a {
-          color: #333;
-          text-decoration: none;
-          font-weight: bold;
-          padding: 8px 12px;
-          transition: color 0.3s ease;
-        }
-        .menu a:hover {
-          color: #00bcd4;
-        }
-        /* Main Container Wrapper */
-        .wrapper {
-          width: 90%;
-          max-width: 1200px;
-          margin: 20px auto;
-        }
-        /* Room Details Section */
-        .container {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          gap: 30px;
-          background: #ffffff;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-          margin-bottom: 20px;
-        }
-        .image-container {
-          position: relative;
-          width: 45%;
-          height: 400px;
-        }
-        .room-info {
-          width: 50%;
-        }
-        .room-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          border-radius: 10px;
-        }
-        .nav-button {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(0,188,212,0.8);
-          color: white;
-          padding: 10px;
-          border-radius: 50%;
-          cursor: pointer;
-          border: none;
-        }
-        .nav-button:hover {
-          background: rgba(0,188,212,1);
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-        .btn {
-          display: inline-block;
-          padding: 10px 20px;
-          font-size: 16px;
-          font-weight: bold;
-          color: white;
-          background-color: #00bcd4;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-          text-align: center;
-          margin-top: 10px;
-        }
-        .btn:hover {
-          background-color: #0097a7;
-        }
-        @media (max-width: 768px) {
-          .container {
-            flex-direction: column;
-            align-items: center;
-          }
-          .image-container, .room-info {
-            width: 100%;
-          }
-          .room-info {
-            text-align: center;
-          }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
-<body>
-<div class="header">
-    <div class="menu">
-        <a href="#">Home</a>
-        <a href="#">Rooms</a>
-        <a href="#">About Us</a>
-        <a href="#">Pages</a>
-        <a href="#">News</a>
-        <a href="#">Contact</a>
-    </div>
-</div>
-<div class="wrapper">
-    <!-- Room Details Section -->
-    <div class="container">
-        <
-        <div class="image-container">
-            <button class="nav-button prev" onclick="prevImage()">&#10094;</button>
-            <img alt="Room Image" class="room-image"
-                 th:src="${room.images != null and not #lists.isEmpty(room.images) ? room.images[0].imageUrl : 'default.jpg'}">
-            <button class="nav-button next" onclick="nextImage()">&#10095;</button>
+<body class="bg-gray-50 text-gray-900">
+<!-- Navigation -->
+<nav class="bg-white shadow-md p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a class="text-2xl font-bold text-teal-500" href="#">Hotel Booking</a>
+        <div class="hidden md:flex space-x-6 text-lg">
+            <a class="hover:text-teal-500 transition duration-300" href="#">Home</a>
+            <a class="hover:text-teal-500 transition duration-300" href="#">Rooms</a>
+            <a class="hover:text-teal-500 transition duration-300" href="#">About Us</a>
+            <a class="hover:text-teal-500 transition duration-300" href="#">Pages</a>
+            <a class="hover:text-teal-500 transition duration-300" href="#">News</a>
+            <a class="hover:text-teal-500 transition duration-300" href="#">Contact</a>
         </div>
-        <div class="room-info">
-            <h3>Room Details</h3>
-            <p><strong>Hotel Name:</strong> <span th:text="${room.hotel.hotelName}"></span></p>
-            <p><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
-            <p><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span> stars</p>
-            <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
-            <p><strong>Capacity:</strong> <span th:text="${room.capacity}"></span> guests</p>
-            <p><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
-            <p><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
-            <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
-            <button class="btn" th:onclick="'window.location.href=' + @{/update_room/{id}(id=${room.id})}">
-                Booking Now
+    </div>
+</nav>
+
+<!-- Room Details -->
+<!-- Room Details -->
+<div class="container mx-auto p-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col lg:flex-row items-center gap-6">
+        <div class="relative w-full lg:w-1/2 h-96 overflow-hidden rounded-lg">
+            <button class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-3 rounded-full hover:bg-teal-600 transition duration-300"
+                    onclick="prevImage()">&#10094;
+            </button>
+            <!-- Hiển thị hình ảnh từ Cloudinary -->
+            <img class="w-full h-full object-cover room-image rounded-lg"
+                 th:src="@{https://res.cloudinary.com/{cloud_name}/image/upload/{public_id}.jpg}">
+            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-3 rounded-full hover:bg-teal-600 transition duration-300"
+                    onclick="nextImage()">&#10095;
+            </button>
+        </div>
+        <div class="w-full lg:w-1/2 text-center lg:text-left">
+            <h2 class="text-3xl font-bold mb-4 text-gray-800">Room Details</h2>
+            <p class="text-lg"><strong>Hotel Name:</strong> <span th:text="${room.hotel.hotelName}"></span></p>
+            <p class="text-lg"><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
+            <p class="text-lg"><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span> stars</p>
+            <p class="text-lg"><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span>
+                /night</p>
+            <p class="text-lg"><strong>Capacity:</strong> <span th:text="${room.capacity}"></span> guests</p>
+            <p class="text-lg"><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
+            <p class="text-lg"><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
+            <p class="text-lg"><strong>Description:</strong> <span th:text="${room.description}"></span></p>
+            <button class="mt-6 bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition duration-300 text-lg"
+                    th:onclick="'window.location.href=' + @{/update_room/{id}(id=${room.id})}">Booking Now
             </button>
         </div>
     </div>
 </div>
 
-<script>
-    let images = [];
-    /*<![CDATA[*/
-    let roomImages = /*[[${room.images}]]*/ [];
-    if (roomImages && Array.isArray(roomImages)) {
-        images = roomImages.map(image => image.imageUrl);
-    }
-    /*]]>*/
+<!-- Review Input Form with Star Selection -->
+<div class="mt-8">
+    <h3 class="text-2xl font-semibold">Customer Reviews</h3>
+    <div th:if="${not #lists.isEmpty(reviews)}">
+        <div class="border-b border-gray-200 py-4" th:each="review : ${reviews}">
+            <p class="font-bold text-teal-500" th:text="${review.user.fullName}"></p>
+            <p>
+                <span class="text-yellow-400 text-lg"
+                      th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
+                <span class="text-gray-300 text-lg"
+                      th:each="i : ${#numbers.sequence(review.rating + 1, 5)}">&#9733;</span>
+            </p>
+            <p class="text-gray-700 mt-1" th:text="${review.comment}"></p>
+        </div>
+    </div>
+    <p class="text-gray-500" th:if="${#lists.isEmpty(reviews)}">No reviews yet. Be the first to leave a review!</p>
+</div>
 
-    let currentIndex = 0;
-    let imageElement = document.querySelector(".room-image");
+<!-- Review Form if User is Logged In -->
+<div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-6" th:if="${user != null}">
+    <h3 class="text-2xl font-semibold">Leave a Review</h3>
+    <form class="mt-4" method="post" th:action="@{/reviews/submit}">
+        <input name="roomId" th:value="${room.id}" type="hidden"/>
+        <input name="userId" th:value="${user.id}" type="hidden"/>
+        <label class="block text-lg">Rating:</label>
+        <div class="flex space-x-2 mt-2 text-3xl" id="starRating">
+            <span class="text-gray-300 cursor-pointer" data-value="1">&#9733;</span>
+            <span class="text-gray-300 cursor-pointer" data-value="2">&#9733;</span>
+            <span class="text-gray-300 cursor-pointer" data-value="3">&#9733;</span>
+            <span class="text-gray-300 cursor-pointer" data-value="4">&#9733;</span>
+            <span class="text-gray-300 cursor-pointer" data-value="5">&#9733;</span>
+        </div>
+        <input id="ratingInput" name="rating" required type="hidden">
+        <label class="block text-lg mt-4">Comment:</label>
+        <textarea class="border p-3 rounded w-full h-24" name="comment" required></textarea>
+        <button class="mt-4 bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition duration-300 text-lg"
+                type="submit">Submit
+        </button>
+    </form>
+</div>
 
-    function prevImage() {
-        if (images.length > 0) {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            imageElement.src = images[currentIndex] || 'default.jpg';
-        }
-    }
-
-    function nextImage() {
-        if (images.length > 0) {
-            currentIndex = (currentIndex + 1) % images.length;
-            imageElement.src = images[currentIndex] || 'default.jpg';
-        }
-    }
-</script>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-10 mt-6">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+        <div>
+            <h3 class="text-2xl font-semibold">Hotel Booking</h3>
+            <p class="text-sm text-gray-400">Experience the best stays with us.</p>
+        </div>
+        <div>
+            <h4 class="font-semibold text-lg">Quick Links</h4>
+            <ul class="text-gray-400 text-sm space-y-1">
+                <li><a class="hover:text-teal-400" href="#">Home</a></li>
+                <li><a class="hover:text-teal-400" href="#">Rooms</a></li>
+                <li><a class="hover:text-teal-400" href="#">About Us</a></li>
+                <li><a class="hover:text-teal-400" href="#">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <p class="text-center text-gray-500 text-sm mt-6">&copy; 2025 Hotel Booking. All rights reserved.</p>
+</footer>
 </body>
 </html>

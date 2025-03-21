@@ -80,4 +80,10 @@ public class Review {
     public void setRoom(Room room) {
         this.room = room;
     }
+
+    public void setRating(int rating) {
+    }
+
+    public void setComment(String comment) {
+    }
 }

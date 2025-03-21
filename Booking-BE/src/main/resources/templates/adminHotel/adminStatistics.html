@@ -189,12 +189,14 @@
                 <div class="space-y-2">
                     <th:block th:each="package : ${topPackages}">
                         <div class="flex justify-between items-center">
-                            <div class="text-gray-500" th:text="${package.packageName}"></div>
-                            <div class="text-gray-500" th:text="${package.percentage} + '%'"></div>
+                            <div class="text-gray-500" th:text="${package['packageName']}"></div>
+                            <div class="text-gray-500"
+                                 th:text="${#numbers.formatDecimal(package['percentage'], 1, 2)} + '%'"></div>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2.5">
                             <div class="h-2.5 rounded-full"
-                                 th:style="'width:' + ${package.percentage} + '%; background-color:' + ${package.color}"></div>
+                                 th:style="'width:' + ${package['percentage']} + '%; background-color:' + ${package['color']}"
+                            ></div>
                         </div>
                     </th:block>
                 </div>

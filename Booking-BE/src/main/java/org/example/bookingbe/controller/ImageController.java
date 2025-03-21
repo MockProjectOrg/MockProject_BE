@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -22,22 +20,15 @@ public class ImageController {
     @GetMapping("/room/{roomId}")
     public String getRoomImages(@PathVariable String roomId, Model model) {
         try {
-            // Lấy danh sách ảnh từ Cloudinary
-            List<String> images = Collections.singletonList(String.valueOf(cloudinaryService.getImageUrl(roomId)));
-
-            // Debug kiểm tra danh sách ảnh
-            System.out.println("DEBUG: Danh sách ảnh của phòng " + roomId + " -> " + images);
-
-            // Thêm danh sách ảnh vào Model để Thymeleaf hiển thị
+            // Giả sử cloudinaryService.getImageUrl trả về một danh sách các URL ảnh cho phòng
+            List<String> images = cloudinaryService.getImageUrlsForRoom(roomId);
             model.addAttribute("images", images);
 
-            // Trả về template Thymeleaf "room_detail.html"
-            return "room_detail";
-        } catch (IOException e) {
-            model.addAttribute("error", "Lỗi tải ảnh: " + e.getMessage());
-            return "error";
+            return "client/room_detail";  // Trả về trang chi tiết phòng
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Ghi log và trả về trang lỗi nếu gặp sự cố
+            model.addAttribute("error", "Unable to fetch room images. Please try again later.");
+            return "error";  // Trang lỗi
         }
     }
 }

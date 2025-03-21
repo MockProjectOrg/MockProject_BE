@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface IBookingService {
 
-    Double getTotalBookings(); // Đổi tên cho rõ nghĩa hơn (tổng số booking)
+    Double getTotalBookings(); //(tổng số booking)
 
     Double getTotalRevenue(); // Tổng doanh thu
 
@@ -13,15 +13,13 @@ public interface IBookingService {
 
     List<Object[]> getMonthlyRevenue(); // Doanh thu từng tháng
 
-    Double getTotalOrder();
-
     List<Object[]> getQuarterlyRevenue(); // Doanh thu theo quý
 
     List<Object[]> getYearlyRevenue(); // Doanh thu theo năm
 
-    Map<String, Object> getStatistics(); // Tổng hợp số liệu
-
-    Object getTopPackages();
+    List<Map<String, Object>> getTopPackages();
 
     List<Integer> getBookingCountsByMonth();
+
+    Map<String, Object> getStatistics();
 }

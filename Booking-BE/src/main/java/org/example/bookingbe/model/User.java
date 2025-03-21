@@ -37,7 +37,7 @@ public class User {
 
     @Column(name = "birthday")
     private LocalDate birthday;
-    
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -46,6 +46,11 @@ public class User {
     private Hotel hotel;
 
     public User() {
+        
+    }
+
+    public User(Long userId) {
+        this.id = userId;
     }
 
     public Long getId() {

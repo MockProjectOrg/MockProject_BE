@@ -39,6 +39,10 @@ public class Room {
     private List<Review> reviews;
 
     public Room() {
+        
+    }
+
+    public Room(Long roomId) {
     }
 
     public Room(Double price, String description, Status status, int capacity, RoomType roomType, Hotel hotel) {
