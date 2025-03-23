@@ -10,14 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
-    private final IUserRepo userRepo;
-    private final IRoleRepo roleRepo;
-    private final MailRegister mailRegister;
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
+    private final IUserRepo userRepo;
+    @Autowired
+    private final IRoleRepo roleRepo;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final MailRegister mailRegister;
+
     public UserService(IUserRepo userRepo, IRoleRepo roleRepo, MailRegister mailRegister, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
@@ -29,21 +34,35 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role role = roleRepo.findByRoleName("USER");
-        if (role == null) {
-            throw new IllegalStateException("Role 'USER' not found in database.");
-        }
-
         user.setRole(role);
         userRepo.save(user);
 
         mailRegister.sendEmailRegister(user.getEmail(), user.getFirstName(), user.getLastName());
     }
 
+    @Override
     public Boolean existsUser(String username) {
         return userRepo.existsByUserName(username);
     }
 
-    public Boolean existsEmail(String email) {
+    @Override
+    public Boolean exstsEmail(String email) {
         return userRepo.existsByEmail(email);
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepo.findByUserName(username);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepo.save(user);  // Lưu thông tin user đã chỉnh sửa
+    }
+
 }

@@ -35,7 +35,7 @@ public class ReviewService implements IReviewService {
 
     @Override
     public boolean hasCheckedOut(Long userId, Long roomId) {
-        Status checkedOutStatus = statusRepo.findByStatusName("CHECKED_OUT");
+        Status checkedOutStatus = statusRepo.findByName("CHECKED_OUT");
         if (checkedOutStatus == null) {
             return false;
         }

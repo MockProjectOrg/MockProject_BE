@@ -1,6 +1,7 @@
 package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -24,33 +25,35 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
+    @Column(name = "status_book", columnDefinition = "BIT")
+    @ColumnDefault("0")
+    private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne
-    @JoinColumn(name = "package_id")
-    private Package bookingPackage;
 
     public Booking() {
     }
 
-    public Booking(LocalDateTime bookingDate, LocalDateTime canceledAt, LocalDateTime checkIn, LocalDateTime checkOut,
-                   String description, User user, Status status, Room room, Package bookingPackage) {
-        this.bookingDate = bookingDate;
-        this.bookingCancel = bookingCancel;
+
+    public Booking(Long id, LocalDateTime checkIn, LocalDateTime checkOut, String description, User user, Boolean status, Room room) {
+        this.id = id;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.description = description;
         this.user = user;
         this.status = status;
         this.room = room;
-        this.bookingPackage = bookingPackage;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Long getId() {
@@ -59,22 +62,6 @@ public class Booking {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(LocalDateTime bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
-    public LocalDateTime getCanceledAt() {
-        return bookingCancel;
-    }
-
-    public void setCanceledAt(LocalDateTime canceledAt) {
-        this.bookingCancel = canceledAt;
     }
 
     public LocalDateTime getCheckIn() {
@@ -109,14 +96,6 @@ public class Booking {
         this.user = user;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public Room getRoom() {
         return room;
     }
@@ -125,11 +104,4 @@ public class Booking {
         this.room = room;
     }
 
-    public Package getBookingPackage() {
-        return bookingPackage;
-    }
-
-    public void setBookingPackage(Package bookingPackage) {
-        this.bookingPackage = bookingPackage;
-    }
 }

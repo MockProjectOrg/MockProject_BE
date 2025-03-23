@@ -1,4 +1,7 @@
 package org.example.bookingbe.service.DiscountService;
 
-public class DiscountService implements IDiscountService{
+import org.springframework.stereotype.Service;
+
+@Service
+public class DiscountService implements IDiscountService {
 }

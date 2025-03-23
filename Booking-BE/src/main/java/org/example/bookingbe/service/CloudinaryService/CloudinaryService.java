@@ -1,8 +1,8 @@
 package org.example.bookingbe.service.CloudinaryService;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,37 +16,18 @@ public class CloudinaryService {
 
     private final Cloudinary cloudinary;
 
-    // Khởi tạo Cloudinary với thông tin cấu hình từ file properties
-    public CloudinaryService(
-            @Value("${cloudinary.cloud-name}") String cloudName,
-            @Value("${cloudinary.api-key}") String apiKey,
-            @Value("${cloudinary.api-secret}") String apiSecret
-    ) {
-        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret
-        ));
+    // Inject Cloudinary từ CloudinaryConfig
+    public CloudinaryService(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
     }
 
-    /**
-     * Tải ảnh lên Cloudinary và trả về URL ảnh đã tải lên.
-     *
-     * @param file MultipartFile đối tượng ảnh được tải lên
-     * @return URL ảnh đã tải lên
-     */
-    public String uploadImage(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("File cannot be null or empty.");
-        }
-
-        try {
-            // Tải ảnh lên Cloudinary và lấy kết quả trả về
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            return (String) uploadResult.get("secure_url");  // Trả về URL ảnh bảo mật
-        } catch (IOException e) {
-            throw new RuntimeException("Image upload failed: " + e.getMessage(), e);
-        }
+    public String uploadFile(MultipartFile file, String folder, String publicId) throws IOException {
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder", folder,    // Thư mục lưu ảnh
+                "public_id", publicId,  // Tên file
+                "overwrite", true
+        ));
+        return uploadResult.get("secure_url").toString();
     }
 
     /**
@@ -62,7 +43,7 @@ public class CloudinaryService {
 
         try {
             // Lấy thông tin ảnh từ Cloudinary với roomId làm tham số
-            Map<String, Object> resource = cloudinary.api().resource(roomId, ObjectUtils.emptyMap());
+            ApiResponse resource = cloudinary.api().resource(roomId, ObjectUtils.emptyMap());
             if (resource != null && resource.containsKey("secure_url")) {
                 return (String) resource.get("secure_url");  // Trả về URL ảnh bảo mật
             } else {

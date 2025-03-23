@@ -12,6 +12,7 @@ public class Status {
     private String statusName;
 
     public Status() {
+
     }
 
     public Status(Long id, String statusName) {
@@ -35,11 +36,4 @@ public class Status {
         this.statusName = statusName;
     }
 
-    @Override
-    public String toString() {
-        return "Status{" +
-                "id=" + id +
-                ", statusName='" + statusName + '\'' +
-                '}';
-    }
 }

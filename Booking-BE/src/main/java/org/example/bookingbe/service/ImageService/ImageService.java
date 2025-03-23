@@ -6,12 +6,18 @@ import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class ImageService {
     private final IImageRepo imageRepo;
     private final CloudinaryService cloudinaryService;
+    // Đặt folder mặc định, có thể thay đổi tùy vào nhu cầu
+    String folder = "hotel_images";
+
+    // Tạo một publicId ngẫu nhiên
+    String publicId = UUID.randomUUID().toString();
 
     public ImageService(IImageRepo imageRepo, CloudinaryService cloudinaryService) {
         this.imageRepo = imageRepo;
@@ -24,7 +30,7 @@ public class ImageService {
      * @param file Tệp ảnh cần tải lên
      * @return Image đối tượng chứa thông tin ảnh đã được lưu
      */
-    public Image uploadImageAndSaveToDatabase(MultipartFile file) {
+    public Image uploadImageAndSaveToDatabase(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty, please upload a valid image.");
         }
@@ -36,7 +42,7 @@ public class ImageService {
         }
 
         // Tải ảnh lên Cloudinary và lấy URL
-        String imageUrl = cloudinaryService.uploadImage(file);
+        String imageUrl = cloudinaryService.uploadFile(file, folder, publicId);
 
         // Kiểm tra tên file, nếu không có thì tạo tên ngẫu nhiên
         String imageName = file.getOriginalFilename();

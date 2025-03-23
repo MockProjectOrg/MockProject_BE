@@ -1,7 +1,9 @@
 package org.example.bookingbe.repository.BookingRepo;
 
+import org.example.bookingbe.dto.BookingInterface;
 import org.example.bookingbe.model.Booking;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,31 @@ import java.util.List;
 
 @Repository
 public interface IBookingRepo extends JpaRepository<Booking, Long> {
+    @EntityGraph(attributePaths = {"user", "room"})
+    List<Booking> findByUserId(Long userId);
+
+    @EntityGraph(attributePaths = {"user", "room"})
+    List<Booking> findByRoomId(Long roomId);
+
+    @EntityGraph(attributePaths = {"user", "room"})
+    @Query("SELECT b FROM Booking b JOIN b.room r JOIN r.hotel h WHERE h.user.id = :managerId")
+    List<Booking> findBookingsByHotelManager(@Param("managerId") Long managerId);
+
+
+    @EntityGraph(attributePaths = {"user", "room", "room.hotel"})
+    @Query("SELECT b FROM Booking b JOIN b.room r WHERE r.hotel.id = :hotelId")
+    List<Booking> findByHotelId(@Param("hotelId") Long hotelId);
+
+    // Kiểm tra xem một booking có thuộc về một hotel cụ thể không
+    @Query("SELECT COUNT(b) > 0 FROM Booking b JOIN b.room r WHERE b.id = :bookingId AND r.hotel.id = :hotelId")
+    boolean isBookingBelongToHotel(@Param("bookingId") Long bookingId, @Param("hotelId") Long hotelId);
+
+    @Query("SELECT b FROM Booking b WHERE b.checkOut BETWEEN :startDate AND :endDate")
+    List<Booking> findUpcomingCheckouts(@Param("startDate") LocalDateTime startDate,
+                                        @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT b.id as id, b.check_in, b.check_out, b.description, b.room_id as roomId , b.user_id as userId, h.id as hotelId FROM Booking AS b  join Room as r on b.room_id = r.id join Hotel AS h on r.hotel_id = h.id where r.id = :id", nativeQuery = true)
+    BookingInterface getBooking(Long id);
 
     @Query("SELECT COUNT(b) FROM Booking b")
     Long countTotalOrders();
@@ -116,3 +143,4 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     @Query("SELECT MONTH(b.bookingDate), COUNT(b) FROM Booking b GROUP BY MONTH(b.bookingDate)")
     List<Object[]> countBookingsByMonth();
 }
+

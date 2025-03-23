@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface IReviewRepo extends JpaRepository<Review, Long> {
+    void deleteByRoomId(Long roomId);
 
     List<Review> findByRoomId(Long roomId);
 
