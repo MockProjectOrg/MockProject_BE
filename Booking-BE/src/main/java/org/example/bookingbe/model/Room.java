@@ -28,7 +28,7 @@ public class Room {
     @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
@@ -39,7 +39,7 @@ public class Room {
     private List<Review> reviews;
 
     public Room() {
-        
+
     }
 
     public Room(Long roomId) {

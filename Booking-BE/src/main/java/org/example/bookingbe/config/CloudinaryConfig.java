@@ -1,6 +1,7 @@
 package org.example.bookingbe.config;
 
 import com.cloudinary.Cloudinary;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,13 +10,28 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
+
+    @Value("${cloudinary.cloud-name}")
+    private String cloudName;
+
+    @Value("${cloudinary.api-key}")
+    private String apiKey;
+
+    @Value("${cloudinary.api-secret}")
+    private String apiSecret;
+
+    @Value("${cloudinary.secure}")
+    private String secure;
+
     @Bean
     public Cloudinary getCloudinary() {
         Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", "dwxxsfyej");
-        config.put("api_key", "542592826161616");
-        config.put("api_secret", "o4J6in895bc3zWtPatPColzfbY4");
-        config.put("secure", "true");
+        config.put("cloud_name", cloudName);
+        config.put("api_key", apiKey);
+        config.put("api_secret", apiSecret);
+        config.put("secure", secure);
         return new Cloudinary(config);
     }
+
+
 }

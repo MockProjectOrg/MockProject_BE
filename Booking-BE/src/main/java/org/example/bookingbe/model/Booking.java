@@ -20,21 +20,37 @@ public class Booking {
     private LocalDateTime checkOut;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @Column(name = "total_price", columnDefinition = "DECIMAL(10,2)")
-    private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @ManyToOne
+    @JoinColumn(name = "package_id")
+    private Package bookingPackage;
 
     public Booking() {
+    }
+
+    public Booking(LocalDateTime bookingDate, LocalDateTime canceledAt, LocalDateTime checkIn, LocalDateTime checkOut,
+                   String description, User user, Status status, Room room, Package bookingPackage) {
+        this.bookingDate = bookingDate;
+        this.bookingCancel = bookingCancel;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.description = description;
+        this.user = user;
+        this.status = status;
+        this.room = room;
+        this.bookingPackage = bookingPackage;
     }
 
     public Long getId() {
@@ -53,12 +69,12 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
-    public LocalDateTime getBookingCancel() {
+    public LocalDateTime getCanceledAt() {
         return bookingCancel;
     }
 
-    public void setBookingCancel(LocalDateTime bookingCancel) {
-        this.bookingCancel = bookingCancel;
+    public void setCanceledAt(LocalDateTime canceledAt) {
+        this.bookingCancel = canceledAt;
     }
 
     public LocalDateTime getCheckIn() {
@@ -93,6 +109,14 @@ public class Booking {
         this.user = user;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Room getRoom() {
         return room;
     }
@@ -101,19 +125,11 @@ public class Booking {
         this.room = room;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
+    public Package getBookingPackage() {
+        return bookingPackage;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setBookingPackage(Package bookingPackage) {
+        this.bookingPackage = bookingPackage;
     }
 }

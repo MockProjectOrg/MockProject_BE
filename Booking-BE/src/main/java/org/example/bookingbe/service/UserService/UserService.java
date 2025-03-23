@@ -12,34 +12,38 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService {
-    @Autowired
-    private static IUserRepo userRepo;
-    @Autowired
-    private IRoleRepo roleRepo;
-    @Autowired
-    private MailRegister mailRegister;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final IUserRepo userRepo;
+    private final IRoleRepo roleRepo;
+    private final MailRegister mailRegister;
+    private final PasswordEncoder passwordEncoder;
 
-    public static User getUserById(Long id) {
-        return userRepo.findById(id).orElse(null);
+    @Autowired
+    public UserService(IUserRepo userRepo, IRoleRepo roleRepo, MailRegister mailRegister, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
+        this.mailRegister = mailRegister;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void registerUser(User user) throws MessagingException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role role = roleRepo.findByRoleName("USER");
+        if (role == null) {
+            throw new IllegalStateException("Role 'USER' not found in database.");
+        }
+
         user.setRole(role);
         userRepo.save(user);
+
         mailRegister.sendEmailRegister(user.getEmail(), user.getFirstName(), user.getLastName());
     }
 
-    @Override
     public Boolean existsUser(String username) {
         return userRepo.existsByUserName(username);
     }
 
-    @Override
-    public Boolean exstsEmail(String email) {
+    public Boolean existsEmail(String email) {
         return userRepo.existsByEmail(email);
     }
 }

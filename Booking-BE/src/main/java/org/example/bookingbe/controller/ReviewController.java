@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.model.Review;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.service.BookingService.BookingService;
 import org.example.bookingbe.service.ReviewService.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +20,25 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private BookingService bookingService;
 
-    @GetMapping("/{roomId}")
-    public String getReviews(@PathVariable Long roomId, Model model, HttpSession session) {
-        List<Review> reviews = reviewService.getReviewsByRoom(roomId);
-
-        // Thêm danh sách review vào model
+    // Lấy danh sách các review của phòng
+    @GetMapping("/room/{roomId}")
+    public String getRoomDetails(@PathVariable Long roomId, Model model, HttpSession session) {
+        // Lấy danh sách review của phòng
+        List<Review> reviews = reviewService.getReviewsByRoomId(roomId);
         model.addAttribute("reviews", reviews);
 
-        // Kiểm tra người dùng có đăng nhập không
+        // Lấy thông tin user từ session
         User user = (User) session.getAttribute("loggedUser");
-        model.addAttribute("user", user);
+        boolean isCheckedOut = false;
 
+        if (user != null) {
+            isCheckedOut = reviewService.hasCheckedOut(user.getId(), roomId);
+        }
+
+        model.addAttribute("isCheckedOut", isCheckedOut);
         return "client/room_detail";
     }
 
@@ -39,26 +48,46 @@ public class ReviewController {
                                @RequestParam int rating,
                                @RequestParam String comment,
                                HttpSession session) {
+
         // Kiểm tra nếu người dùng chưa đăng nhập
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
-            return "redirect:/api/login?error=user_not_logged_in"; // Chuyển hướng đến login
+            session.setAttribute("errorMessage", "Bạn cần đăng nhập trước khi gửi review.");
+            return "redirect:/api/login"; // Chuyển hướng đến trang đăng nhập
         }
 
         // Kiểm tra xem người dùng đã checkout chưa
         boolean hasCheckedOut = reviewService.hasCheckedOut(user.getId(), roomId);
         if (!hasCheckedOut) {
-            return "redirect:/rooms/" + roomId + "?error=not_checked_out";
+            session.setAttribute("errorMessage", "Bạn cần checkout phòng này trước khi gửi review.");
+            return "redirect:/rooms/" + roomId; // Nếu chưa checkout, không thể gửi review
         }
 
-        // Lưu review nếu đã checkout
+        // Kiểm tra rating và comment hợp lệ
+        if (rating < 1 || rating > 5) {
+            session.setAttribute("errorMessage", "Đánh giá phải từ 1 đến 5.");
+            return "redirect:/rooms/" + roomId;
+        }
+
+        if (comment == null || comment.trim().isEmpty()) {
+            session.setAttribute("errorMessage", "Vui lòng cung cấp mô tả cho review.");
+            return "redirect:/rooms/" + roomId;
+        }
+
+        // Tạo đối tượng review và lưu vào database
         Review review = new Review();
-        review.setRoom(new Room(roomId));
-        review.setUser(user);
-        review.setRating(rating);
-        review.setComment(comment);
+        review.setRoom(new Room(roomId));  // Gán phòng cho review
+        review.setUser(user);  // Gán người dùng cho review
+        review.setRate(rating);  // Gán đánh giá cho review
+        review.setDescription(comment);  // Gán mô tả cho review
 
         reviewService.saveReview(review);
         return "redirect:/rooms/" + roomId;
+    }
+
+    @GetMapping("/checked-out")
+    public ResponseEntity<List<Review>> getCheckedOutReviews() {
+        List<Review> reviews = reviewService.getReviewsForCheckedOutBookings();
+        return ResponseEntity.ok(reviews);
     }
 }

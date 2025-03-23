@@ -34,8 +34,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error").permitAll() // 🚀 Cho phép truy cập vào /error
-                        .requestMatchers("/api/login", "/api/register", "/api/Doregister", "/api/current-user", "/api/session-info", "/api/room/**", "/api/booking/admin/Dashboard").permitAll()
+                        .requestMatchers("/error", "/css/**", "/js/**", "/images/**").permitAll() // 🚀 Cho phép truy cập vào /error
+                        .requestMatchers("/api/login", "/api/register", "/api/Doregister", "/api/current-user", "/api/session-info", "/api/room/**", "/api/booking/admin/Dashboard", "/BookingChart").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()

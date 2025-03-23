@@ -9,6 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface IRoomRepo extends JpaRepository<Room, Long> {
-    @EntityGraph(attributePaths = {"images"})
+
+    @EntityGraph(attributePaths = {"images", "reviews"})
     Optional<Room> findById(Long id);
+
+    ;
 }

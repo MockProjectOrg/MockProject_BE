@@ -5,6 +5,8 @@ import org.example.bookingbe.model.User;
 
 public interface IUserService {
     void registerUser(User user) throws MessagingException;
+
     Boolean existsUser(String username);
-    Boolean exstsEmail(String email);
+
+    Boolean existsEmail(String email);
 }

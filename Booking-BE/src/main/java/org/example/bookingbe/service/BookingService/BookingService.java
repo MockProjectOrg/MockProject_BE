@@ -1,127 +1,155 @@
 package org.example.bookingbe.service.BookingService;
 
 import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService implements IBookingService {
-
     private final IBookingRepo bookingRepo;
 
+    @Autowired
     public BookingService(IBookingRepo bookingRepo) {
         this.bookingRepo = bookingRepo;
     }
 
-    //Đếm số lươợng đơn booking
-    @Override
-    public Double getTotalBookings() {
-        return bookingRepo.countTotalBookings();
-    }
-
-    // đếm tổng doanh thu
     @Override
     public Double getTotalRevenue() {
-        return bookingRepo.getTotalRevenue();
+        return Optional.ofNullable(bookingRepo.countTotalRevenue()).orElse(0.0);
     }
 
-    // tính doanh thu trong tuần hiện tại
-    @Override
-    public Double getRevenueCurrentWeek() {
-        return bookingRepo.getRevenueCurrentWeek();
+    private Long countOrdersThisWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfWeek = today.with(DayOfWeek.MONDAY).atStartOfDay();
+        LocalDateTime endOfWeek = today.with(DayOfWeek.SUNDAY).plusDays(1).atStartOfDay().minusSeconds(1);
+        return Optional.ofNullable(bookingRepo.countOrdersThisWeek(startOfWeek, endOfWeek)).orElse(0L);
     }
 
-    // tính doanh thu theo tháng
     @Override
-    public List<Object[]> getMonthlyRevenue() {
-        return bookingRepo.getMonthlyRevenue();
+    public List<Map<String, Object>> getMonthlyRevenue() {
+        return Optional.ofNullable(bookingRepo.getMonthlyRevenue())
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.mapping(row -> {
+                    Map<String, Object> revenueMap = new HashMap<>();
+                    revenueMap.put("month", ((Number) row[0]).intValue());
+                    revenueMap.put("revenue", ((Number) row[1]).doubleValue());
+                    return revenueMap;
+                }, Collectors.toList()));
     }
 
-    // tính doanh thu theo quý
     @Override
-    public List<Object[]> getQuarterlyRevenue() {
-        return bookingRepo.getQuarterlyRevenue();
+    public List<Map<String, Object>> getQuarterlyRevenue() {
+        return Collections.emptyList();
     }
 
-    //tính doanh thu theo năm
     @Override
-    public List<Object[]> getYearlyRevenue() {
-        return bookingRepo.getYearlyRevenue();
+    public List<Map<String, Object>> getYearlyRevenue() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Double getPreviousMonthlyRevenue(int month, int year) {
+        return 0.0;
+    }
+
+    @Override
+    public Double getTotalRevenueThisYear() {
+        return 0.0;
+    }
+
+    @Override
+    public Double getTotalRevenueLastYear() {
+        return 0.0;
+    }
+
+    @Override
+    public Double getPreviousMonthlyRevenue() {
+        return 0.0;
     }
 
     @Override
     public List<Map<String, Object>> getTopPackages() {
-        List<Object[]> results = bookingRepo.getMostBookedPackages();
-        List<Map<String, Object>> topPackages = new ArrayList<>();
-
-        if (results.isEmpty()) {
-            System.out.println("Không có dữ liệu đặt phòng!");
-            return topPackages;
-        }
-
-        // Tính tổng số lượt đặt phòng để tính phần trăm
-        int totalBookings = results.stream().mapToInt(r -> ((Number) r[1]).intValue()).sum();
-        System.out.println("🔹 Tổng số lượt đặt phòng: " + totalBookings);
-
-        String[] colors = {"#FF5733", "#33FF57", "#5733FF", "#FFC300", "#C70039"};
-        int colorIndex = 0;
-
-        for (Object[] row : results) {
-            String packageName = (String) row[0];
-            int count = ((Number) row[1]).intValue();
-            double percentage = totalBookings > 0 ? ((double) count / totalBookings) * 100 : 0;
-
-            Map<String, Object> packageInfo = new HashMap<>();
-            packageInfo.put("packageName", packageName);
-            packageInfo.put("percentage", percentage);
-            packageInfo.put("color", colors[colorIndex % colors.length]);
-
-            System.out.println("Gói: " + packageName + ", Số lượng: " + count + ", Phần trăm: " + percentage);
-            topPackages.add(packageInfo);
-            colorIndex++;
-        }
-
-        return topPackages;
-    }
-
-    private String getColorForPackage(String packageName) {
-        Map<String, String> colorMap = Map.of(
-                "Standard", "#f87171",
-                "Premium", "#60a5fa",
-                "Deluxe", "#34d399"
-        );
-        return colorMap.getOrDefault(packageName, "#a3a3a3");
+        return Collections.emptyList();
     }
 
     @Override
-    public List<Integer> getBookingCountsByMonth() {
-        List<Object[]> results = bookingRepo.getBookingCountsByMonth();
-        List<Integer> bookingCounts = new ArrayList<>();
+    public Map<String, Integer> getBookingCountsByStatus() {
+        return Optional.ofNullable(bookingRepo.getBookingCountsByStatus())
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(
+                        row -> row[0] != null ? row[0].toString() : "UNKNOWN",
+                        row -> row[1] instanceof Number ? ((Number) row[1]).intValue() : 0
+                ));
+    }
 
-        for (Object[] row : results) {
-            bookingCounts.add(((Number) row[1]).intValue());
-        }
-        return bookingCounts;
+    @Override
+    public Long countCancelledBookings() {
+        return Optional.ofNullable(bookingRepo.countCancelledBookings()).orElse(0L);
+    }
+
+    @Override
+    public boolean isUserCheckedOut(Long userId, Long roomId) {
+        return false;
     }
 
     @Override
     public Map<String, Object> getStatistics() {
-        List<Object[]> results = bookingRepo.getStatistics();
         Map<String, Object> statistics = new HashMap<>();
-
-        if (!results.isEmpty()) {
-            Object[] row = results.get(0);
-            statistics.put("totalBookings", row[0] != null ? ((Number) row[0]).intValue() : 0);
-            statistics.put("totalRevenue", row[1] != null ? ((Number) row[1]).doubleValue() : 0.0);
-        } else {
-            statistics.put("totalBookings", 0);
-            statistics.put("totalRevenue", 0.0);
-        }
-
+        statistics.put("totalOrders", Optional.ofNullable(bookingRepo.countTotalOrders()).orElse(0L));
+        statistics.put("thisWeekOrders", countOrdersThisWeek());
+        statistics.put("thisMonthlyOrders", Optional.ofNullable(bookingRepo.countOrdersThisMonth()).orElse(0L));
+        statistics.put("totalRevenues", getTotalRevenue());
+        statistics.put("thisMonthlyRevenues", Optional.ofNullable(bookingRepo.getRevenueThisMonth()).orElse(0.0));
         return statistics;
+    }
+
+    @Override
+    public Integer getCountRoomAvailable() {
+        return Math.toIntExact(Optional.ofNullable(bookingRepo.countAvailableRooms()).orElse(0L));
+    }
+
+    @Override
+    public List<Map<String, Object>> getTopSelectedPackages() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getSalesChartUrl() {
+        return "";
+    }
+
+    @Override
+    public List<Object[]> getBookingDataByMonth() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Map<String, Object>> getPopularRoomTypes() {
+        List<Object[]> results = Optional.ofNullable(bookingRepo.getMostPopularRoomType())
+                .orElse(Collections.emptyList());
+
+        return results.stream().map(row -> {
+            Map<String, Object> roomData = new HashMap<>();
+            roomData.put("roomType", row[0]);  // Tên loại phòng
+            roomData.put("bookingCount", ((Number) row[1]).intValue()); // Số lượt đặt
+            return roomData;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Integer> getBookingCountsByMonth() {
+        return Optional.ofNullable(bookingRepo.getBookingCountsByMonth())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(row -> row != null && row.length > 1 && row[1] instanceof Number ? ((Number) row[1]).intValue() : 0)
+                .collect(Collectors.toList());
     }
 }

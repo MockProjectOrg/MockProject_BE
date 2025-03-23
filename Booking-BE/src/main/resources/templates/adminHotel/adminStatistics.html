@@ -5,9 +5,19 @@
     <title>
         Dashboard Overview
     </title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+
+    <style>
+        @media (max-width: 768px) {
+    iframe {
+            height: 400px;
+        width: 100%;
+    }
+}
+    </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 <div class="flex">
@@ -84,18 +94,36 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white p-6 rounded-lg shadow">
                 <div class="text-gray-500">
-                    Total Revenue
+                    Total Orders
                 </div>
                 <div class="text-3xl font-bold">
-                    <span th:text="${totalRevenue}">0.0</span> VNĐ
+                    <span th:text="${totalOrders}"></span>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <div>
+                        <div class="text-gray-500">
+                            THIS MONTH
+                        </div>
+                        <div class="text-xl font-bold">
+                            <span th:text="${thisMonthlyOrders}"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-gray-500">
+                            THIS WEEK
+                        </div>
+                        <div class="text-xl font-bold">
+                            <span th:text="${thisWeekOrders}"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow">
                 <div class="text-gray-500">
-                    Total Booking
+                    Total Bookings
                 </div>
                 <div class="text-3xl font-bold">
-                    <span th:text="${totalOrders}"></span>
+                    <span th:text="${totalRevenues}"></span>
                     <span class="text-red-500 text-sm" th:if="${percentageChange < 0}">
                         ↓ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
                     </span>
@@ -106,18 +134,18 @@
                 <div class="flex justify-between mt-4">
                     <div>
                         <div class="text-gray-500">
-                            THIS MONTH
+                            PREVIOUS MONTH
                         </div>
                         <div class="text-xl font-bold">
-                            <span th:text="${monthlyRevenue}"></span>
+                            <span th:text="${previousRevenue}"></span>
                         </div>
                     </div>
                     <div>
                         <div class="text-gray-500">
-                            THIS WEEK
+                            THIS MONTH
                         </div>
                         <div class="text-xl font-bold">
-                            <span th:text="${weeklyRevenue}"></span>
+                            <span th:text="${monthlyRevenue}"></span>
                         </div>
                     </div>
                 </div>
@@ -148,43 +176,14 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="text-gray-500">
-                    Expenses
-                </div>
-                <div class="text-3xl font-bold">
-                    79,358.50 USD
-                </div>
-                <div class="flex justify-between mt-4">
-                    <div>
-                        <div class="text-gray-500">
-                            THIS MONTH
-                        </div>
-                        <div class="text-xl font-bold">
-                            3,540.59 USD
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            THIS WEEK
-                        </div>
-                        <div class="text-xl font-bold">
-                            1,259.28 USD
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         <!-- Charts and Graphs -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Top Selected Package -->
             <div class="bg-white p-6 rounded-lg shadow">
                 <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        Top Selected Package
-                    </div>
-                    <div class="text-gray-500">
-                        30 Days
-                    </div>
+                    <div class="text-gray-500">Top Selected Package</div>
+                    <div class="text-gray-500">30 Days</div>
                 </div>
                 <div class="space-y-2">
                     <th:block th:each="package : ${topPackages}">
@@ -195,64 +194,21 @@
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2.5">
                             <div class="h-2.5 rounded-full"
-                                 th:style="'width:' + ${package['percentage']} + '%; background-color:' + ${package['color']}"
-                            ></div>
+                                 th:style="'width:' + ${package['percentage']} + '%; background-color:' + ${package['color']}"></div>
                         </div>
                     </th:block>
                 </div>
             </div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex justify-between items-center mb-4">
-                <div class="text-gray-500">
-                    Sales Revenue
-                </div>
-                <div class="text-gray-500">
-                    30 Days
-                </div>
-            </div>
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <div class="text-gray-500">
-                        Monthly
-                    </div>
-                    <div class="text-2xl font-bold">
-                        <span th:text="${monthlyRevenue}"></span>K
-                        <span th:class="${monthlyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
-                    <span th:text="${monthlyChange >= 0 ? '↑' : '↓'}"></span>
-                    <span th:text="${#numbers.formatDecimal(monthlyChange, 1, 2)} + '%'"></span>
-                </span>
-                    </div>
-                </div>
-                <div>
-                    <div class="text-gray-500">
-                        Weekly
-                    </div>
-                    <div class="text-2xl font-bold">
-                        <span th:text="${weeklyRevenue}"></span>K
-                        <span th:class="${weeklyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
-                    <span th:text="${weeklyChange >= 0 ? '↑' : '↓'}"></span>
-                    <span th:text="${#numbers.formatDecimal(weeklyChange, 1, 2)} + '%'"></span>
-                </span>
-                    </div>
-                </div>
-                <div>
-                    <div class="text-gray-500">
-                        Daily (Avg)
-                    </div>
-                    <div class="text-2xl font-bold">
-                        <span th:text="${dailyRevenue}"></span>K
-                        <span th:class="${dailyChange >= 0 ? 'text-green-500 text-sm' : 'text-red-500 text-sm'}">
-                    <span th:text="${dailyChange >= 0 ? '↑' : '↓'}"></span>
-                    <span th:text="${#numbers.formatDecimal(dailyChange, 1, 2)} + '%'"></span>
-                </span>
-                    </div>
-                </div>
-            </div>
-            <img alt="Sales Revenue Chart" class="w-full" height="200"
-                 th:src="${salesChartUrl}" width="400"/>
-        </div>
 
+            <!-- Sales Revenue -->
+            <div class="bg-white p-6 rounded shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-gray-500">Popular Room Types</div>
+                    <div class="text-gray-500">Last 12 Months</div>
+                </div>
+                <canvas id="popularRoomChart"></canvas>
+            </div>
+        </div>
         <!-- Room Booking Chart and Income vs Expenses -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div class="bg-white p-6 rounded-lg shadow">
@@ -264,7 +220,7 @@
                         30 Days
                     </div>
                 </div>
-                <iframe class="w-full" height="800" src="BookingChart.html" style="border:none;" width="400"></iframe>
+                <canvas id="bookingChart"></canvas>
             </div>
         </div>
         <!-- New Customer and Recent Activities -->
@@ -275,7 +231,7 @@
                         New Customer
                     </div>
                     <div class="text-blue-500">
-                        <a href="/customers">View All</a>
+                        <a href="/user">View All</a>
                     </div>
                 </div>
                 <div class="space-y-4">
@@ -321,5 +277,67 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Khởi tạo biểu đồ...");
+
+    // 📊 Biểu đồ đặt phòng
+    const bookingCanvas = document.getElementById('bookingChart');
+    if (!bookingCanvas) {
+        console.error("⚠️ Không tìm thấy phần tử #bookingChart!");
+        return;
+    }
+    const bookingCtx = bookingCanvas.getContext('2d');
+
+    let bookingChart = new Chart(bookingCtx, {
+        type: 'bar',
+        data: {
+            labels: /*[[${labels}]]*/ [],
+            datasets: [{
+                label: 'Số lượng đặt phòng',
+                data: /*[[${bookingData}]]*/ [],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // 📊 Biểu đồ loại phòng phổ biến
+    const popularRoomCanvas = document.getElementById('popularRoomChart');
+    if (!popularRoomCanvas) {
+        console.error("⚠️ Không tìm thấy phần tử #popularRoomChart!");
+        return;
+    }
+    const popularRoomCtx = popularRoomCanvas.getContext('2d');
+
+    let popularRoomChart = new Chart(popularRoomCtx, {
+        type: 'pie',
+        data: {
+            labels: /*[[${roomTypes}]]*/ [],
+            datasets: [{
+                label: 'Loại phòng phổ biến',
+                data: /*[[${bookingCounts}]]*/ [],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                borderColor: '#ffffff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+
+</script>
 </body>
 </html>

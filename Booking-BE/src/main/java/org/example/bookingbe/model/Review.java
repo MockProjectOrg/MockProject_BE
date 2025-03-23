@@ -29,6 +29,9 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+    @ManyToOne
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
 
     public Review() {
     }
@@ -81,9 +84,7 @@ public class Review {
         this.room = room;
     }
 
-    public void setRating(int rating) {
-    }
-
     public void setComment(String comment) {
+        this.description = comment;
     }
 }

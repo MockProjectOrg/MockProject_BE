@@ -52,4 +52,5 @@ public class Image {
     public void setRoom(Room room) {
         this.room = room;
     }
+
 }

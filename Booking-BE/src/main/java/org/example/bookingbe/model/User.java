@@ -10,7 +10,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "avatar", columnDefinition = "varchar(255)")
+    private String avatar;
     @Column(name = "user_name", columnDefinition = "varchar(100)", unique = true)
     private String userName;
 
@@ -46,7 +47,7 @@ public class User {
     private Hotel hotel;
 
     public User() {
-        
+
     }
 
     public User(Long userId) {
@@ -59,6 +60,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUserName() {
