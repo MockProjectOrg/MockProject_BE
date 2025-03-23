@@ -35,7 +35,6 @@ public class UserController {
     @Autowired
     private IRoomRepo roomRepo;
 
-
     @GetMapping("/")
     public String login(HttpServletRequest request) {
         if (request.getUserPrincipal() != null) {
@@ -49,12 +48,12 @@ public class UserController {
         if (request.getUserPrincipal() != null) {
             return "redirect:/api/user/home";
         }
-        model.addAttribute("user", new User(userId));
+        model.addAttribute("user", new User());
         return "auth/register";
     }
 
     @PostMapping("/Doregister")
-    public String doRegister(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) throws MessagingException {
+    public String doRegister(@ModelAttribute("user") @Valid User user, BindingResult result, Model model, HttpSession session) throws MessagingException {
         if (userService.existsUser(user.getUserName()) || userService.exstsEmail(user.getEmail())) {
             model.addAttribute("message", new MessageRespone("User or Email already exists"));
             return "auth/register";
@@ -63,7 +62,8 @@ public class UserController {
             return "auth/register";
         }
         userService.registerUser(user);
-        return "redirect:auth/login";
+        session.setAttribute("userId", user.getId()); // Lưu userId vào session
+        return "redirect:/api/login";
     }
 
     @GetMapping("/user/userProfile")
@@ -80,7 +80,7 @@ public class UserController {
         }
 
         model.addAttribute("user", user);
-        return "profile"; // Trả về trang profile.html với dữ liệu user
+        return "profile";
     }
 
     @PostMapping("/user/updateProfile")
@@ -93,23 +93,19 @@ public class UserController {
         }
 
         User existingUser = userService.getUserById(userId);
-
         if (existingUser == null) {
             return ResponseEntity.badRequest().body(new MessageRespone("Không tìm thấy người dùng!"));
         }
 
-        // Cập nhật thông tin
         existingUser.setFirstName(updatedUser.getFirstName());
         existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPhone(updatedUser.getPhone());
         existingUser.setAddress(updatedUser.getAddress());
+        // Không cập nhật email trực tiếp để tránh giả mạo danh tính
 
-        userService.saveUser(existingUser);  // Lưu user đã cập nhật
-
+        userService.saveUser(existingUser);
         return ResponseEntity.ok(new MessageRespone("Cập nhật thông tin thành công!"));
     }
-
 
     @GetMapping("/user/searchRooms")
     public String searchAvailableRooms(
@@ -123,18 +119,15 @@ public class UserController {
 
         List<Room> rooms;
 
-        // Nếu có điều kiện tìm kiếm -> lọc danh sách phòng theo điều kiện
         if (hotelName != null || typeName != null || minPrice != null || maxPrice != null || checkIn != null || checkOut != null) {
             rooms = roomService.searchRooms(hotelName, typeName, minPrice, maxPrice, checkIn, checkOut)
                     .stream()
-                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 1) // Chỉ lấy phòng available
+                    .filter(room -> "AVAILABLE".equals(room.getStatus().getStatusName()))
                     .collect(Collectors.toList());
         } else {
-            // Nếu không có điều kiện tìm kiếm -> chỉ lấy danh sách phòng available
             rooms = roomService.getAvailableRooms();
         }
 
-        // Nếu có checkIn và checkOut -> Lọc phòng trống trong khoảng thời gian đó
         if (checkIn != null && checkOut != null) {
             rooms = rooms.stream()
                     .filter(room -> roomRepo.isRoomAvailable(room.getId(), checkIn, checkOut))
@@ -146,6 +139,4 @@ public class UserController {
         model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
     }
-
-
 }

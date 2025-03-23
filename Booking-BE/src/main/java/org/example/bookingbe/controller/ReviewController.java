@@ -76,7 +76,7 @@ public class ReviewController {
 
         // Tạo đối tượng review và lưu vào database
         Review review = new Review();
-        review.setRoom(new Room(roomId));  // Gán phòng cho review
+        review.setRoom(new Room());  // Gán phòng cho review
         review.setUser(user);  // Gán người dùng cho review
         review.setRate(rating);  // Gán đánh giá cho review
         review.setDescription(comment);  // Gán mô tả cho review
