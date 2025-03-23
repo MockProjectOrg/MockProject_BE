@@ -80,6 +80,7 @@
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th>Status</th>
+                        <th>Generated Codes</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -92,6 +93,7 @@
                         <td th:text="${discount.name}"></td>
                         <td th:text="${discount.discountValue} + '%'"></td>
                         <td th:text="${discount.condition}"></td>
+                        <td th:text="${discountCodesCount.get(discount.id)} ?: '0'"></td>
                         <td th:text="${#temporals.format(discount.createAt, 'dd-MM-yyyy HH:mm')}"></td>
                         <td th:text="${#temporals.format(discount.updateAt, 'dd-MM-yyyy HH:mm')}"></td>
                         <td>
@@ -197,7 +199,9 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <form th:action="@{/discounts/manager/generate/{id}(id=${discount.id})}" method="post">
-                    <button type="submit" class="btn btn-success">Generate Codes</button>
+                    <button type="submit" class="btn btn-success">
+                        Generate Codes
+                    </button>
                 </form>
             </div>
         </div>

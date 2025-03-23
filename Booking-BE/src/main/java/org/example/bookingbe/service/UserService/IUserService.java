@@ -10,4 +10,5 @@ public interface IUserService {
     Boolean exstsEmail(String email);
 
     Optional<User> findByUsername(String username);
+    User getUserById(Long id);
 }

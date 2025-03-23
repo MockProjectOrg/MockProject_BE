@@ -18,6 +18,8 @@ public class UserService implements IUserService {
     private IRoleRepo roleRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private IUserRepo userRepository; // Use your actual repository interface name here
     public User registerUser(User user) {
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepo.findByRoleName("USER");
@@ -38,5 +40,11 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> findByUsername(String username) {
         return userRepo.findByUserName(username);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElse(null);  // Returns null if user not found
     }
 }

@@ -4,6 +4,7 @@ import org.example.bookingbe.model.Discount;
 import org.example.bookingbe.model.DiscountUser;
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.repository.DiscountUserRepo.IDiscountUserRepo;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.example.bookingbe.service.DiscountService.IDiscountService;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/discounts")
@@ -33,6 +36,9 @@ public class DiscountController {
 
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    private IDiscountUserRepo discountUserRepo;
 
     // Hotel Manager endpoints
 
@@ -51,8 +57,17 @@ public class DiscountController {
 
         Long hotelId = hotel.getId();
 
+        // Thêm thông tin số lượng mã đã tạo cho mỗi discount
         List<Discount> discounts = discountService.getAllDiscountsByHotel(hotelId);
+        Map<Long, Integer> discountCodesCount = new HashMap<>();
+
+        for (Discount discount : discounts) {
+            int codeCount = discountUserRepo.findByDiscount(discount).size();
+            discountCodesCount.put(discount.getId(), codeCount);
+        }
+
         model.addAttribute("discounts", discounts);
+        model.addAttribute("discountCodesCount", discountCodesCount);
         model.addAttribute("newDiscount", new Discount());
 
         return "managerHotel/managerDiscount";
