@@ -5,119 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Customer Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f6f9;
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #222831;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        .sidebar a:hover {
+            background: #00ADB5;
+        }
+        .content {
+            margin-left: 270px;
+            width: calc(100% - 270px);
+            padding: 20px;
+        }
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 270px;
+            font-size: 26px;
+            color: #222831;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .home-btn:hover {
+            color: #00ADB5;
         }
         .profile-container {
             max-width: 800px;
             margin: auto;
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         .profile-img {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
             transition: transform 0.3s ease-in-out;
+            border: 4px solid #00ADB5;
         }
         .profile-img:hover {
-            transform: scale(1.05);
-        }
-        .edit-btn {
-            position: absolute;
-            top: 95px;
-            right: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: all 0.3s;
-        }
-        .edit-btn:hover {
-            opacity: 1;
-            background: #f8f9fa;
-        }
-        .table-responsive {
-            margin-top: 20px;
+            transform: scale(1.08);
         }
         .btn-primary {
             padding: 10px 20px;
             font-weight: bold;
             border-radius: 8px;
+            background-color: #00ADB5;
+            border: none;
             transition: 0.3s;
         }
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #007bff;
             transform: scale(1.05);
         }
         #editProfileForm {
-            display: none;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        #editProfileForm.show {
+            max-height: 600px;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-
-<div class="container mt-5">
-    <div class="profile-container p-4">
-        <div class="text-center">
-            <div class="position-relative d-inline-block">
-                <img th:src="@{'https://res.cloudinary.com/your-cloud-name/image/upload/v1/user_profiles/profile_' + ${user.id} + '.jpg'}"
-                     alt="Profile Picture" class="profile-img" id="profileImage" th:attr="data-user-id=${user.id}">
-                <button class="edit-btn btn btn-outline-secondary btn-sm" onclick="document.getElementById('fileInput').click()">✏️</button>
-                <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="uploadImage(event)">
-            </div>
-            <h4 class="mt-3" th:text="${user.firstName} + ' ' + ${user.lastName}">John Doe</h4>
-            <p class="text-muted" th:text="${user.role.roleName}">Gold Member</p>
-        </div>
-
-        <hr>
-
-        <div>
+<div class="sidebar">
+    <a href="#">👤 Hồ sơ</a>
+    <a href="#">📦 Lịch sử giao dịch</a>
+    <a href="#">💳 Voucher</a>
+</div>
+<a href="/" class="home-btn">🏠</a>
+<div class="content">
+    <div class="container mt-5">
+        <div class="profile-container p-4">
+            <img th:src="@{'https://res.cloudinary.com/your-cloud-name/image/upload/v1/user_profiles/profile_' + ${user.id} + '.jpg'}" alt="Profile Picture" class="profile-img" id="profileImage">
+            <h4 class="mt-3" th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
+            <p class="text-muted" th:text="${user.role.roleName}"></p>
+            <hr>
             <h5>📌 Thông tin khách hàng</h5>
-            <p><strong>📧 Email:</strong> <span th:text="${user.email}">john.doe@example.com</span></p>
-            <p><strong>📞 Số điện thoại:</strong> <span th:text="${user.phone}">+123 456 7890</span></p>
-            <p><strong>🏠 Địa chỉ:</strong> <span th:text="${user.address}">123 Main St, New York, NY</span></p>
+            <p><strong>📧 Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>📞 Số điện thoại:</strong> <span th:text="${user.phone}"></span></p>
+            <p><strong>🏠 Địa chỉ:</strong> <span th:text="${user.address}"></span></p>
+            <button class="btn btn-secondary mt-3" onclick="toggleEditForm()">Chỉnh sửa thông tin</button>
+            <form id="editProfileForm" class="mt-4">
+                <div class="mb-3">
+                    <label class="form-label">Họ</label>
+                    <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tên</label>
+                    <input type="text" class="form-control" id="lastName" th:value="${user.lastName}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:value="${user.email}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phone" th:value="${user.phone}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address" th:value="${user.address}">
+                </div>
+                <button type="button" class="btn btn-primary">Cập nhật</button>
+            </form>
         </div>
-
-        <button class="btn btn-secondary mt-3" onclick="toggleEditForm()">Chỉnh sửa thông tin</button>
-        <button class="btn btn-danger mt-3" onclick="window.location.href='/'">🏠 Trở về Home</button>
-
-        <form id="editProfileForm" class="mt-4">
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Họ</label>
-                <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
-            </div>
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Tên</label>
-                <input type="text" class="form-control" id="lastName" th:value="${user.lastName}">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" th:value="${user.email}">
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Số điện thoại</label>
-                <input type="text" class="form-control" id="phone" th:value="${user.phone}">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" id="address" th:value="${user.address}">
-            </div>
-            <button type="button" class="btn btn-primary" onclick="updateProfile()">Cập nhật</button>
-        </form>
-
     </div>
 </div>
-
-</body>
 <script>
     function toggleEditForm() {
-        let form = document.getElementById("editProfileForm");
-        form.style.display = form.style.display === "none" ? "block" : "none";
+        document.getElementById("editProfileForm").classList.toggle("show");
     }
 </script>
+</body>
 </html>

@@ -12,8 +12,6 @@
         private Double price;
         @Column(name = "description", columnDefinition = "TEXT")
         private String description;
-        @Column(name = "image_url")
-        private String imageUrl;
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "room_type_id")
         private RoomType roomType;
@@ -26,13 +24,12 @@
 
         public Room() {}
 
-        public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, String imageUrl, Status status) {
+        public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, Status status) {
             this.id = id;
             this.price = price;
             this.description = description;
             this.roomType = roomType;
             this.hotel = hotel;
-            this.imageUrl = imageUrl;
             this.status = status;
         }
 
@@ -82,14 +79,6 @@
 
         public void setHotel(Hotel hotel) {
             this.hotel = hotel;
-        }
-
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
         }
 
     }

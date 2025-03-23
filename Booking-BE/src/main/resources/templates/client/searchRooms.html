@@ -127,43 +127,53 @@
   <div class="row">
     <!-- Cột bên trái: Form tìm kiếm -->
     <div class="col-md-4">
-      <div class="card p-4 shadow-sm">
-        <h4 class="text-center">Search Filter</h4>
+      <div class="card p-4 shadow-lg border-0 rounded-4">
+        <h4 class="text-center text-primary fw-bold mb-4">🔍 Search Filter</h4>
+
         <form action="/api/user/searchRooms" method="get">
+          <!-- Hotel Name -->
           <div class="mb-3">
-            <label for="hotelName" class="form-label">Hotel:</label>
-            <input type="text" id="hotelName" name="hotelName" class="form-control" placeholder="Enter hotel name">
-          </div>
-          <div class="mb-3">
-            <label for="typeName" class="form-label">Room Type:</label>
-            <input type="text" id="typeName" name="typeName" class="form-control" placeholder="Enter room type">
+            <label for="hotelName" class="form-label fw-bold">🏨 Hotel Name</label>
+            <input type="text" id="hotelName" name="hotelName" class="form-control"
+                   placeholder="Enter hotel name">
           </div>
 
-          <!-- Thanh trượt giá -->
+          <!-- Room Type -->
           <div class="mb-3">
-            <label class="form-label">Price: </label>
+            <label for="typeName" class="form-label fw-bold">🛏️ Room Type</label>
+            <input type="text" id="typeName" name="typeName" class="form-control"
+                   placeholder="Enter room type">
+          </div>
+
+          <!-- Price Range Slider -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">💰 Price Range</label>
             <div class="slider-container">
               <div id="price-slider"></div>
             </div>
-            <div class="price-input">
-              <input type="text" id="minPrice" name="minPrice" readonly>
-              <span> - </span>
-              <input type="text" id="maxPrice" name="maxPrice" readonly>
+            <div class="d-flex justify-content-between">
+              <input type="text" id="minPrice" name="minPrice" class="form-control w-45 text-center" readonly>
+              <span class="align-self-center fw-bold"> - </span>
+              <input type="text" id="maxPrice" name="maxPrice" class="form-control w-45 text-center" readonly>
             </div>
           </div>
 
-          <!-- Thêm trường tìm kiếm theo checkIn và checkOut -->
+          <!-- Check In & Check Out -->
           <div class="mb-3">
-            <label for="checkIn" class="form-label">Check In Date:</label>
+            <label for="checkIn" class="form-label fw-bold">📅 Check In Date</label>
             <input type="datetime-local" id="checkIn" name="checkIn" class="form-control">
           </div>
+
           <div class="mb-3">
-            <label for="checkOut" class="form-label">Check Out Date:</label>
+            <label for="checkOut" class="form-label fw-bold">📅 Check Out Date</label>
             <input type="datetime-local" id="checkOut" name="checkOut" class="form-control">
           </div>
 
-          <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary w-100">Search</button>
+          <!-- Search Button -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+              🔎 Search Now
+            </button>
           </div>
         </form>
       </div>
@@ -181,48 +191,56 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4" th:each="room : ${rooms}">
+        <div class="col-lg-12 mb-4" th:each="room : ${rooms}">
           <div class="card shadow-lg border-0 rounded-4">
-            <!-- Hiển thị hình ảnh -->
-            <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="card-img-top rounded-top"
-                 style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h5 class="card-title text-primary fw-bold">
-                Room #<span th:text="${room.id}"></span>
-              </h5>
+            <div class="row g-0">
+              <!-- Cột hình ảnh -->
+              <div class="col-md-4">
+                <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="img-fluid rounded-start"
+                     style="height: 100%; width: 100%; object-fit: cover;">
+              </div>
 
-              <p class="card-text">
-                <strong>🏨 Hotel:</strong> <span th:text="${room.hotel.hotelName}"></span>
-              </p>
+              <!-- Cột thông tin phòng -->
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title text-primary fw-bold">
+                    Room #<span th:text="${room.id}"></span>
+                  </h5>
 
-              <p class="card-text">
-                <strong>🛏️ Room Type:</strong> <span th:text="${room.roomType.typeName}"></span>
-              </p>
+                  <p class="card-text">
+                    <strong>🏨 Hotel:</strong> <span th:text="${room.hotel.hotelName}"></span>
+                  </p>
 
-              <p class="card-text">
-                <strong>💰 Price:</strong> <span th:text="${room.price} + ' VNĐ'"></span>
-              </p>
+                  <p class="card-text">
+                    <strong>🛏️ Room Type:</strong> <span th:text="${room.roomType.typeName}"></span>
+                  </p>
 
-              <p class="card-text">
-                <strong>📜 Description:</strong> <span th:text="${room.description}"></span>
-              </p>
+                  <p class="card-text">
+                    <strong>💰 Price:</strong> <span th:text="${room.price} + ' VNĐ'"></span>
+                  </p>
 
-              <p class="card-text">
-                <strong>🟢 Status:</strong>
-                <span class="text-success fw-bold">Available</span>
-              </p>
+                  <p class="card-text">
+                    <strong>📜 Description:</strong> <span th:text="${room.description}"></span>
+                  </p>
 
-              <div class="text-end">
-                <a href="#" class="btn btn-primary btn-sm">Detail</a>
-                <a href="#" class="btn btn-success btn-sm">Book</a>
+                  <p class="card-text">
+                    <strong>🟢 Status:</strong>
+                    <span class="text-success fw-bold">Available</span>
+                  </p>
+
+                  <div class="text-end">
+                    <a href="#" class="btn btn-primary btn-sm">Detail</a>
+                    <a href="#" class="btn btn-success btn-sm">Book</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </div>
+
+    </div>
 </div>
 
 <footer class="bg-gray-800 text-white py-8">
