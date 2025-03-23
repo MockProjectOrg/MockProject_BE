@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface IHotelRepo extends JpaRepository<Hotel, Long> {
     List<Hotel> findByUser(User user);
+    List<Hotel> findByUserId(Long userId);
 }

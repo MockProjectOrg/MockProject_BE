@@ -97,5 +97,115 @@
     </div>
 </div>
 
+<!-- User Discounts Section - Include this in profile.html -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">My Discount Codes</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Hotel</th>
+                    <th>Discount Name</th>
+                    <th>Code</th>
+                    <th>Discount %</th>
+                    <th>Valid Until</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${discounts == null || discounts.empty}">
+                    <td colspan="7" class="text-center">You don't have any discount codes available</td>
+                </tr>
+                <tr th:each="discount : ${discounts}">
+                    <td th:text="${discount.discount.hotel.name}"></td>
+                    <td th:text="${discount.discount.name}"></td>
+                    <td>
+                        <span class="code-text" th:text="${discount.code}"></span>
+                        <button class="btn btn-sm btn-outline-secondary copy-btn" th:data-code="${discount.code}" title="Copy to clipboard">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </td>
+                    <td th:text="${discount.discount.percentOff} + '%'"></td>
+                    <td th:text="${#temporals.format(discount.discount.endDate, 'dd-MM-yyyy')}"></td>
+                    <td>
+                        <span th:if="${discount.isUsed}" class="badge bg-secondary">Used</span>
+                        <span th:unless="${discount.isUsed}" class="badge bg-success">Available</span>
+                    </td>
+                    <td>
+                        <button th:if="${!discount.isUsed}" class="btn btn-sm btn-primary apply-discount-btn" th:data-code="${discount.code}">Apply</button>
+                        <span th:if="${discount.isUsed}" class="text-muted">Already used</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
+
+<!-- JavaScript for Copy Button Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Copy discount code functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const code = this.getAttribute('data-code');
+                navigator.clipboard.writeText(code).then(() => {
+                    // Visual feedback
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="bi bi-check"></i>';
+                    this.classList.add('btn-success');
+                    this.classList.remove('btn-outline-secondary');
+
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-outline-secondary');
+                    }, 2000);
+                });
+            });
+        });
+
+        // Apply discount code functionality
+        document.querySelectorAll('.apply-discount-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const code = this.getAttribute('data-code');
+
+                // AJAX call to validate and apply the discount code
+                fetch('/discounts/api/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                    },
+                    body: 'discountCode=' + encodeURIComponent(code)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text().then(text => {
+                            // Success - Show successful application
+                            alert('Discount applied successfully!');
+                            // Reload the page to update the discount status
+                            window.location.reload();
+                        });
+                    } else {
+                        return response.text().then(text => {
+                            // Error - Show error message
+                            alert('Error: ' + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while applying the discount.');
+                });
+            });
+        });
+    });
+</script>

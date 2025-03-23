@@ -2,7 +2,9 @@ package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -31,6 +33,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+
 
     public User(Long userId) {}
 
@@ -136,4 +140,18 @@ public class User {
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
+
+    // Thêm vào class User
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    // Thêm getter và setter
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
 }
