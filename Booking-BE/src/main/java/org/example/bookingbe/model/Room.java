@@ -1,6 +1,6 @@
-package org.example.bookingbe.model;
+    package org.example.bookingbe.model;
 
-import jakarta.persistence.*;
+    import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,9 +33,9 @@ public class Room {
             inverseJoinColumns = @JoinColumn(name = "utilities_id")
     )
     private Set<Utilities> utilities = new HashSet<>();
+
     public Room() {
     }
-
     public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, Status status) {
         this.id = id;
         this.price = price;
@@ -56,53 +56,53 @@ public class Room {
         this.utilities = utilities;
     }
 
-    public Long getId() {
-        return id;
-    }
+        public Long getId() {
+            return id;
+        }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        public void setId(Long id) {
+            this.id = id;
+        }
 
-    public Double getPrice() {
-        return price;
-    }
+        public Double getPrice() {
+            return price;
+        }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+        public void setPrice(Double price) {
+            this.price = price;
+        }
 
-    public String getDescription() {
-        return description;
-    }
+        public String getDescription() {
+            return description;
+        }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-    public RoomType getRoomType() {
-        return roomType;
-    }
+        public RoomType getRoomType() {
+            return roomType;
+        }
 
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
-    }
+        public void setRoomType(RoomType roomType) {
+            this.roomType = roomType;
+        }
 
-    public Status getStatus() {
-        return status;
-    }
+        public Status getStatus() {
+            return status;
+        }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+        public void setStatus(Status status) {
+            this.status = status;
+        }
 
-    public Hotel getHotel() {
-        return hotel;
-    }
+        public Hotel getHotel() {
+            return hotel;
+        }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
+        public void setHotel(Hotel hotel) {
+            this.hotel = hotel;
+        }
 
     public String getRoomName() {
         return roomName;
@@ -119,4 +119,4 @@ public class Room {
     public void setUtilities(Set<Utilities> utilities) {
         this.utilities = utilities;
     }
-}
+    }

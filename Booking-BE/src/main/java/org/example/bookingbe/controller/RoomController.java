@@ -1,11 +1,9 @@
 package org.example.bookingbe.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.bookingbe.model.Hotel;
-import org.example.bookingbe.model.Room;
-import org.example.bookingbe.model.Status;
-import org.example.bookingbe.model.User;
+import org.example.bookingbe.model.*;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
+import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.example.bookingbe.service.RoomService.IRoomService;
@@ -20,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/managerRooms")
@@ -42,6 +42,9 @@ public class RoomController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private IImageRepo imageRepo;
 
     // Danh sách phòng của khách sạn do Manager quản lý
     @GetMapping
@@ -65,10 +68,17 @@ public class RoomController {
 
         List<Room> rooms = roomService.getRoomsByHotel(hotel.getId(), userId);
 
-        // Lấy danh sách tất cả trạng thái phòng để hiển thị
+        // Lấy danh sách ảnh cho từng phòng
+        Map<Long, List<Image>> roomImagesMap = new HashMap<>();
+        for (Room room : rooms) {
+            List<Image> images = imageRepo.findByRoomId(room.getId());
+            roomImagesMap.put(room.getId(), images);
+        }
+
         List<Status> allStatuses = roomService.getAllStatuses();
 
         model.addAttribute("rooms", rooms);
+        model.addAttribute("roomImagesMap", roomImagesMap);
         model.addAttribute("hotel", hotel);
         model.addAttribute("allStatuses", allStatuses);
         model.addAttribute("newRoom", new Room());
@@ -82,8 +92,7 @@ public class RoomController {
 
     // Thêm phòng mới
     @PostMapping("/add")
-    public String addRoom(@ModelAttribute Room room, @RequestParam("imageFile") MultipartFile imageFile) {
-        // Lấy thông tin người dùng từ Spring Security
+    public String addRoom(@ModelAttribute Room room, @RequestParam("imageFiles") MultipartFile[] imageFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPriciple userPriciple = (UserPriciple) authentication.getPrincipal();
 
@@ -110,16 +119,29 @@ public class RoomController {
         Hotel hotel = hotelRepo.findById(hotelId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách sạn"));
 
+        room.setHotel(hotel);
+
+        // 💾 Lưu Room trước để lấy ID
+        Room savedRoom = roomService.createRoom(room, userId);
+
         try {
-            // Upload ảnh phòng lên Cloudinary (lưu vào thư mục "room_images")
-            String imageUrl = cloudinaryService.uploadFile(imageFile, "room_images", "room_" + System.currentTimeMillis());
-//            room.setImageUrl(imageUrl);
+            for (MultipartFile imageFile : imageFiles) {
+                if (!imageFile.isEmpty()) {
+                    // 📸 Upload ảnh lên Cloudinary
+                    String imageUrl = cloudinaryService.uploadFile(imageFile, "room_images", "room_" + System.currentTimeMillis());
+
+                    // 🎞️ Tạo đối tượng Image và liên kết với Room
+                    Image image = new Image();
+                    image.setImageName(imageUrl); // Dùng imageName để lưu URL
+                    image.setRoom(savedRoom);
+
+                    // 💾 Lưu Image vào database
+                    imageRepo.save(image);
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException("Lỗi khi upload ảnh lên Cloudinary", e);
         }
-
-        room.setHotel(hotel);
-        roomService.createRoom(room, userId);
 
         return "redirect:/managerRooms";
     }

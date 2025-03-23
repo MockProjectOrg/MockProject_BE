@@ -22,4 +22,5 @@ public class HotelService implements IHotelService {
     public List<Hotel> getAllHotels() {
         return hotelRepo.findAll();
     }
+
 }

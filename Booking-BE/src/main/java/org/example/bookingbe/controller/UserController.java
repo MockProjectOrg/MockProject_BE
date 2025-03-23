@@ -9,34 +9,45 @@ import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
 import org.example.bookingbe.service.RoomService.IRoomService;
+import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @Controller
 @RequestMapping("/api")
 public class UserController {
     @Autowired
     private IUserService userService;
-    @Autowired
-    private IRoomService roomService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private IRoomService roomService;
+
     @Autowired
     private IRoomRepo roomRepo;
-
-
-
 
 
     @GetMapping("/")
@@ -74,9 +85,10 @@ public class UserController {
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
-            return "redirect:/api/login";
+            return "redirect:/api/login"; // Nếu không có userId, yêu cầu đăng nhập lại
         }
 
+        // Lấy User từ database
         User user = userService.getUserById(userId);
         if (user == null) {
             return "redirect:/api/login";
@@ -145,15 +157,23 @@ public class UserController {
         }
 
         model.addAttribute("rooms", rooms);
-        model.addAttribute("checkIn", checkIn);
-        model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
     }
 
 
 
+    @GetMapping("/user/home")
+    public String getUser(){
+        return "client/homePage";
+    }
 
-
-
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:/api/login";
+    }
 
 }

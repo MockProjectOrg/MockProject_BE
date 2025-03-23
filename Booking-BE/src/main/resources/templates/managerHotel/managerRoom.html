@@ -166,7 +166,15 @@
                             <td class="py-4 px-6 text-sm font-medium text-gray-900" th:text="${room.id}"></td>
                             <td class="py-4 px-6 text-sm text-gray-700" th:text="${room.description}"></td>
                             <td class="py-4 px-6 text-sm text-gray-700">
-                                <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="w-16 h-16 object-cover rounded">
+                                <div th:if="${roomImagesMap[room.id] != null and not #lists.isEmpty(roomImagesMap[room.id])}" class="flex space-x-2">
+                                    <img th:each="image : ${roomImagesMap[room.id]}"
+                                         th:src="${image.imageName}"
+                                         alt="Hình ảnh phòng"
+                                         class="w-16 h-16 object-cover rounded">
+                                </div>
+                                <div th:if="${roomImagesMap[room.id] == null or #lists.isEmpty(roomImagesMap[room.id])}">
+                                    <span>Không có ảnh</span>
+                                </div>
                             </td>
                             <td class="py-4 px-6 text-sm text-gray-700">
                                 <span th:text="${#numbers.formatDecimal(room.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
@@ -278,8 +286,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-gray-700 font-medium mb-2">Giá (USD):</label>
-                <input type="file" name="imageFile" accept="image/*" required
+                <label class="block text-gray-700 font-medium mb-2">Ảnh:</label>
+                <input type="file" name="imageFiles" accept="image/*" multiple required
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             </div>
             <!-- Add status selection dropdown -->

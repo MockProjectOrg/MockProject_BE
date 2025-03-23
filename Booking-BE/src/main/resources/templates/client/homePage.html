@@ -11,8 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Halminton+Grand&display=swap" rel="stylesheet"/>
   <style>
     body {
-      font-family: 'Libre Baskerville', serif;
-    }
+       font-family: 'Libre Baskerville', serif;
+
+     }
 
     .hero-text {
       font-family: 'Halminton Grand', serif;
@@ -375,9 +376,6 @@
     <p class="text-gray-500 max-w-md mx-auto">We're currently updating our hotel inventory. Please check back later for exciting new options.</p>
   </div>
 </section>
-
-
-
 <section class="bg-gray-100 py-12">
   <div class="container mx-auto px-6">
     <h2 class="text-3xl font-bold text-center mb-8">
@@ -517,6 +515,7 @@
         </div>
       </div>
     </div>
+
     <div class="text-center text-gray-400 mt-8">
       © 2023 Sona. All rights reserved.
     </div>
@@ -527,430 +526,430 @@
 
 <script>
   // Hotel Slideshow Enhanced JavaScript
-  // Main state variables
-  let currentSlide = 0;
-  const totalSlides = /*[[${#lists.size(hotels)}]]*/ 10;
-  let slideInterval;
-  let isRoomViewOpen = false;
-  let touchStartX = 0;
-  let touchEndX = 0;
+// Main state variables
+let currentSlide = 0;
+const totalSlides = /*[[${#lists.size(hotels)}]]*/ 10;
+let slideInterval;
+let isRoomViewOpen = false;
+let touchStartX = 0;
+let touchEndX = 0;
 
-  // DOM elements
-  let slider;
-  let indicators;
+// DOM elements
+let slider;
+let indicators;
 
-  // Constants
-  const SLIDE_INTERVAL_DURATION = 5000;
-  const SWIPE_THRESHOLD = 50;
-  const ROOMS_PER_PAGE = 3;
+// Constants
+const SLIDE_INTERVAL_DURATION = 5000;
+const SWIPE_THRESHOLD = 50;
+const ROOMS_PER_PAGE = 3;
 
-  /**
-   * Initialize the slider and all related functionality
-   */
-  function initializeSlider() {
-    slider = document.getElementById('hotel-slider');
-    indicators = document.querySelectorAll('.hotel-indicator');
+/**
+ * Initialize the slider and all related functionality
+ */
+function initializeSlider() {
+  slider = document.getElementById('hotel-slider');
+  indicators = document.querySelectorAll('.hotel-indicator');
 
+  if (!slider) return;
+
+  // Setup initial state
+  updateSlider();
+  setupEventListeners();
+  addCloseButtons();
+
+  // Add initial fade-in effect
+  slider.style.opacity = '0';
+  setTimeout(() => {
+    slider.style.transition = 'opacity 0.5s ease-in-out';
+    slider.style.opacity = '1';
+  }, 100);
+
+  // Start automatic slideshow
+  startSlideInterval();
+
+  // Initialize pagination for all hotels
+  document.querySelectorAll('[id^="hotel"]').forEach(hotel => {
+    const hotelIndex = hotel.id.match(/hotel(\d+)/)?.[1];
+    if (hotelIndex) paginateRooms(hotelIndex, 1);
+  });
+
+  // Initialize pagination for any already open room views
+  const openRooms = document.querySelector('.hotel-rooms.active');
+  if (openRooms) {
+    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (hotelIndex) paginateRooms(hotelIndex, 1);
+  }
+}
+
+/**
+ * Set up all event listeners
+ */
+function setupEventListeners() {
+  // Slider hover events
+  slider.addEventListener('mouseenter', pauseSlideInterval);
+  slider.addEventListener('mouseleave', () => {
+    if (!isRoomViewOpen) startSlideInterval();
+  });
+
+  // Touch events for mobile
+  slider.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  slider.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (isRoomViewOpen) return;
+
+    if (e.key === 'ArrowLeft') {
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      nextSlide();
+    }
+  });
+
+  // Scroll event to pause slideshow when out of view
+  window.addEventListener('scroll', () => {
     if (!slider) return;
 
-    // Setup initial state
-    updateSlider();
-    setupEventListeners();
-    addCloseButtons();
-
-    // Add initial fade-in effect
-    slider.style.opacity = '0';
-    setTimeout(() => {
-      slider.style.transition = 'opacity 0.5s ease-in-out';
-      slider.style.opacity = '1';
-    }, 100);
-
-    // Start automatic slideshow
-    startSlideInterval();
-
-    // Initialize pagination for all hotels
-    document.querySelectorAll('[id^="hotel"]').forEach(hotel => {
-      const hotelIndex = hotel.id.match(/hotel(\d+)/)?.[1];
-      if (hotelIndex) paginateRooms(hotelIndex, 1);
-    });
-
-    // Initialize pagination for any already open room views
-    const openRooms = document.querySelector('.hotel-rooms.active');
-    if (openRooms) {
-      const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-      if (hotelIndex) paginateRooms(hotelIndex, 1);
-    }
-  }
-
-  /**
-   * Set up all event listeners
-   */
-  function setupEventListeners() {
-    // Slider hover events
-    slider.addEventListener('mouseenter', pauseSlideInterval);
-    slider.addEventListener('mouseleave', () => {
-      if (!isRoomViewOpen) startSlideInterval();
-    });
-
-    // Touch events for mobile
-    slider.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    slider.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', e => {
-      if (isRoomViewOpen) return;
-
-      if (e.key === 'ArrowLeft') {
-        prevSlide();
-      } else if (e.key === 'ArrowRight') {
-        nextSlide();
-      }
-    });
-
-    // Scroll event to pause slideshow when out of view
-    window.addEventListener('scroll', () => {
-      if (!slider) return;
-
-      const sliderRect = slider.getBoundingClientRect();
-      if (sliderRect.bottom < 0 || sliderRect.top > window.innerHeight) {
-        pauseSlideInterval();
-      } else if (!isRoomViewOpen) {
-        startSlideInterval();
-      }
-    });
-
-    // Click outside to close room view
-    document.addEventListener('click', e => {
-      if (isRoomViewOpen &&
-              !e.target.closest('.hotel-rooms') &&
-              !e.target.closest('[onclick^="toggleRooms"]')) {
-
-        const openRooms = document.querySelector('.hotel-rooms.active');
-        if (openRooms) {
-          const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-          if (hotelIndex) toggleRooms('hotel' + hotelIndex);
-        }
-      }
-    });
-  }
-
-  /**
-   * Handle swipe gestures for mobile devices
-   */
-  function handleSwipe() {
-    if (isRoomViewOpen) return;
-
-    if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
-      nextSlide(); // Swipe left
-    } else if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
-      prevSlide(); // Swipe right
-    }
-  }
-
-  /**
-   * Start automatic slideshow timer
-   */
-  function startSlideInterval() {
-    if (isRoomViewOpen || totalSlides <= 1) return;
-
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_DURATION);
-  }
-
-  /**
-   * Pause automatic slideshow
-   */
-  function pauseSlideInterval() {
-    clearInterval(slideInterval);
-  }
-
-  /**
-   * Navigate to the next slide
-   */
-  function nextSlide() {
-    if (isRoomViewOpen) return;
-
-    currentSlide = (currentSlide + 1) % totalSlides;
-    updateSlider();
-  }
-
-  /**
-   * Navigate to the previous slide
-   */
-  function prevSlide() {
-    if (isRoomViewOpen) return;
-
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    updateSlider();
-  }
-
-  /**
-   * Go to a specific slide
-   * @param {number} index - The slide index to go to
-   */
-  function goToSlide(index) {
-    // Close any open room views first
-    const openRooms = document.querySelector('.hotel-rooms.active');
-    if (openRooms) {
-      const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-      if (hotelIndex) toggleRooms('hotel' + hotelIndex);
-    }
-
-    currentSlide = index;
-    updateSlider();
-  }
-
-  /**
-   * Update the slider position and indicators
-   */
-  function updateSlider() {
-    if (!slider) return;
-
-    // Update slider position
-    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-    // Update indicators
-    updateIndicators();
-  }
-
-  /**
-   * Update the indicator styling
-   */
-  function updateIndicators() {
-    indicators.forEach((indicator, index) => {
-      if (index === currentSlide) {
-        indicator.classList.add('active', 'bg-orange-500', 'w-12');
-        indicator.classList.remove('bg-gray-300', 'w-8');
-      } else {
-        indicator.classList.remove('active', 'bg-orange-500', 'w-12');
-        indicator.classList.add('bg-gray-300', 'w-8');
-      }
-    });
-  }
-
-  /**
-   * Toggle room visibility for a hotel
-   * @param {string} hotelId - The hotel ID
-   */
-  function toggleRooms(hotelId) {
-    const roomsElement = document.getElementById(hotelId + '-rooms');
-    if (!roomsElement) return;
-
-    const isOpening = !roomsElement.classList.contains('active');
-    roomsElement.classList.toggle('active');
-
-    // Update chevron icon
-    const hotelElement = document.querySelector(`[onclick="toggleRooms('${hotelId}')"]`);
-    const chevronIcon = hotelElement?.querySelector('.fa-chevron-down, .fa-chevron-up');
-
-    if (chevronIcon) {
-      if (roomsElement.classList.contains('active')) {
-        chevronIcon.classList.add('transform', 'rotate-180');
-      } else {
-        chevronIcon.classList.remove('transform', 'rotate-180');
-      }
-    }
-
-    // Update room view state
-    isRoomViewOpen = roomsElement.classList.contains('active');
-
-    // Pause/resume slideshow based on room view state
-    if (isRoomViewOpen) {
+    const sliderRect = slider.getBoundingClientRect();
+    if (sliderRect.bottom < 0 || sliderRect.top > window.innerHeight) {
       pauseSlideInterval();
-
-      // Initialize pagination
-      const hotelIndex = hotelId.replace('hotel', '');
-      paginateRooms(hotelIndex, 1);
-    } else {
+    } else if (!isRoomViewOpen) {
       startSlideInterval();
     }
+  });
 
-    // Smooth scroll to rooms when opened
-    if (isOpening) {
-      setTimeout(() => {
-        roomsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }
+  // Click outside to close room view
+  document.addEventListener('click', e => {
+    if (isRoomViewOpen &&
+        !e.target.closest('.hotel-rooms') &&
+        !e.target.closest('[onclick^="toggleRooms"]')) {
 
-  /**
-   * Handle room pagination
-   * @param {string} hotelIndex - The hotel index
-   * @param {number} pageNumber - The page number to display
-   */
-  function paginateRooms(hotelIndex, pageNumber) {
-    const hotelRoomsContainer = document.getElementById(`hotel${hotelIndex}-rooms`);
-    if (!hotelRoomsContainer) return;
-
-    // Find all room cards
-    const roomCards = hotelRoomsContainer.querySelectorAll('.grid > div');
-    if (!roomCards.length) return;
-
-    const totalPages = Math.ceil(roomCards.length / ROOMS_PER_PAGE);
-
-    // Validate page number
-    pageNumber = Math.max(1, Math.min(pageNumber, totalPages));
-
-    // Update pagination buttons
-    updatePaginationControls(hotelRoomsContainer, hotelIndex, pageNumber, totalPages);
-
-    // Update room visibility
-    const startIndex = (pageNumber - 1) * ROOMS_PER_PAGE;
-    const endIndex = startIndex + ROOMS_PER_PAGE - 1;
-    let visibleCount = 0;
-
-    roomCards.forEach((room, index) => {
-      if (index >= startIndex && index <= endIndex) {
-        room.style.display = 'block';
-        visibleCount++;
-      } else {
-        room.style.display = 'none';
-      }
-    });
-
-    // Update room count display
-    const roomCountVisible = hotelRoomsContainer.querySelector('.room-count-visible');
-    if (roomCountVisible) {
-      roomCountVisible.textContent = visibleCount;
-    }
-  }
-
-  /**
-   * Update pagination controls
-   * @param {HTMLElement} container - The container element
-   * @param {string} hotelIndex - The hotel index
-   * @param {number} currentPage - The current page
-   * @param {number} totalPages - The total number of pages
-   */
-  function updatePaginationControls(container, hotelIndex, currentPage, totalPages) {
-    // Update prev/next buttons
-    const prevButton = container.querySelector('.pagination-prev');
-    const nextButton = container.querySelector('.pagination-next');
-
-    if (prevButton) {
-      prevButton.disabled = currentPage <= 1;
-      prevButton.onclick = function(e) {
-        e.stopPropagation();
-        if (currentPage > 1) {
-          paginateRooms(hotelIndex, currentPage - 1);
-        }
-      };
-    }
-
-    if (nextButton) {
-      nextButton.disabled = currentPage >= totalPages;
-      nextButton.onclick = function(e) {
-        e.stopPropagation();
-        if (currentPage < totalPages) {
-          paginateRooms(hotelIndex, currentPage + 1);
-        }
-      };
-    }
-
-    // Update page number buttons
-    const paginationButtonsContainer = container.querySelector('.room-pagination-buttons');
-    if (paginationButtonsContainer) {
-      paginationButtonsContainer.innerHTML = '';
-
-      for (let i = 0; i < totalPages; i++) {
-        const button = document.createElement('button');
-        button.className = `w-8 h-8 flex items-center justify-center rounded ${
-                i + 1 === currentPage ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
-        }`;
-        button.textContent = i + 1;
-        button.onclick = function(e) {
-          e.stopPropagation();
-          paginateRooms(hotelIndex, i + 1);
-        };
-        paginationButtonsContainer.appendChild(button);
+      const openRooms = document.querySelector('.hotel-rooms.active');
+      if (openRooms) {
+        const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+        if (hotelIndex) toggleRooms('hotel' + hotelIndex);
       }
     }
+  });
+}
+
+/**
+ * Handle swipe gestures for mobile devices
+ */
+function handleSwipe() {
+  if (isRoomViewOpen) return;
+
+  if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
+    nextSlide(); // Swipe left
+  } else if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
+    prevSlide(); // Swipe right
+  }
+}
+
+/**
+ * Start automatic slideshow timer
+ */
+function startSlideInterval() {
+  if (isRoomViewOpen || totalSlides <= 1) return;
+
+  clearInterval(slideInterval);
+  slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_DURATION);
+}
+
+/**
+ * Pause automatic slideshow
+ */
+function pauseSlideInterval() {
+  clearInterval(slideInterval);
+}
+
+/**
+ * Navigate to the next slide
+ */
+function nextSlide() {
+  if (isRoomViewOpen) return;
+
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateSlider();
+}
+
+/**
+ * Navigate to the previous slide
+ */
+function prevSlide() {
+  if (isRoomViewOpen) return;
+
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlider();
+}
+
+/**
+ * Go to a specific slide
+ * @param {number} index - The slide index to go to
+ */
+function goToSlide(index) {
+  // Close any open room views first
+  const openRooms = document.querySelector('.hotel-rooms.active');
+  if (openRooms) {
+    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (hotelIndex) toggleRooms('hotel' + hotelIndex);
   }
 
-  /**
-   * Add close buttons to all room sections
-   */
-  function addCloseButtons() {
-    const roomSections = document.querySelectorAll('.hotel-rooms');
+  currentSlide = index;
+  updateSlider();
+}
 
-    roomSections.forEach(section => {
-      // Skip if already has a close button
-      if (section.querySelector('.close-room-button')) return;
+/**
+ * Update the slider position and indicators
+ */
+function updateSlider() {
+  if (!slider) return;
 
-      const hotelIndex = section.id.match(/hotel(\d+)-rooms/)?.[1];
-      if (!hotelIndex) return;
+  // Update slider position
+  slider.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-      const closeButton = document.createElement('button');
-      closeButton.className = 'close-room-button absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10';
-      closeButton.innerHTML = '<i class="fas fa-times"></i>';
-      closeButton.onclick = function(e) {
-        e.stopPropagation();
-        toggleRooms('hotel' + hotelIndex);
-      };
+  // Update indicators
+  updateIndicators();
+}
 
-      const contentDiv = section.querySelector('div');
-      if (contentDiv) {
-        contentDiv.style.position = 'relative';
-        contentDiv.prepend(closeButton);
-      }
-    });
-  }
-
-  /**
-   * Safe document ready handler with fallback
-   */
-  function onDocumentReady(callback) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', callback);
+/**
+ * Update the indicator styling
+ */
+function updateIndicators() {
+  indicators.forEach((indicator, index) => {
+    if (index === currentSlide) {
+      indicator.classList.add('active', 'bg-orange-500', 'w-12');
+      indicator.classList.remove('bg-gray-300', 'w-8');
     } else {
-      callback();
+      indicator.classList.remove('active', 'bg-orange-500', 'w-12');
+      indicator.classList.add('bg-gray-300', 'w-8');
+    }
+  });
+}
+
+/**
+ * Toggle room visibility for a hotel
+ * @param {string} hotelId - The hotel ID
+ */
+function toggleRooms(hotelId) {
+  const roomsElement = document.getElementById(hotelId + '-rooms');
+  if (!roomsElement) return;
+
+  const isOpening = !roomsElement.classList.contains('active');
+  roomsElement.classList.toggle('active');
+
+  // Update chevron icon
+  const hotelElement = document.querySelector(`[onclick="toggleRooms('${hotelId}')"]`);
+  const chevronIcon = hotelElement?.querySelector('.fa-chevron-down, .fa-chevron-up');
+
+  if (chevronIcon) {
+    if (roomsElement.classList.contains('active')) {
+      chevronIcon.classList.add('transform', 'rotate-180');
+    } else {
+      chevronIcon.classList.remove('transform', 'rotate-180');
     }
   }
 
-  /**
-   * Preload images and initialize the slider
-   */
-  function preloadImagesAndInitialize() {
-    const images = document.querySelectorAll('img');
+  // Update room view state
+  isRoomViewOpen = roomsElement.classList.contains('active');
 
-    if (images.length === 0) {
-      initializeSlider();
-      return;
+  // Pause/resume slideshow based on room view state
+  if (isRoomViewOpen) {
+    pauseSlideInterval();
+
+    // Initialize pagination
+    const hotelIndex = hotelId.replace('hotel', '');
+    paginateRooms(hotelIndex, 1);
+  } else {
+    startSlideInterval();
+  }
+
+  // Smooth scroll to rooms when opened
+  if (isOpening) {
+    setTimeout(() => {
+      roomsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+/**
+ * Handle room pagination
+ * @param {string} hotelIndex - The hotel index
+ * @param {number} pageNumber - The page number to display
+ */
+function paginateRooms(hotelIndex, pageNumber) {
+  const hotelRoomsContainer = document.getElementById(`hotel${hotelIndex}-rooms`);
+  if (!hotelRoomsContainer) return;
+
+  // Find all room cards
+  const roomCards = hotelRoomsContainer.querySelectorAll('.grid > div');
+  if (!roomCards.length) return;
+
+  const totalPages = Math.ceil(roomCards.length / ROOMS_PER_PAGE);
+
+  // Validate page number
+  pageNumber = Math.max(1, Math.min(pageNumber, totalPages));
+
+  // Update pagination buttons
+  updatePaginationControls(hotelRoomsContainer, hotelIndex, pageNumber, totalPages);
+
+  // Update room visibility
+  const startIndex = (pageNumber - 1) * ROOMS_PER_PAGE;
+  const endIndex = startIndex + ROOMS_PER_PAGE - 1;
+  let visibleCount = 0;
+
+  roomCards.forEach((room, index) => {
+    if (index >= startIndex && index <= endIndex) {
+      room.style.display = 'block';
+      visibleCount++;
+    } else {
+      room.style.display = 'none';
     }
+  });
 
-    let imagesLoaded = 0;
-    const totalImages = images.length;
+  // Update room count display
+  const roomCountVisible = hotelRoomsContainer.querySelector('.room-count-visible');
+  if (roomCountVisible) {
+    roomCountVisible.textContent = visibleCount;
+  }
+}
 
-    const handleImageLoad = () => {
-      imagesLoaded++;
-      if (imagesLoaded === totalImages) {
-        initializeSlider();
+/**
+ * Update pagination controls
+ * @param {HTMLElement} container - The container element
+ * @param {string} hotelIndex - The hotel index
+ * @param {number} currentPage - The current page
+ * @param {number} totalPages - The total number of pages
+ */
+function updatePaginationControls(container, hotelIndex, currentPage, totalPages) {
+  // Update prev/next buttons
+  const prevButton = container.querySelector('.pagination-prev');
+  const nextButton = container.querySelector('.pagination-next');
+
+  if (prevButton) {
+    prevButton.disabled = currentPage <= 1;
+    prevButton.onclick = function(e) {
+      e.stopPropagation();
+      if (currentPage > 1) {
+        paginateRooms(hotelIndex, currentPage - 1);
       }
     };
-
-    images.forEach(img => {
-      if (img.complete) {
-        handleImageLoad();
-      } else {
-        img.addEventListener('load', handleImageLoad);
-        img.addEventListener('error', handleImageLoad); // Handle image error as loaded
-      }
-    });
-
-    // Fallback in case images don't load properly
-    setTimeout(initializeSlider, 1000);
   }
 
-  // Initialize everything when the document is ready
-  onDocumentReady(preloadImagesAndInitialize);
+  if (nextButton) {
+    nextButton.disabled = currentPage >= totalPages;
+    nextButton.onclick = function(e) {
+      e.stopPropagation();
+      if (currentPage < totalPages) {
+        paginateRooms(hotelIndex, currentPage + 1);
+      }
+    };
+  }
 
-  // Make functions globally accessible
-  window.goToSlide = goToSlide;
-  window.toggleRooms = toggleRooms;
+  // Update page number buttons
+  const paginationButtonsContainer = container.querySelector('.room-pagination-buttons');
+  if (paginationButtonsContainer) {
+    paginationButtonsContainer.innerHTML = '';
+
+    for (let i = 0; i < totalPages; i++) {
+      const button = document.createElement('button');
+      button.className = `w-8 h-8 flex items-center justify-center rounded ${
+        i + 1 === currentPage ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+      }`;
+      button.textContent = i + 1;
+      button.onclick = function(e) {
+        e.stopPropagation();
+        paginateRooms(hotelIndex, i + 1);
+      };
+      paginationButtonsContainer.appendChild(button);
+    }
+  }
+}
+
+/**
+ * Add close buttons to all room sections
+ */
+function addCloseButtons() {
+  const roomSections = document.querySelectorAll('.hotel-rooms');
+
+  roomSections.forEach(section => {
+    // Skip if already has a close button
+    if (section.querySelector('.close-room-button')) return;
+
+    const hotelIndex = section.id.match(/hotel(\d+)-rooms/)?.[1];
+    if (!hotelIndex) return;
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-room-button absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10';
+    closeButton.innerHTML = '<i class="fas fa-times"></i>';
+    closeButton.onclick = function(e) {
+      e.stopPropagation();
+      toggleRooms('hotel' + hotelIndex);
+    };
+
+    const contentDiv = section.querySelector('div');
+    if (contentDiv) {
+      contentDiv.style.position = 'relative';
+      contentDiv.prepend(closeButton);
+    }
+  });
+}
+
+/**
+ * Safe document ready handler with fallback
+ */
+function onDocumentReady(callback) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+  } else {
+    callback();
+  }
+}
+
+/**
+ * Preload images and initialize the slider
+ */
+function preloadImagesAndInitialize() {
+  const images = document.querySelectorAll('img');
+
+  if (images.length === 0) {
+    initializeSlider();
+    return;
+  }
+
+  let imagesLoaded = 0;
+  const totalImages = images.length;
+
+  const handleImageLoad = () => {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+      initializeSlider();
+    }
+  };
+
+  images.forEach(img => {
+    if (img.complete) {
+      handleImageLoad();
+    } else {
+      img.addEventListener('load', handleImageLoad);
+      img.addEventListener('error', handleImageLoad); // Handle image error as loaded
+    }
+  });
+
+  // Fallback in case images don't load properly
+  setTimeout(initializeSlider, 1000);
+}
+
+// Initialize everything when the document is ready
+onDocumentReady(preloadImagesAndInitialize);
+
+// Make functions globally accessible
+window.goToSlide = goToSlide;
+window.toggleRooms = toggleRooms;
 </script>
