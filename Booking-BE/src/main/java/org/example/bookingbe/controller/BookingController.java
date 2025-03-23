@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
+import org.example.bookingbe.dto.DiscountDto;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.service.BookingService.IBookingService;
+import org.example.bookingbe.service.DiscountService.IDiscountService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.VNPayService.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.example.bookingbe.custom.datetime.DateTimeFormat.calculateDaysBetween;
@@ -29,11 +33,16 @@ public class BookingController {
     @Autowired
     private IRoomService roomService;
     @Autowired
+    private IDiscountService discountService;
+    @Autowired
     private VNPayService vnPayService;
     @GetMapping("/booking/{id}")
     private String booking(@PathVariable("id") Long id, Model model,
                            @RequestParam (required = false) String checkIn,
-                           @RequestParam (required = false) String checkOut) {
+                           @RequestParam (required = false) String checkOut,
+                           Principal principal) {
+        System.out.println("user_name" + principal.getName());
+        List<DiscountDto> discountDto = discountService.getDiscounts(principal.getName(), id);
         Optional<Room> room = roomService.getRoomById(id);
         long days = calculateDaysBetween(checkIn, checkOut);
         double priceTotal = room.get().getPrice() * days;
@@ -43,6 +52,7 @@ public class BookingController {
         model.addAttribute("timeCheckIn", dateTimeFormatter.formatTime(checkIn));
         model.addAttribute("dateCheckOut", dateTimeFormatter.formatDate(checkOut));
         model.addAttribute("timeCheckOut", dateTimeFormatter.formatTime(checkOut));
+        model.addAttribute("day", days);
         return "client/payment";
     }
 
