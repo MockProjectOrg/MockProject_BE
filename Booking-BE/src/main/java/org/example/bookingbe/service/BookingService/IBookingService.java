@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
+import org.example.bookingbe.model.User;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;

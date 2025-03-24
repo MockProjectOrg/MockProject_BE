@@ -4,11 +4,14 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
 import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
+import org.example.bookingbe.service.BookingService.IBookingService;
 import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
@@ -26,16 +29,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -55,6 +56,12 @@ public class UserController {
 
     @Autowired
     private IImageService imageService;
+
+    @Autowired
+    private IBookingRepo bookingRepo;
+
+    @Autowired
+    private IBookingService bookingService;
 
 
     @GetMapping("/")
@@ -101,8 +108,20 @@ public class UserController {
             return "redirect:/api/login";
         }
 
+        // Lấy danh sách booking của user
+        List<Booking> bookings = bookingRepo.findByUserId(userId);
+
         model.addAttribute("user", user);
-        return "profile"; // Trả về trang profile.html với dữ liệu user
+        model.addAttribute("bookings", bookings); // Gửi danh sách booking đến profile.html
+
+        return "auth/profile"; // Trả về trang profile.html với dữ liệu user và bookings
+    }
+
+    @PostMapping("/user/deleteBooking/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        bookingService.deleteBooking(id);
+        redirectAttributes.addAttribute("success", true);
+        return "redirect:/api/user/userProfile";
     }
 
     @PostMapping("/user/updateProfile")

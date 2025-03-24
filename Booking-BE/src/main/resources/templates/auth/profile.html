@@ -5,144 +5,614 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Customer Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --text: #333;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --sidebar: #2b2d42;
+            --sidebar-hover: #4361ee;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light-text: #f1faee;
         }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            display: flex;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
         .sidebar {
-            width: 250px;
-            background: #222831;
-            color: white;
-            padding: 20px;
+            width: 270px;
+            background: var(--sidebar);
+            color: var(--light-text);
+            padding: 30px 15px;
             height: 100vh;
             position: fixed;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
         }
+
+        .sidebar-header {
+            padding: 0 10px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
         .sidebar a {
-            display: block;
-            color: white;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
             text-decoration: none;
-            padding: 12px;
+            padding: 15px;
             margin: 8px 0;
-            border-radius: 6px;
+            border-radius: 10px;
             font-weight: 500;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
-        .sidebar a:hover {
-            background: #00ADB5;
+
+        .sidebar a i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
         }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: var(--sidebar-hover);
+            transform: translateX(5px);
+        }
+
         .content {
             margin-left: 270px;
             width: calc(100% - 270px);
-            padding: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
         }
+
         .home-btn {
             position: fixed;
-            top: 20px;
-            left: 270px;
+            top: 30px;
+            right: 30px;
             font-size: 26px;
-            color: #222831;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .home-btn:hover {
-            color: #00ADB5;
-        }
-        .profile-container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .profile-img {
-            width: 140px;
-            height: 140px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .home-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-img-container {
+            position: relative;
+            margin-right: 30px;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
             object-fit: cover;
-            transition: transform 0.3s ease-in-out;
-            border: 4px solid #00ADB5;
+            border: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
         .profile-img:hover {
-            transform: scale(1.08);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
-        .btn-primary {
-            padding: 10px 20px;
-            font-weight: bold;
+
+        .change-photo {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .change-photo:hover {
+            transform: scale(1.1);
+            background: var(--secondary);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .profile-role {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .info-item i {
+            width: 35px;
+            height: 35px;
+            background: rgba(67, 97, 238, 0.1);
             border-radius: 8px;
-            background-color: #00ADB5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            margin-right: 10px;
+            min-width: 100px;
+        }
+
+        .info-value {
+            color: #6c757d;
+        }
+
+        .btn-custom {
+            background-color: var(--primary);
+            color: white;
             border: none;
-            transition: 0.3s;
+            padding: 10px 24px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .btn-primary:hover {
-            background-color: #007bff;
-            transform: scale(1.05);
+
+        .btn-custom:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            color: white;
         }
+
+        .btn-danger-custom {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger-custom:hover {
+            background-color: #d90166;
+        }
+
         #editProfileForm {
             max-height: 0;
             opacity: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
         }
+
         #editProfileForm.show {
-            max-height: 600px;
+            max-height: 800px;
             opacity: 1;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+            border-color: var(--primary);
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .booking-history {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+
+        .booking-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .booking-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            padding: 15px;
+            text-align: left;
+            border: none;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .badge {
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .badge-success {
+            background-color: var(--success);
+            color: #033649;
+        }
+
+        .badge-warning {
+            background-color: var(--warning);
+            color: #774200;
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.4rem;
+            }
+
+            .sidebar-header h3 {
+                display: none;
+            }
+
+            .content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-img-container {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .info-item i {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="sidebar">
-    <a href="#">👤 Hồ sơ</a>
-    <a href="#">📦 Lịch sử giao dịch</a>
-    <a href="#">💳 Voucher</a>
-</div>
-<a href="/" class="home-btn">🏠</a>
+
+
+<a href="/" class="home-btn" title="Trang chủ">
+    <i class="fas fa-home"></i>
+</a>
+
 <div class="content">
-    <div class="container mt-5">
-        <div class="profile-container p-4">
-            <img th:src="@{'https://res.cloudinary.com/your-cloud-name/image/upload/v1/user_profiles/profile_' + ${user.id} + '.jpg'}" alt="Profile Picture" class="profile-img" id="profileImage">
-            <h4 class="mt-3" th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
-            <p class="text-muted" th:text="${user.role.roleName}"></p>
-            <hr>
-            <h5>📌 Thông tin khách hàng</h5>
-            <p><strong>📧 Email:</strong> <span th:text="${user.email}"></span></p>
-            <p><strong>📞 Số điện thoại:</strong> <span th:text="${user.phone}"></span></p>
-            <p><strong>🏠 Địa chỉ:</strong> <span th:text="${user.address}"></span></p>
-            <button class="btn btn-secondary mt-3" onclick="toggleEditForm()">Chỉnh sửa thông tin</button>
+    <div class="container-fluid">
+        <div class="profile-container animate-in">
+            <div class="profile-header">
+                <div class="profile-img-container">
+                    <img th:src="@{'https://res.cloudinary.com/dwxxsfyej/image/upload/v1/user_profiles/profile_' + ${user.id} + '.jpg'}"
+                         alt="Profile Picture" class="profile-img" id="profileImage">
+                    <div class="change-photo" title="Thay đổi ảnh đại diện">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name" th:text="${user.firstName} + ' ' + ${user.lastName}"></h2>
+                    <span class="profile-role" th:text="${user.role.roleName}"></span>
+                    <p class="mt-3">Chào mừng bạn quay trở lại! Quản lý tài khoản và theo dõi lịch sử đặt phòng của bạn tại đây.</p>
+                    <button class="btn btn-custom mt-3" onclick="toggleEditForm()">
+                        <i class="fas fa-edit me-2"></i> Chỉnh sửa thông tin
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h5 class="section-title"><i class="fas fa-info-circle"></i> Thông tin khách hàng</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" th:text="${user.email}"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span class="info-label">Số điện thoại:</span>
+                            <span class="info-value" th:text="${user.phone}"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="info-label">Địa chỉ:</span>
+                            <span class="info-value" th:text="${user.address}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <form id="editProfileForm" class="mt-4">
-                <div class="mb-3">
-                    <label class="form-label">Họ</label>
-                    <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Họ</label>
+                        <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="lastName" th:value="${user.lastName}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" th:value="${user.email}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="phone" th:value="${user.phone}">
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" id="address" th:value="${user.address}">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-custom" onclick="saveChanges()">
+                            <i class="fas fa-save me-2"></i> Cập nhật
+                        </button>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="lastName" th:value="${user.lastName}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" th:value="${user.email}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="text" class="form-control" id="phone" th:value="${user.phone}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Địa chỉ</label>
-                    <input type="text" class="form-control" id="address" th:value="${user.address}">
-                </div>
-                <button type="button" class="btn btn-primary">Cập nhật</button>
             </form>
+        </div>
+
+        <div class="booking-history animate-in">
+            <h4 class="booking-title"><i class="fas fa-calendar-check"></i> Lịch sử đặt phòng</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Phòng</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Trạng thái</th>
+                        <th th:if="${bookings.![status].contains(false)}">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td th:text="${booking.id}"></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="me-2"><i class="fas fa-door-open text-primary"></i></div>
+                                <span th:text="${booking.room.id}"></span>
+                            </div>
+                        </td>
+                        <td th:text="${#temporals.format(booking.checkIn, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="${#temporals.format(booking.checkOut, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:if="${booking.status}" class="badge badge-success">
+                                <i class="fas fa-check-circle me-1"></i> Hoàn thành
+                            </span>
+                            <span th:unless="${booking.status}" class="badge badge-warning">
+                                <i class="fas fa-clock me-1"></i> Chưa thanh toán
+                            </span>
+                        </td>
+                        <td>
+                            <form th:if="${!booking.status}" th:action="@{/api/user/deleteBooking/{id}(id=${booking.id})}" method="post">
+                                <button type="submit" class="btn btn-sm btn-danger-custom">
+                                    <i class="fas fa-times me-1"></i> Hủy
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function toggleEditForm() {
         document.getElementById("editProfileForm").classList.toggle("show");
+    }
+
+    function saveChanges() {
+        // Here you would normally handle the form submission with AJAX
+        // For demo purposes, we'll just show a success message
+
+        const form = document.getElementById("editProfileForm");
+        form.classList.remove("show");
+
+        // Create a toast notification
+        const toast = document.createElement("div");
+        toast.style.position = "fixed";
+        toast.style.bottom = "20px";
+        toast.style.right = "20px";
+        toast.style.background = "#4361ee";
+        toast.style.color = "white";
+        toast.style.padding = "15px 25px";
+        toast.style.borderRadius = "8px";
+        toast.style.boxShadow = "0 5px 15px rgba(0,0,0,0.2)";
+        toast.style.zIndex = "9999";
+        toast.style.transition = "all 0.3s ease";
+        toast.innerHTML = '<i class="fas fa-check-circle me-2"></i> Cập nhật thông tin thành công!';
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+
+        // Update displayed information
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const address = document.getElementById("address").value;
+
+        document.querySelector(".profile-name").textContent = firstName + " " + lastName;
+        document.querySelectorAll(".info-value")[0].textContent = email;
+        document.querySelectorAll(".info-value")[1].textContent = phone;
+        document.querySelectorAll(".info-value")[2].textContent = address;
     }
 </script>
 </body>
