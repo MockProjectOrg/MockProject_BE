@@ -3,8 +3,9 @@ package org.example.bookingbe.service.VNPayService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.bookingbe.config.VNPayConfig;
+import org.example.bookingbe.dto.BillDto;
 import org.springframework.stereotype.Service;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +15,7 @@ import java.util.*;
 @Service
 public class VNPayService {
 
-    public String createOrder(int total, String orderInfor, String urlReturn){
+    public String createOrder(double total, BillDto orderInfor, String urlReturn){
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
@@ -26,12 +27,20 @@ public class VNPayService {
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(total*100));
+        vnp_Params.put("vnp_Amount", String.valueOf((long) (total * 100)));
         vnp_Params.put("vnp_CurrCode", "VND");
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", orderInfor);
+//        vnp_Params.put("vnp_OrderInfo", orderInfor);
         vnp_Params.put("vnp_OrderType", orderType);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String orderInfoJson = objectMapper.writeValueAsString(orderInfor);
+            vnp_Params.put("vnp_OrderInfo", URLEncoder.encode(orderInfoJson, StandardCharsets.UTF_8.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         String locate = "vn";
         vnp_Params.put("vnp_Locale", locate);

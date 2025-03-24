@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -17,9 +19,9 @@ public class UserService implements IUserService {
     @Autowired
     private IRoleRepo roleRepo;
     @Autowired
-    private MailRegister mailRegister;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MailRegister mailRegister;
     public void registerUser(User user) throws MessagingException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepo.findByRoleName("USER");
@@ -37,4 +39,20 @@ public class UserService implements IUserService {
     public Boolean exstsEmail(String email) {
         return userRepo.existsByEmail(email);
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepo.findByUserName(username);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepo.save(user);  // Lưu thông tin user đã chỉnh sửa
+    }
+
 }

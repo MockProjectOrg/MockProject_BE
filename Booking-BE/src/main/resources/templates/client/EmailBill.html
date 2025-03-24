@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận thanh toán</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+    <h2 style="color: #4CAF50; text-align: center;">Xác nhận thanh toán</h2>
+    <p>Chào <strong th:text="${customerName}"></strong>,</p>
+    <p>Cảm ơn bạn đã mua hàng tại <strong>Công ty XYZ</strong>. Chúng tôi đã nhận được thanh toán của bạn.</p>
+
+    <h3>Chi tiết đơn hàng:</h3>
+    <p><strong>Mã đơn hàng:</strong> <span th:text="${orderId}"></span></p>
+    <p><strong>Ngày thanh toán:</strong> <span th:text="${paymentDate}"></span></p>
+    <p><strong>Số tiền:</strong> <span th:text="${amount}"></span> VND</p>
+
+    <p>Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.</p>
+    <p>Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email <a href="mailto:support@xyz.com">support@xyz.com</a> hoặc số điện thoại 0123-456-789.</p>
+
+    <p>Trân trọng,<br><strong>Đội ngũ Công ty XYZ</strong></p>
+</div>
+</body>
+</html>

@@ -19,6 +19,12 @@ public class Bill {
     private Booking booking;
     public Bill() {}
 
+    public Bill(LocalDateTime datePayment, Double totalPrice, Booking booking) {
+        this.datePayment = datePayment;
+        this.totalPrice = totalPrice;
+        this.booking = booking;
+    }
+
     public Long getId() {
         return id;
     }

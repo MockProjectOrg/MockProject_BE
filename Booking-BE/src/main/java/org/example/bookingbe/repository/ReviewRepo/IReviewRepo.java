@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IReviewRepo extends JpaRepository<Review, Long> {
+    void deleteByRoomId(Long roomId);
 }

@@ -5,97 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Customer Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #222831;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        .sidebar a:hover {
+            background: #00ADB5;
+        }
+        .content {
+            margin-left: 270px;
+            width: calc(100% - 270px);
+            padding: 20px;
+        }
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 270px;
+            font-size: 26px;
+            color: #222831;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .home-btn:hover {
+            color: #00ADB5;
         }
         .profile-container {
             max-width: 800px;
             margin: auto;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         .profile-img {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+            border: 4px solid #00ADB5;
         }
-        .edit-btn {
-            position: absolute;
-            top: 85px;
-            right: 10px;
-            background: white;
+        .profile-img:hover {
+            transform: scale(1.08);
+        }
+        .btn-primary {
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            background-color: #00ADB5;
             border: none;
-            cursor: pointer;
+            transition: 0.3s;
         }
-        .table-responsive {
-            margin-top: 20px;
+        .btn-primary:hover {
+            background-color: #007bff;
+            transform: scale(1.05);
+        }
+        #editProfileForm {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        #editProfileForm.show {
+            max-height: 600px;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-
-<div class="container mt-5">
-    <div class="profile-container p-4">
-        <div class="text-center">
-            <div class="position-relative d-inline-block">
-                <img src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-img">
-                <button class="edit-btn btn btn-outline-secondary btn-sm">✏️</button>
-            </div>
-            <h4 class="mt-3">John Doe</h4>
-            <p class="text-muted">Gold Member</p>
-        </div>
-
-        <hr>
-
-        <div>
-            <h5>Customer Information</h5>
-            <p><strong>Email:</strong> john.doe@example.com</p>
-            <p><strong>Phone:</strong> +123 456 7890</p>
-            <p><strong>Address:</strong> 123 Main St, New York, NY</p>
-        </div>
-
-        <hr>
-
-        <div class="table-responsive">
-            <h5>Booking History</h5>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Room</th>
-                    <th>Check-in</th>
-                    <th>Check-out</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Deluxe Suite</td>
-                    <td>2025-02-15</td>
-                    <td>2025-02-20</td>
-                    <td><span class="badge bg-success">Completed</span></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Executive Room</td>
-                    <td>2025-03-01</td>
-                    <td>2025-03-05</td>
-                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="text-center mt-4">
-            <button class="btn btn-primary">Edit Profile</button>
+<div class="sidebar">
+    <a href="#">👤 Hồ sơ</a>
+    <a href="#">📦 Lịch sử giao dịch</a>
+    <a href="#">💳 Voucher</a>
+</div>
+<a href="/" class="home-btn">🏠</a>
+<div class="content">
+    <div class="container mt-5">
+        <div class="profile-container p-4">
+            <img th:src="@{'https://res.cloudinary.com/your-cloud-name/image/upload/v1/user_profiles/profile_' + ${user.id} + '.jpg'}" alt="Profile Picture" class="profile-img" id="profileImage">
+            <h4 class="mt-3" th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
+            <p class="text-muted" th:text="${user.role.roleName}"></p>
+            <hr>
+            <h5>📌 Thông tin khách hàng</h5>
+            <p><strong>📧 Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>📞 Số điện thoại:</strong> <span th:text="${user.phone}"></span></p>
+            <p><strong>🏠 Địa chỉ:</strong> <span th:text="${user.address}"></span></p>
+            <button class="btn btn-secondary mt-3" onclick="toggleEditForm()">Chỉnh sửa thông tin</button>
+            <form id="editProfileForm" class="mt-4">
+                <div class="mb-3">
+                    <label class="form-label">Họ</label>
+                    <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tên</label>
+                    <input type="text" class="form-control" id="lastName" th:value="${user.lastName}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:value="${user.email}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phone" th:value="${user.phone}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address" th:value="${user.address}">
+                </div>
+                <button type="button" class="btn btn-primary">Cập nhật</button>
+            </form>
         </div>
     </div>
 </div>
-
+<script>
+    function toggleEditForm() {
+        document.getElementById("editProfileForm").classList.toggle("show");
+    }
+</script>
 </body>
 </html>

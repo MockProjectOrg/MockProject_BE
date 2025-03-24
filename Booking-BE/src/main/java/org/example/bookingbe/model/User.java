@@ -1,6 +1,9 @@
 package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.example.bookingbe.custom.annotationValidate.AgeOver18;
 
 import java.time.LocalDate;
 
@@ -11,28 +14,49 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "user_name", columnDefinition = "varchar(100)")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d._-]+$", message = "example: user_123 or user123")
     private String userName;
     @Column(name = "email", columnDefinition = "varchar(50)")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
+            message = "Email không hợp lệ!"
+    )
     private String email;
     @Column(name = "phone", columnDefinition = "varchar(10)")
+    @Pattern(regexp = "^\\d{10}$", message = "Phone number up to 10 digits")
     private String phone;
     @Column(name = "password", columnDefinition = "TEXT")
+//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "example: user_123 or Password123!")
     private String password;
     @Column(name = "address", columnDefinition = "varchar(155)")
+    @Size(min = 20, max = 150, message = "address minimum 20 characters")
     private String address;
     @Column(name = "gender")
     private Integer gender;
     @Column(name = "first_name", columnDefinition = "varchar(50)")
+    @Size(min = 2, max = 10, message = "First name minimum 2 characters")
     private String firstName;
     @Column(name = "last_name", columnDefinition = "varchar(50)")
+    @Size(min = 2, max = 20, message = "Last name minimum 2 characters")
     private String lastName;
     @Column(name = "birthday", columnDefinition = "Date")
+    @AgeOver18
     private LocalDate birthday;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public User() {}
+    public User(Long userId) {}
+
+    public User(Long id, String email, String phone, String address, Integer gender, String firstName, String lastName, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.gender = gender;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+    }
 
     public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
         this.id = id;
@@ -43,6 +67,11 @@ public class User {
         this.address = address;
         this.role = role;
     }
+
+    public User() {
+
+    }
+
 
     public Long getId() {
         return id;
