@@ -27,11 +27,14 @@ public interface IRoomService {
 
     List<Status> getAllStatuses();
 
+    Room getRoomWithUtilities(Long roomId);
+
     List<Room> getAvailableRooms();
 
     @Query("SELECT r FROM Room r JOIN FETCH r.roomType JOIN FETCH r.status JOIN FETCH r.hotel WHERE r.hotel.id = :hotelId AND r.status.id = 4")
     List<Room> getAvailableRoomsByHotel(@Param("hotelId") Long hotelId);
 
+    Optional<Room> findById(Long id);
 
-    Room findById(Long id);
+    Optional<Room> getRoomByIdWithDetails(Long roomId);
 }

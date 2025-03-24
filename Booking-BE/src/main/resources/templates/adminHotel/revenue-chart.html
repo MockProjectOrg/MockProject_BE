@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Biểu đồ Đặt Phòng & Doanh Thu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .chart-container {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chart-wrapper">
+    <div class="chart-container">
+        <h2>📊 Monthly Booking Volume</h2>
+        <canvas id="bookingBarChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h2>💰 Revenue by Room Type</h2>
+        <canvas id="revenuePieChart"></canvas>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.get("/BookingChart", function (data) {
+            // Lấy dữ liệu từ API
+            const labels = data.labels;
+            const bookingData = data.bookingData;
+            const roomLabels = data.roomLabels;
+            const roomRevenue = data.roomRevenue;
+
+            // Biểu đồ cột - Đặt phòng theo tháng
+            const bookingCtx = document.getElementById('bookingBarChart').getContext('2d');
+            new Chart(bookingCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số Lượng Đặt Phòng',
+                        data: bookingData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Biểu đồ tròn - Doanh thu theo loại phòng
+            const revenueCtx = document.getElementById('revenuePieChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'pie',
+                data: {
+                    labels: roomLabels,
+                    datasets: [{
+                        data: roomRevenue,
+                        backgroundColor: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"],
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    let value = tooltipItem.raw.toLocaleString();
+                                    return `${tooltipItem.label}: ${value} VND`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

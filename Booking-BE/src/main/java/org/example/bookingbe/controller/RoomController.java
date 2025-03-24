@@ -16,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +28,7 @@ import java.util.List;
 public class RoomController {
 
     private final CloudinaryService cloudinaryService;
-    
+
     private IRoomService roomService;
     @Autowired
     private CustomUserDetailService userDetailService;
@@ -44,29 +42,6 @@ public class RoomController {
     public RoomController(RoomService roomService, CloudinaryService cloudinaryService) {
         this.roomService = roomService;
         this.cloudinaryService = cloudinaryService;
-    }
-
-    @Transactional
-    @GetMapping("/{id}")
-    public String getRoomDetail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Room room = roomService.findById(id);
-        if (room == null) {
-            redirectAttributes.addFlashAttribute("error", "Room not found!");
-            return "redirect:/rooms";
-        }
-        // Bây giờ có thể truy cập room.getHotel().getHotelName() mà không gặp lỗi LazyInitialization
-        model.addAttribute("room", room);
-        model.addAttribute("images", room.getImages());
-        model.addAttribute("review", room.getReviews());
-        return "/client/room_detail";
-    }
-
-    @GetMapping("/admin/{id}")
-    public String getAdminRoomDetail(@PathVariable Long id, Model model) {
-        Room room = roomService.findById(id);
-        model.addAttribute("room", room);
-        model.addAttribute("images", room.getImages());
-        return "/adminHotel/adminRoom_detail";
     }
 
     // Danh sách phòng của khách sạn do Manager quản lý
@@ -201,6 +176,7 @@ public class RoomController {
         roomService.updateRoomStatus(id, statusId, userId);
         return "redirect:/managerRooms";
     }
+
 }
 
 

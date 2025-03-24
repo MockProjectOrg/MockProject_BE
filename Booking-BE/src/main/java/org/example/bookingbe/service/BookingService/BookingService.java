@@ -13,7 +13,6 @@ import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,78 +35,12 @@ public class BookingService implements IBookingService {
         this.bookingRepo = bookingRepo;
     }
 
-    @Override
-    public Double getTotalRevenue(int month, int year) {
-        Double revenue = bookingRepo.getTotalRevenue(month, year);
-        return revenue != null ? revenue : 0.0;
+    public List<Booking> getBookingsByUser(Long userId) {
+        return bookingRepo.findByUserId(userId);
     }
 
-
-    @Override
-    public List<Map<String, Object>> getMonthlyRevenue() {
-        List<Object[]> results = bookingRepo.countBookingsByMonth(); // Lấy dữ liệu doanh thu theo tháng
-
-        if (results == null || results.isEmpty()) {
-            return Collections.emptyList(); // Trả về danh sách rỗng nếu không có dữ liệu
-        }
-
-        return results.stream().map(row -> {
-            Map<String, Object> revenueMap = new HashMap<>();
-
-            Integer month = row[0] != null ? ((Number) row[0]).intValue() : null;
-            Double revenue = row[1] != null ? ((Number) row[1]).doubleValue() : 0.0;
-
-            revenueMap.put("month", month);
-            revenueMap.put("revenue", revenue);
-
-            return revenueMap;
-        }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Map<String, Object>> getQuarterlyRevenue() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<Map<String, Object>> getYearlyRevenue() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Double getPreviousMonthlyRevenue(int month, int year) {
-        return 0.0;
-    }
-
-    @Override
-    public Double getTotalRevenueThisYear() {
-        return 0.0;
-    }
-
-    @Override
-    public Double getTotalRevenueLastYear() {
-        return 0.0;
-    }
-
-    @Override
-    public Double getPreviousMonthlyRevenue() {
-        return 0.0;
-    }
-
-    @Override
-    public List<Map<String, Object>> getTopPackages() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Map<String, Integer> getBookingCountsByStatus() {
-        return Optional.ofNullable(bookingRepo.getBookingCountsByStatus())
-                .orElse(Collections.emptyList())
-                .stream()
-                .collect(Collectors.toMap(
-                        row -> row[0] != null ? row[0].toString() : "UNKNOWN",
-                        row -> row[1] instanceof Number ? ((Number) row[1]).intValue() : 0
-                ));
+    public List<Booking> getBookingsByHotelId(Long hotelId) {
+        return bookingRepo.findByHotelId(hotelId);
     }
 
     @Override
@@ -120,25 +53,10 @@ public class BookingService implements IBookingService {
         return false;
     }
 
-    @Override
-    public Map<String, Object> getStatistics() {
-        Map<String, Object> statistics = new HashMap<>();
-        int currentMonth = LocalDate.now().getMonthValue();
-        int currentYear = LocalDate.now().getYear();
-        statistics.put("totalOrders", Optional.ofNullable(bookingRepo.countTotalOrders()).orElse(0L));
-        statistics.put("thisMonthlyOrders", Optional.ofNullable(bookingRepo.countOrdersThisMonth()).orElse(0L));
-        statistics.put("totalRevenues", getTotalRevenue(currentMonth, currentYear));
-        return statistics;
-    }
 
     @Override
     public Integer getCountRoomAvailable() {
         return Math.toIntExact(Optional.ofNullable(bookingRepo.countAvailableRooms()).orElse(0L));
-    }
-
-    @Override
-    public List<Map<String, Object>> getTopSelectedPackages() {
-        return Collections.emptyList();
     }
 
     @Override
@@ -164,14 +82,6 @@ public class BookingService implements IBookingService {
         }).collect(Collectors.toList());
     }
 
-    @Override
-    public List<Integer> getBookingCountsByMonth() {
-        return Optional.ofNullable(bookingRepo.countBookingsByMonth())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(row -> row != null && row.length > 1 && row[1] instanceof Number ? ((Number) row[1]).intValue() : 0)
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     @Override
@@ -200,6 +110,31 @@ public class BookingService implements IBookingService {
         return bookingRepo.save(booking);
     }
 
+
+    // lấy tất cả đơn đặt phòng
+    @Override
+    public List<Booking> getAllBookings() {
+        return bookingRepo.findAll();
+    }
+
+    @Override
+    public Optional<Booking> getBookingById(Long id) {
+        return bookingRepo.findById(id);
+    }
+
+    // Lưu đặt phòng
+    @Override
+    public Booking saveBooking(Booking booking) {
+        return bookingRepo.save(booking);
+    }
+
+    // Xóa đơn đặt phòng
+    @Override
+    public void deleteBooking(Long id) {
+        bookingRepo.deleteById(id);
+    }
+
+    // Hủy đặt phòng
     @Transactional
     @Override
     public void cancelBooking(Long bookingId, Long userId) {
@@ -223,31 +158,6 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public List<Booking> getBookingsByUser(Long userId) {
-        return bookingRepo.findByUserId(userId);
-    }
-
-    @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepo.findAll();
-    }
-
-    @Override
-    public Optional<Booking> getBookingById(Long id) {
-        return bookingRepo.findById(id);
-    }
-
-    @Override
-    public Booking saveBooking(Booking booking) {
-        return bookingRepo.save(booking);
-    }
-
-    @Override
-    public void deleteBooking(Long id) {
-        bookingRepo.deleteById(id);
-    }
-
-    @Override
     public List<Booking> getBookingsByUserId(Long userId) {
         return bookingRepo.findByUserId(userId);
     }
@@ -257,10 +167,6 @@ public class BookingService implements IBookingService {
         return bookingRepo.findBookingsByHotelManager(managerId);
     }
 
-    @Override
-    public List<Booking> getBookingsByHotelId(Long hotelId) {
-        return bookingRepo.findByHotelId(hotelId);
-    }
 
     @Override
     public boolean isBookingBelongToHotel(Long bookingId, Long hotelId) {
@@ -289,4 +195,5 @@ public class BookingService implements IBookingService {
                 projection.getDescription()
         );
     }
+
 }

@@ -41,7 +41,10 @@ public class ImageService {
             throw new IllegalArgumentException("Invalid file type. Only images are allowed.");
         }
 
-        // Tải ảnh lên Cloudinary và lấy URL
+        // Tạo publicId mới mỗi lần upload (tránh ghi đè ảnh cũ)
+        String publicId = UUID.randomUUID().toString();
+
+        // Tải ảnh lên Cloudinary
         String imageUrl = cloudinaryService.uploadFile(file, folder, publicId);
 
         // Kiểm tra tên file, nếu không có thì tạo tên ngẫu nhiên
@@ -50,7 +53,7 @@ public class ImageService {
             imageName = UUID.randomUUID().toString();
         }
 
-        // Tạo đối tượng Image và lưu vào cơ sở dữ liệu
+        // Tạo đối tượng Image và lưu vào database
         Image image = new Image();
         image.setImageName(imageName);
         image.setImageUrl(imageUrl);

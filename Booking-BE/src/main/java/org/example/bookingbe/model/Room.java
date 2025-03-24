@@ -33,7 +33,7 @@ public class Room {
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "room_amenity",
             joinColumns = @JoinColumn(name = "room_id"),

@@ -29,29 +29,15 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.checkOut BETWEEN :startDate AND :endDate")
     List<Booking> findUpcomingCheckouts(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NOT NULL")
+    Long countCancelledBookings();
+
     @Query("SELECT COUNT(b) FROM Booking b")
     Long countTotalOrders();
-
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Bill b")
-    Double getTotalRevenue(int month, int year);
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE FUNCTION('MONTH', b.bookingDate) = FUNCTION('MONTH', CURRENT_DATE) " +
             "AND FUNCTION('YEAR', b.bookingDate) = FUNCTION('YEAR', CURRENT_DATE)")
     Long countOrdersThisMonth();
-
-    @Query("SELECT COALESCE(SUM(bi.totalPrice), 0) FROM Bill bi WHERE FUNCTION('MONTH', bi.datePayment) = :month " +
-            "AND FUNCTION('YEAR', bi.datePayment) = :year")
-    Double getMonthlyRevenue(@Param("month") int month, @Param("year") int year);
-
-    @Query("SELECT COALESCE(SUM(bi.totalPrice), 0) FROM Bill bi " +
-            "WHERE YEAR(bi.datePayment) = YEAR(CURRENT_DATE) " +
-            "AND bi.booking.status = true " +
-            "AND bi.booking.bookingCancel IS NULL")
-    Double getTotalRevenueThisYear();
-
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingCancel IS NOT NULL")
-    Long countCancelledBookings();
 
     @Query("SELECT COUNT(r) FROM Room r WHERE r.status.statusName = 'AVAILABLE'")
     Long countAvailableRooms();
@@ -63,12 +49,21 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     @Query("SELECT b.status, COUNT(b) FROM Booking b GROUP BY b.status")
     List<Object[]> getBookingCountsByStatus();
 
-    @Query("SELECT r.roomType, COUNT(b) FROM Booking b JOIN b.room r GROUP BY r.roomType ORDER BY COUNT(b) DESC")
+    // Lấy loại phòng phổ biến
+    @Query("SELECT rt.typeName, COUNT(b) FROM Booking b JOIN b.room r JOIN r.roomType rt GROUP BY rt.typeName ORDER BY COUNT(b) DESC")
     List<Object[]> getMostPopularRoomType();
 
+    // tìm đơn đặt phòng theo quản lý khách sạn
     @Query("SELECT b FROM Booking b JOIN b.room r JOIN r.hotel h WHERE h.user.id = :managerId AND h.user.role.roleName = 'HOTEL_MANAGER'")
     List<Booking> findBookingsByHotelManager(@Param("managerId") Long managerId);
 
     @Query("SELECT b FROM Booking b WHERE b.id = :id")
     BookingInterface getBooking(@Param("id") Long id);
+
+    // kiểm tra check out của người dùng
+    @Query("SELECT COUNT(b) > 0 FROM Booking b WHERE b.user.id = :userId AND b.room.id = :roomId AND b.checkOut <= CURRENT_TIMESTAMP")
+    boolean hasUserCheckedOut(@Param("userId") Long userId, @Param("roomId") Long roomId);
+
+    @Query("SELECT rt.typeName, SUM(r.price) FROM Booking b JOIN b.room r JOIN r.roomType rt GROUP BY rt.typeName")
+    List<Object[]> revenueByRoomType();
 }

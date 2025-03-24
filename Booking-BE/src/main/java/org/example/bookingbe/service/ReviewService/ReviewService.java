@@ -36,8 +36,7 @@ public class ReviewService implements IReviewService {
 
     @Override
     public boolean hasCheckedOut(Long userId, Long roomId) {
-        List<Review> reviews = reviewRepo.findByRoomId(roomId);
-        return !reviews.isEmpty();
+        return bookingRepo.hasUserCheckedOut(userId, roomId);
     }
 
     @Override

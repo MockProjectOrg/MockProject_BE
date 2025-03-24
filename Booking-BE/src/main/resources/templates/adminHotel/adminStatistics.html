@@ -1,343 +1,758 @@
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>
-        Dashboard Overview
-    </title>
 
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Hotel Booking Dashboard</title>
+    <!-- ======= Styles ====== -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-
-    <style>
-        @media (max-width: 768px) {
-    iframe {
-            height: 400px;
-        width: 100%;
-    }
-}
-    </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-<div class="flex">
-    <!-- Sidebar -->
-    <div class="w-64 bg-gray-900 h-screen">
-        <div class="p-4 text-white text-2xl font-bold">
-            dashlite
-        </div>
-        <nav class="mt-10">
-            <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
-                <i class="fas fa-tachometer-alt mr-3">
-                </i>
-                Dashboard
-            </a>
-            <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
-                <i class="fas fa-book mr-3">
-                </i>
-                Bookings
-            </a>
-            <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-white" href="#">
-                <i class="fas fa-bed mr-3">
-                </i>
-                Room
-            </a>
+<style>
+    /* =========== Google Fonts ============ */
+    @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
 
-        </nav>
-        <div class="mt-10 px-4">
-            <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="#">
-                <i class="fas fa-arrow-left mr-3">
-                </i>
-                Main Dashboard
-            </a>
-            <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white" href="#">
-                <i class="fas fa-th-large mr-3">
-                </i>
-                All Components
-            </a>
-        </div>
+    /* =============== Globals ============== */
+    * {
+      font-family: "Ubuntu", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --blue: #2a2185;
+      --white: #fff;
+      --gray: #f5f5f5;
+      --black1: #222;
+      --black2: #999;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+    }
+
+    /* =============== Navigation ================ */
+    .navigation {
+      position: fixed;
+      width: 300px;
+      height: 100%;
+      background: var(--blue);
+      border-left: 10px solid var(--blue);
+      transition: 0.5s;
+      overflow: hidden;
+    }
+    .navigation.active {
+      width: 80px;
+    }
+
+    .navigation ul {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .navigation ul li {
+      position: relative;
+      width: 100%;
+      list-style: none;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+    }
+
+    .navigation ul li:hover,
+    .navigation ul li.hovered {
+      background-color: var(--white);
+    }
+
+    .navigation ul li:nth-child(1) {
+      margin-bottom: 40px;
+      pointer-events: none;
+    }
+
+    .navigation ul li a {
+      position: relative;
+      display: block;
+      width: 100%;
+      display: flex;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .navigation ul li:hover a,
+    .navigation ul li.hovered a {
+      color: var(--blue);
+    }
+
+    .navigation ul li a .icon {
+      position: relative;
+      display: block;
+      min-width: 60px;
+      height: 60px;
+      line-height: 75px;
+      text-align: center;
+    }
+    .navigation ul li a .icon ion-icon {
+      font-size: 1.75rem;
+    }
+
+    .navigation ul li a .title {
+      position: relative;
+      display: block;
+      padding: 0 10px;
+      height: 60px;
+      line-height: 60px;
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    /* --------- curve outside ---------- */
+    .navigation ul li:hover a::before,
+    .navigation ul li.hovered a::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -50px;
+      width: 50px;
+      height: 50px;
+      background-color: transparent;
+      border-radius: 50%;
+      box-shadow: 35px 35px 0 10px var(--white);
+      pointer-events: none;
+    }
+    .navigation ul li:hover a::after,
+    .navigation ul li.hovered a::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: -50px;
+      width: 50px;
+      height: 50px;
+      background-color: transparent;
+      border-radius: 50%;
+      box-shadow: 35px -35px 0 10px var(--white);
+      pointer-events: none;
+    }
+
+    /* ===================== Main ===================== */
+    .main {
+      position: absolute;
+      width: calc(100% - 300px);
+      left: 300px;
+      min-height: 100vh;
+      background: var(--white);
+      transition: 0.5s;
+    }
+    .main.active {
+      width: calc(100% - 80px);
+      left: 80px;
+    }
+
+    .topbar {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .toggle {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+
+    .search {
+      position: relative;
+      width: 400px;
+      margin: 0 10px;
+    }
+
+    .search label {
+      position: relative;
+      width: 100%;
+    }
+
+    .search label input {
+      width: 100%;
+      height: 40px;
+      border-radius: 40px;
+      padding: 5px 20px;
+      padding-left: 35px;
+      font-size: 18px;
+      outline: none;
+      border: 1px solid var(--black2);
+    }
+
+    .search label ion-icon {
+      position: absolute;
+      top: 0;
+      left: 10px;
+      font-size: 1.2rem;
+    }
+
+    .user {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .user img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ======================= Cards ====================== */
+    .cardBox {
+      display: flex;
+      justify-content: space-evenly;
+      gap: 1px;
+      flex-wrap: wrap;
+      position: relative;
+      width: 100%;
+      padding: 20px;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 30px;
+    }
+
+    .cardBox .card {
+      position: relative;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .cardBox .card .numbers {
+      position: relative;
+      font-weight: 500;
+      font-size: 2.5rem;
+      color: var(--blue);
+    }
+
+    .cardBox .card .cardName {
+      color: var(--black2);
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+
+    .cardBox .card .iconBx {
+      font-size: 3.5rem;
+      color: var(--black2);
+    }
+
+    .cardBox .card:hover {
+      background: var(--blue);
+    }
+    .cardBox .card:hover .numbers,
+    .cardBox .card:hover .cardName,
+    .cardBox .card:hover .iconBx {
+      color: var(--white);
+    }
+
+    /* ================== Order Details List ============== */
+    .details {
+      position: relative;
+      width: 100%;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-gap: 30px;
+      /* margin-top: 10px; */
+    }
+
+    .details .recentOrders {
+      position: relative;
+      display: grid;
+      min-height: 500px;
+      background: var(--white);
+      padding: 20px;
+      box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+      border-radius: 20px;
+    }
+
+    .details .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .cardHeader h2 {
+      font-weight: 600;
+      color: var(--blue);
+    }
+    .cardHeader .btn {
+      position: relative;
+      padding: 5px 10px;
+      background: var(--blue);
+      text-decoration: none;
+      color: var(--white);
+      border-radius: 6px;
+    }
+
+    .details table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .details table thead td {
+      font-weight: 600;
+    }
+    .details .recentOrders table tr {
+      color: var(--black1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .details .recentOrders table tr:last-child {
+      border-bottom: none;
+    }
+    .details .recentOrders table tbody tr:hover {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .details .recentOrders table tr td {
+      padding: 10px;
+    }
+    .details .recentOrders table tr td:last-child {
+      text-align: end;
+    }
+    .details .recentOrders table tr td:nth-child(2) {
+      text-align: end;
+    }
+    .details .recentOrders table tr td:nth-child(3) {
+      text-align: center;
+    }
+    .status.delivered {
+      padding: 2px 4px;
+      background: #8de02c;
+      color: var(--white);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .status.pending {
+      padding: 2px 4px;
+      background: #e9b10a;
+      color: var(--white);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .status.return {
+      padding: 2px 4px;
+      background: #f00;
+      color: var(--white);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .status.inProgress {
+      padding: 2px 4px;
+      background: #1795ce;
+      color: var(--white);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .recentCustomers {
+      position: relative;
+      display: grid;
+      min-height: 500px;
+      padding: 20px;
+      background: var(--white);
+      box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+      border-radius: 20px;
+    }
+    .recentCustomers .imgBx {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    .recentCustomers .imgBx img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .recentCustomers table tr td {
+      padding: 12px 10px;
+    }
+    .recentCustomers table tr td h4 {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.2rem;
+    }
+    .recentCustomers table tr td h4 span {
+      font-size: 14px;
+      color: var(--black2);
+    }
+    .recentCustomers table tr:hover {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .recentCustomers table tr:hover td h4 span {
+      color: var(--white);
+    }
+
+    /* ====================== Responsive Design ========================== */
+    @media (max-width: 991px) {
+      .navigation {
+        left: -300px;
+      }
+      .navigation.active {
+        width: 300px;
+        left: 0;
+      }
+      .main {
+        width: 100%;
+        left: 0;
+      }
+      .main.active {
+        left: 300px;
+      }
+      .cardBox {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .details {
+        grid-template-columns: 1fr;
+      }
+      .recentOrders {
+        overflow-x: auto;
+      }
+      .status.inProgress {
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cardBox {
+        grid-template-columns: repeat(1, 1fr);
+      }
+      .cardHeader h2 {
+        font-size: 20px;
+      }
+      .user {
+        min-width: 40px;
+      }
+      .navigation {
+        width: 100%;
+        left: -100%;
+        z-index: 1000;
+      }
+      .navigation.active {
+        width: 100%;
+        left: 0;
+      }
+      .toggle {
+        z-index: 10001;
+      }
+      .main.active .toggle {
+        color: #fff;
+        position: fixed;
+        right: 0;
+        left: initial;
+      }
+      .revenue-filter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .revenue-select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .revenue-chart {
+        width: 300px;
+        height: 300px;
+    }
+
+    }
+</style>
+<body>
+<!-- =============== Navigation ================ -->
+<div class="container">
+    <div class="navigation">
+        <ul>
+            <li>
+                <a href="#">
+                        <span class="icon">
+
+                        </span>
+                    <span class="title">Admin Page</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                    <span class="title">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                    <span class="title">Customers</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="chatbubble-outline"></ion-icon>
+                        </span>
+                    <span class="title">Messages</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="help-outline"></ion-icon>
+                        </span>
+                    <span class="title">Help</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                    <span class="title">Settings</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                        </span>
+                    <span class="title">Password</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                    <span class="title">Sign Out</span>
+                </a>
+            </li>
+        </ul>
     </div>
-    <!-- Main Content -->
-    <div class="flex-1 p-6">
-        <!-- Top Bar -->
-        <div class="flex justify-between items-center mb-6">
 
-            <div class="flex items-center">
-                <div class="mr-4">
-                    <img alt="Flag" class="rounded-full" height="30"
-                         src="https://storage.googleapis.com/a1aa/image/0Ff5SQhxkCrEGj3lf3K94qcQC1s_NjHEALDnF69PZKE.jpg"
-                         width="30"/>
-                </div>
-                <div class="flex items-center">
-                    <img alt="User Avatar" class="rounded-full mr-2" height="30"
-                         src="https://storage.googleapis.com/a1aa/image/YDBCQH_TqS7OJDXBh6B_E_XomAnNTc7E41JSmqk-8GQ.jpg"
-                         width="30"/>
-                    <div>
-                        <div class="text-sm font-semibold">
-                            HIEU
-                        </div>
-                        <div class="text-xs text-gray-500">
-                            Administrator
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- ======================= Cards ================== -->
+    <div class="main">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
         </div>
-        <!-- Dashboard Overview -->
-        <div class="text-2xl font-semibold mb-4">
-            Dashboard Overview
-        </div>
-        <div class="text-gray-500 mb-6">
-            Welcome to ADMIN Dashboard Template.
-        </div>
-        <!-- Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="text-gray-500">
-                    Total Orders
+        <div class="cardBox">
+            <div class="card">
+                <div>
+                    <div class="numbers">$<span th:text="${totalRevenue}">0.00</span></div>
+                    <div class="cardName">Total Revenue</div>
                 </div>
-                <div class="text-3xl font-bold">
-                    <span th:text="${totalOrders}"></span>
-                </div>
-                <div class="flex justify-between mt-4">
-                    <div>
-                        <div class="text-gray-500">
-                            THIS MONTH
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${thisMonthlyOrders}"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            THIS WEEK
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${thisWeekOrders}"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="text-gray-500">
-                    Total Bookings
-                </div>
-                <div class="text-3xl font-bold">
-                    <span th:text="${totalRevenues}"></span>
-                    <span class="text-red-500 text-sm" th:if="${percentageChange < 0}">
-                        ↓ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
-                    </span>
-                    <span class="text-green-500 text-sm" th:if="${percentageChange > 0}">
-                        ↑ <span th:text="${#numbers.formatDecimal(percentageChange, 1, 2)}">0.00</span>%
-                    </span>
-                </div>
-                <div class="flex justify-between mt-4">
-                    <div>
-                        <div class="text-gray-500">
-                            PREVIOUS MONTH
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${previousRevenue}"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            THIS MONTH
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${monthlyRevenue}"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="text-gray-500">
-                    Rooms Available
-                </div>
-                <div class="text-3xl font-bold">
-                    <span th:text="${countRoomAvailable}"></span>
-                </div>
-                <div class="flex justify-between mt-4">
-                    <div>
-                        <div class="text-gray-500">
-                            BOOKED (W)
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${bookedRoomsWeekly}"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-gray-500">
-                            BOOKED (M)
-                        </div>
-                        <div class="text-xl font-bold">
-                            <span th:text="${bookedRoomsMonthly}"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Charts and Graphs -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- Top Selected Package -->
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">Top Selected Package</div>
-                    <div class="text-gray-500">30 Days</div>
-                </div>
-                <div class="space-y-2">
-                    <th:block th:each="package : ${topPackages}">
-                        <div class="flex justify-between items-center">
-                            <div class="text-gray-500" th:text="${package['packageName']}"></div>
-                            <div class="text-gray-500"
-                                 th:text="${#numbers.formatDecimal(package['percentage'], 1, 2)} + '%'"></div>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="h-2.5 rounded-full"
-                                 th:style="'width:' + ${package['percentage']} + '%; background-color:' + ${package['color']}"></div>
-                        </div>
-                    </th:block>
+
+                <div class="iconBx">
+                    <ion-icon name="cash-outline"></ion-icon>
                 </div>
             </div>
 
-            <!-- Sales Revenue -->
-            <div class="bg-white p-6 rounded shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">Popular Room Types</div>
-                    <div class="text-gray-500">Last 12 Months</div>
+            <div class="card">
+                <div>
+                    <div class="numbers"><span th:text="${totalOrders}">0</span></div>
+                    <div class="cardName">Total Orders</div>
                 </div>
-                <canvas id="popularRoomChart"></canvas>
+
+                <div class="iconBx">
+                    <ion-icon name="clipboard-outline"></ion-icon>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers"><span th:text="${availableRooms}">0</span></div>
+                    <div class="cardName">Available Rooms</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="bed-outline"></ion-icon>
+                </div>
             </div>
         </div>
-        <!-- Room Booking Chart and Income vs Expenses -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        Room Booking Chart
-                    </div>
-                    <div class="text-gray-500">
-                        30 Days
-                    </div>
+
+        <!-- ========================= Main ==================== -->
+
+
+        <!-- ================ Order Details List ================= -->
+        <div class="details">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Revenue Overview</h2>
+                </div>
+                <div class="bg-white p-5 shadow rounded-lg">
+                    <h3 class="text-lg font-semibold mb-3">Revenue Chart</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+
+            </div>
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Revenue Overview</h2>
                 </div>
                 <canvas id="bookingChart"></canvas>
-            </div>
-        </div>
-        <!-- New Customer and Recent Activities -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">
-                        New Customer
-                    </div>
-                    <div class="text-blue-500">
-                        <a href="/user">View All</a>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex items-center" th:each="customer : ${newCustomers}">
-                        <img alt="Customer Avatar" class="rounded-full mr-4" height="40"
-                             th:src="${customer.avatarUrl}" width="40"/>
-                        <div>
-                            <div class="text-gray-700 font-semibold" th:text="${customer.name}"></div>
-                            <div class="text-gray-500 text-sm" th:text="${customer.email}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-gray-500">Recent Activities</div>
-                    <div class="text-blue-500 cursor-pointer hover:underline">Cancel All</div>
-                </div>
-                <div class="space-y-4" th:if="${not #lists.isEmpty(recentActivities)}">
-                    <th:block th:each="activity : ${recentActivities}">
-                        <div class="flex items-center gap-4">
-                            <img alt="Activity Avatar" class="rounded-full" height="40"
-                                 th:src="${activity.avatarUrl} ?: 'default-avatar.png'"
-                                 width="40"/>
-                            <div>
-                                <div class="text-gray-700 font-semibold w-32 truncate"
-                                     th:text="${activity.username}"></div>
-                                <div class="text-gray-500 text-sm" th:text="${activity.action}"></div>
-                                <div class="text-gray-400 text-xs" th:text="${activity.timestamp}"></div>
-                            </div>
-                        </div>
-                    </th:block>
-                </div>
-                <div class="text-gray-400 text-sm text-center" th:if="${#lists.isEmpty(recentActivities)}">
-                    No recent activities.
-                </div>
-            </div>
-        </div>
 
-        <!-- Footer -->
-        <div class="mt-6 text-center text-gray-500 text-sm">
-            © 2024 DashLite. Template by Softnio
+            </div>
         </div>
     </div>
 </div>
+
+<!-- =========== Scripts =========  -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    console.log("🚀 Khởi tạo biểu đồ...");
+    // Lấy dữ liệu từ Thymeleaf
+    let labels = [[${labels}]];
+    let bookingData = [[${bookingData}]];
+    let roomLabels = /*[[${roomLabels}]]*/ [];
+    let roomRevenue = /*[[${roomRevenue}]]*/ [];
 
-    // 📊 Biểu đồ đặt phòng
-    const bookingCanvas = document.getElementById('bookingChart');
-    if (!bookingCanvas) {
-        console.error("⚠️ Không tìm thấy phần tử #bookingChart!");
-        return;
-    }
-    const bookingCtx = bookingCanvas.getContext('2d');
-
-    let bookingChart = new Chart(bookingCtx, {
+    // Biểu đồ cột: Số lượng đặt phòng theo tháng
+    new Chart(document.getElementById('bookingChart'), {
         type: 'bar',
         data: {
-            labels: /*[[${labels}]]*/ [],
+            labels: labels,
             datasets: [{
-                label: 'Số lượng đặt phòng',
-                data: /*[[${bookingData}]]*/ [],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                label: 'Bookings per Month',
+                data: bookingData,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
-            scales: { y: { beginAtZero: true } }
-        }
-    });
-
-    // 📊 Biểu đồ loại phòng phổ biến
-    const popularRoomCanvas = document.getElementById('popularRoomChart');
-    if (!popularRoomCanvas) {
-        console.error("⚠️ Không tìm thấy phần tử #popularRoomChart!");
-        return;
-    }
-    const popularRoomCtx = popularRoomCanvas.getContext('2d');
-
-    let popularRoomChart = new Chart(popularRoomCtx, {
-        type: 'pie',
-        data: {
-            labels: /*[[${roomTypes}]]*/ [],
-            datasets: [{
-                label: 'Loại phòng phổ biến',
-                data: /*[[${bookingCounts}]]*/ [],
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
-                borderColor: '#ffffff',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
         }
     });
-});
+
+    // Biểu đồ tròn: Doanh thu theo loại phòng
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'pie',
+        data: {
+            labels: roomLabels,
+            datasets: [{
+                label: 'Revenue by Room Type',
+                data: roomRevenue,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [5000, 7000, 8000, 6000, 10000, 12000], // Dữ liệu mẫu
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+<script>
+    // add hovered class to selected list item
+let list = document.querySelectorAll(".navigation li");
+
+function activeLink() {
+  list.forEach((item) => {
+    item.classList.remove("hovered");
+  });
+  this.classList.add("hovered");
+}
+
+list.forEach((item) => item.addEventListener("mouseover", activeLink));
+
+// Menu Toggle
+let toggle = document.querySelector(".toggle");
+let navigation = document.querySelector(".navigation");
+let main = document.querySelector(".main");
+
+toggle.onclick = function () {
+  navigation.classList.toggle("active");
+  main.classList.toggle("active");
+};
 
 </script>
+<script>
+    console.log("Labels:", [[${labels}]]);
+    console.log("Booking Data:", [[${bookingData}]]);
+    console.log("Room Labels:", [[${roomLabels}]]);
+    console.log("Room Revenue:", [[${roomRevenue}]]);
+</script>
+<!-- ====== ionicons ======= -->
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>

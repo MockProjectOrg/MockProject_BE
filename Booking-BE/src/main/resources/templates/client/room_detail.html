@@ -1,126 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Room Details</title>
+    <title>Luxury Double Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet"/>
-    <style>
-        /* Mặc định ẩn hai nút */
-        .swiper:hover .swiper-button-next,
-        .swiper:hover .swiper-button-prev {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .swiper-button-next,
-        .swiper-button-prev {
-            background: rgba(0, 128, 128, 0.8); /* Màu xanh ngọc trong suốt */
-            padding: 20px 12px; /* Điều chỉnh padding để tạo hình chữ nhật đứng */
-            border-radius: 10px; /* Làm bo góc nhẹ để không quá vuông */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng */
-            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        /* Khi hover vào ảnh thì button xuất hiện */
-        .swiper:hover .swiper-button-next:hover,
-        .swiper:hover .swiper-button-prev:hover {
-            background: rgba(0, 128, 128, 1); /* Đậm hơn khi hover */
-            transform: scale(1.1);
-        }
-
-        /* Thay đổi kích thước và màu của icon */
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 20px;
-            color: white;
-        }
-        #menu {
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    transform: translateY(-10px);
-    opacity: 0;
-}
-
-#menu.slide-in {
-    transform: translateY(0);
-    opacity: 1;
-}
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
-<body class="bg-gray-50 text-gray-900">
-<!-- Navigation -->
-<nav class="bg-white shadow-md p-4 sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center">
-        <a class="text-2xl font-bold text-teal-500" href="#">Hotel Booking</a>
-        <button class="md:hidden focus:outline-none text-2xl" id="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="hidden md:flex space-x-6 text-lg" id="menu">
-            <a class="hover:text-teal-500 transition duration-300" href="#">Home</a>
-            <a class="hover:text-teal-500 transition duration-300" href="#">Rooms</a>
-            <a class="hover:text-teal-500 transition duration-300" href="#">About Us</a>
-            <a class="hover:text-teal-500 transition duration-300" href="#">Pages</a>
-            <a class="hover:text-teal-500 transition duration-300" href="#">News</a>
-            <a class="hover:text-teal-500 transition duration-300" href="#">Contact</a>
-        </div>
-    </div>
-</nav>
+<body class="font-sans">
+<!-- Header -->
+<header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <div class="text-xl font-bold">Mona</div>
+    <nav>
+        <ul class="flex space-x-4">
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">Home</a></li>
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">Rooms</a></li>
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">About Us</a></li>
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">Pages</a></li>
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">News</a></li>
+            <li><a class="hover:text-teal-500 transition duration-300" href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <button class="bg-yellow-400 px-4 py-2 rounded">BOOK NOW</button>
+</header>
 
-<!-- Room Details -->
-<div class="bg-gray-100 flex justify-center items-center py-10 px-2">
-    <div class="bg-white shadow-lg rounded-lg p-6 max-w-5xl w-full flex flex-col lg:flex-row">
-        <!-- Phần hình ảnh -->
-        <div class="lg:w-3/5 pr-0 lg:pr-6 mb-6 lg:mb-0">
-            <div class="swiper overflow-hidden rounded-lg">
+<!-- Nội dung chính -->
+<main class="max-w-6xl mx-auto p-6">
+    <div class="grid md:grid-cols-2 gap-6">
+        <!-- Hình ảnh phòng -->
+        <div class="flex flex-col gap-4">
+            <div class="swiper mySwiper w-full h-96 rounded-md">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" th:each="image : ${room.images}">
                         <img alt="Room Image" class="w-full h-96 object-cover rounded-md"
                              th:src="${image.imageUrl}">
                     </div>
                 </div>
+                <!-- Nút điều hướng -->
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
+                <!-- Chấm nhỏ dưới ảnh -->
                 <div class="swiper-pagination"></div>
             </div>
         </div>
-        <!-- Phần chi tiết -->
-        <div class="lg:w-2/5 text-center lg:text-left">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800">Room Details</h2>
+
+        <!-- Thông tin phòng -->
+        <div>
+            <h1 class="text-2xl font-bold">
+                <span th:text="${room.hotel.hotelName}"></span>
+            </h1>
+            <p class="text-blue-600 text-xl font-semibold"><span th:text="${room.price}"></span></p>
             <p class="text-lg"><strong>Hotel:</strong> <span th:text="${room.hotel.hotelName}"></span></p>
             <p class="text-lg"><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
-            <p class="text-lg"><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span> ★</p>
-            <p class="text-lg"><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span>
-                /night</p>
-            <p class="text-lg"><strong>Capacity:</strong> <span th:text="${room.capacity}"></span> guests</p>
+            <p class="text-lg"><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span>★</p>
+            <p class="text-lg"><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
+            <p class="text-lg"><strong>Capacity:</strong> <span th:text="${room.roomType.capacity}"></span> guests</p>
             <p class="text-lg"><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
             <p class="text-lg"><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
-            <p class="text-lg"><strong>Description:</strong> <span th:text="${room.description}"></span></p>
-            <form class="mt-6" method="post" th:action="@{/booking}">
-                <input name="roomId" th:value="${room.id}" type="hidden"/>
-                <button class="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition duration-300 w-full lg:w-auto">
-                    Booking Now
-                </button>
-            </form>
+            <p class="text-lg"><strong>Description:</strong> <span th:text="${room.roomType.description}"></span></p>
+            <p class="text-lg"><strong>Utilities:</strong>
+                <span th:each="utility, iterStat : ${room.utilities}">
+        <span th:text="${utility.name}"></span><span th:if="${!iterStat.last}">, </span>
+    </span>
+            </p>
+            <button class="bg-blue-500 text-white px-6 py-2 rounded mt-4">BOOK NOW</button>
         </div>
     </div>
-</div>
-
+</main>
 <!-- Reviews Section -->
-<div class="mt-8 container mx-auto px-4" th:if="${hasCheckedOut}">
+<div class="mt-8 container mx-auto px-4">
     <h3 class="text-3xl font-semibold text-center mb-6">Reviews</h3>
-
     <!-- Form nhập đánh giá -->
-    <div class="p-6 bg-white shadow-lg rounded-lg" th:if="${user != null}">
-        <h3 class="text-xl font-semibold">Enter a Review</h3>
-        <form class="mt-3" method="post" th:action="@{/reviews/submit}">
-            <input name="roomId" th:value="${room.id}" type="hidden"/>
-            <input name="userId" th:value="${user.id}" type="hidden"/>
-            <label class="block text-md">Rating:</label>
+    <div class="mt-6" th:if="${#authorization.expression('isAuthenticated()')}">
+        <div class="p-6 bg-white shadow-lg rounded-lg" th:if="${hasCheckedOut}">
+            <h3 class="text-lg font-semibold">Write your review</h3>
             <div class="flex space-x-1 mt-2 text-xl text-gray-300 cursor-pointer" id="starRating">
                 <span data-value="1">★</span>
                 <span data-value="2">★</span>
@@ -128,120 +82,160 @@
                 <span data-value="4">★</span>
                 <span data-value="5">★</span>
             </div>
-            <input id="ratingInput" name="rating" required type="hidden">
-            <label class="block text-md mt-3">Comment:</label>
-            <textarea class="border p-2 rounded w-full h-24 resize-none focus:ring-2 focus:ring-teal-500" name="comment"
-                      required></textarea>
-            <button class="mt-4 bg-gradient-to-r from-teal-500 to-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-lg transition duration-300 transform hover:scale-105 w-full">
-                Submit
-            </button>
-        </form>
-    </div>
+            <form method="post" th:action="@{/room/review}">
+                <input name="roomId" th:value="${room.id}" type="hidden"/>
+                <input name="userId" th:value="${user.id}" type="hidden"/>
+                <textarea class="w-full p-2 border rounded-md mt-2" name="description"
+                          placeholder="Enter your review"></textarea>
+                <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md" type="submit">Send</button>
+            </form>
+        </div>
+        <div class="text-gray-500 text-sm mt-4" th:unless="${hasCheckedOut}">
+            You need to checkout before you can write a review.
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg mt-4" th:each="review : ${room.reviews}">
+            <div class="flex items-center">
+                <!-- Avatar của người dùng -->
+                <div class="mr-4">
+                    <img alt="User Avatar" class="w-12 h-12 rounded-full" th:src="@{${review.user.avatar}}"/>
+                </div>
+                <!-- Thông tin người dùng và đánh giá -->
+                <div>
+                    <div class="flex items-center">
+                        <!-- Sao đánh giá -->
+                        <div class="text-xl text-yellow-500">
+                            <span th:each="i : ${#numbers.sequence(1, review.rate)}">★</span>
+                            <span class="text-gray-300" th:each="i : ${#numbers.sequence(review.rate + 1, 5)}">★</span>
+                        </div>
 
-    <!-- Hiển thị các đánh giá đã có -->
-    <div class="p-6 bg-white shadow-lg rounded-lg mt-4" th:each="review : ${room.reviews}">
-        <div class="flex items-center">
-            <!-- Avatar của người dùng -->
-            <div class="mr-4">
-                <img alt="User Avatar" class="w-12 h-12 rounded-full" th:src="@{${review.user.avatar}}"/>
-            </div>
-
-            <!-- Thông tin người dùng và đánh giá -->
-            <div>
-                <div class="flex items-center">
-                    <!-- Sao đánh giá -->
-                    <div class="text-xl text-yellow-500">
-                        <!-- Hiển thị sao đánh giá dựa trên giá trị của review.rate -->
-                        <span th:each="i : ${#numbers.sequence(1, review.rate)}">★</span>
-                        <!-- Hiển thị sao trống cho những sao còn lại -->
-                        <span class="text-gray-300" th:each="i : ${#numbers.sequence(review.rate + 1, 5)}">★</span>
+                        <!-- Tên người dùng -->
+                        <span class="ml-2 text-gray-600 text-sm" th:text="${review.user.userName}"></span>
                     </div>
 
-                    <!-- Tên người dùng -->
-                    <span class="ml-2 text-gray-600 text-sm" th:text="${review.user.userName}"></span>
+                    <!-- Mô tả người dùng (description) -->
+                    <p class="mt-1 text-sm text-gray-500" th:text="${review.user.description}"></p>
+
+                    <!-- Bình luận của người dùng -->
+                    <p class="mt-2 text-md text-gray-700" th:text="${review.description}"></p>
                 </div>
-
-                <!-- Mô tả người dùng (description) -->
-                <p class="mt-1 text-sm text-gray-500" th:text="${review.user.description}"></p>
-
-                <!-- Bình luận của người dùng -->
-                <p class="mt-2 text-md text-gray-700" th:text="${review.description}"></p>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Hiển thị danh sách review -->
 
 
-<!-- Footer -->
-<footer class="bg-gray-900 text-white py-10 mt-6">
-    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-        <div>
-            <h3 class="text-2xl font-semibold">Hotel Booking</h3>
-            <p class="text-sm text-gray-400">Experience the best stays with us.</p>
+    <!-- Footer -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4">
+        <div
+                class="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <h4 class="text-lg font-bold text-gray-800">Book Your Stay</h4>
+            <form class="flex flex-col md:flex-row md:space-x-4 w-full md:w-auto">
+                <input
+                        class="border rounded-lg p-2 w-full md:w-auto focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        type="date"
+                />
+                <input
+                        class="border rounded-lg p-2 w-full md:w-auto focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        type="date"
+                />
+                <button
+                        class="bg-blue-500 text-white rounded-lg px-6 py-2 hover:bg-blue-600 transition duration-200"
+                >
+                    Book Now
+                </button>
+            </form>
         </div>
-        <div class="text-sm text-gray-500 mt-4 md:mt-0">&copy; 2025 Hotel Booking. All rights reserved.</div>
     </div>
-</footer>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    // Xử lý menu toggle với hiệu ứng trượt
-    const menu = document.getElementById("menu");
-    const menuToggle = document.getElementById("menu-toggle");
-
-    menuToggle.addEventListener("click", function (e) {
-        menu.classList.toggle("hidden");
-        menu.classList.toggle("slide-in"); // Thêm hiệu ứng trượt
-        e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
-    });
-
-    document.addEventListener("click", function (e) {
-        if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
-            menu.classList.add("hidden");
-            menu.classList.remove("slide-in");
-        }
-    });
-
-    // Xử lý đánh giá sao với hiệu ứng hover
-    const stars = document.querySelectorAll("#starRating span");
-    const ratingInput = document.getElementById("ratingInput");
-
-    stars.forEach(star => {
-        star.addEventListener("click", function () {
-            let rating = this.dataset.value;
-            ratingInput.value = rating;
-            updateStars(rating);
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Swiper(".mySwiper", {
+                loop: true, // Lặp vô hạn
+                spaceBetween: 10, // Khoảng cách giữa ảnh
+                slidesPerView: 1, // Hiển thị 1 ảnh mỗi lần
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true
+                },
+                autoplay: {
+                    delay: 3000, // Tự động chuyển slide mỗi 3s
+                    disableOnInteraction: false
+                }
+            });
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM fully loaded and parsed");
 
-        star.addEventListener("mouseover", function () {
-            updateStars(this.dataset.value);
+            // ✅ Xử lý menu toggle với hiệu ứng trượt
+            const menu = document.getElementById("menu");
+            const menuToggle = document.getElementById("menu-toggle");
+
+            if (menu && menuToggle) {
+                menuToggle.addEventListener("click", function (e) {
+                    menu.classList.toggle("hidden");
+                    menu.classList.toggle("slide-in");
+                    e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
+                });
+
+                document.addEventListener("click", function (e) {
+                    if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("slide-in");
+                    }
+                });
+            } else {
+                console.warn("⚠️ menu hoặc menu-toggle không tồn tại trên trang!");
+            }
+
+            // ✅ Xử lý đánh giá sao với hiệu ứng hover
+            const stars = document.querySelectorAll("#starRating span");
+            const ratingInput = document.getElementById("ratingInput");
+
+            if (stars.length > 0 && ratingInput) {
+                stars.forEach(star => {
+                    star.addEventListener("click", function () {
+                        let rating = this.dataset.value;
+                        ratingInput.value = rating;
+                        updateStars(rating);
+                    });
+
+                    star.addEventListener("mouseover", function () {
+                        updateStars(this.dataset.value);
+                    });
+
+                    star.addEventListener("mouseout", function () {
+                        updateStars(ratingInput.value || 0);
+                    });
+                });
+
+                function updateStars(rating) {
+                    stars.forEach(s => s.style.color = s.dataset.value <= rating ? "#ffcc00" : "#ccc");
+                }
+            } else {
+                console.warn("⚠️ Không tìm thấy #starRating hoặc #ratingInput trên trang!");
+            }
+
+            // ✅ Khởi tạo Swiper nếu có trên trang
+            if (typeof Swiper !== "undefined" && document.querySelector(".swiper")) {
+                new Swiper('.swiper', {
+                    loop: true,
+                    autoplay: { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true },
+                    speed: 800,
+                    effect: "fade",
+                    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+                    pagination: { el: ".swiper-pagination", clickable: true }
+                });
+            } else {
+                console.warn("⚠️ Swiper library chưa được tải hoặc không tìm thấy .swiper trên trang!");
+            }
         });
+    </script>
 
-        star.addEventListener("mouseout", function () {
-            updateStars(ratingInput.value || 0); // Quay lại trạng thái đã chọn
-        });
-    });
-
-    function updateStars(rating) {
-        stars.forEach(s => s.style.color = s.dataset.value <= rating ? "#ffcc00" : "#ccc");
-    }
-
-    // Khởi tạo Swiper nếu có trên trang
-    if (document.querySelector(".swiper")) {
-        new Swiper('.swiper', {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true // Dừng khi hover vào slider
-            },
-            speed: 800, // Tăng tốc độ chuyển slide
-            effect: "fade", // Hiệu ứng chuyển slide đẹp hơn
-            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-            pagination: { el: ".swiper-pagination", clickable: true }
-        });
-    }
-});
-</script>
 </body>
 </html>

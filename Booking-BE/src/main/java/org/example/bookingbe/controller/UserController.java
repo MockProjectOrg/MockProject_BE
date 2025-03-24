@@ -18,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -138,5 +140,17 @@ public class UserController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
+    }
+
+    @PostMapping("/upload-avatar")
+    public String uploadAvatar(@RequestParam("avatarFile") MultipartFile file, @RequestParam("userId") Long userId, RedirectAttributes redirectAttributes) {
+        try {
+            String avatarUrl = userService.uploadAvatar(file, userId);
+            redirectAttributes.addFlashAttribute("success", "Avatar updated successfully!");
+            return "redirect:/profile"; // Chuyển hướng về trang profile
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to upload avatar.");
+            return "redirect:/profile";
+        }
     }
 }

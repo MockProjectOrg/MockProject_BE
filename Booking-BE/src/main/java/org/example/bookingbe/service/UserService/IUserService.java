@@ -2,6 +2,7 @@ package org.example.bookingbe.service.UserService;
 
 import jakarta.mail.MessagingException;
 import org.example.bookingbe.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -19,4 +20,5 @@ public interface IUserService {
     void saveUser(User user);
 
 
+    String uploadAvatar(MultipartFile file, Long userId);
 }
