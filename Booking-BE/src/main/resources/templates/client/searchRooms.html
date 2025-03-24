@@ -230,7 +230,9 @@
 
                   <div class="text-end">
                     <a href="#" class="btn btn-outline-primary btn-sm px-4">Detail</a>
-                    <a href="#" class="btn btn-success btn-sm px-4">Book</a>
+                    <a th:href="@{/api/booking/{id}(id=${room.id},
+                                        checkIn=${#temporals.format(checkIn, 'dd/MM/yyyy HH:mm')},
+                                        checkOut=${#temporals.format(checkOut, 'dd/MM/yyyy HH:mm')})}" class="btn btn-success btn-sm px-4">Book</a>
                   </div>
                 </div>
               </div>

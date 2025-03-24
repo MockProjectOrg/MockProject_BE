@@ -1,13 +1,12 @@
 package org.example.bookingbe.service.ImageService;
 
+import org.example.bookingbe.model.Image;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.example.bookingbe.model.Image;
-import org.example.bookingbe.repository.ImageRepo.IImageRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 

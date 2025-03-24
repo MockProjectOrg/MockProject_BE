@@ -125,7 +125,7 @@ public class BookingController {
             }
         }
         Booking booking = (Booking) session.getAttribute("booking");
-        Double price = Double.valueOf(totalPrice);
+        Double price = Double.valueOf(totalPrice) / 100;
         Bill bill = new Bill(LocalDateTime.now(), price, booking);
         billService.save(bill);
         booking.setStatus(true);
