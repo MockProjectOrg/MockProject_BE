@@ -4,6 +4,7 @@ import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.dto.BookingInterface;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
+import org.example.bookingbe.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

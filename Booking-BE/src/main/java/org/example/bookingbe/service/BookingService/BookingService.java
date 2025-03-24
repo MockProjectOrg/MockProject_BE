@@ -178,5 +178,4 @@ public class BookingService implements IBookingService {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
     }
 
-
 }

@@ -113,7 +113,7 @@ public class RoomController {
 
         System.out.println("User Role: " + user.getRole().getRoleName());
 
-        if (!"HOTEL MANAGER".equalsIgnoreCase(user.getRole().getRoleName())) {
+        if (!"HOTEL_MANAGER".equalsIgnoreCase(user.getRole().getRoleName())) {
             throw new RuntimeException("Người dùng không có quyền thêm phòng");
         }
 

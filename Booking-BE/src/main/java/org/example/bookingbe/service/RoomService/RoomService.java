@@ -112,7 +112,6 @@ public class RoomService implements IRoomService {
             throw new RuntimeException("Unauthorized: You cannot delete this room");
         }
 
-
         // Xóa phòng sau khi đã xóa dữ liệu liên quan
         roomRepo.deleteById(roomId);
 

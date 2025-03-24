@@ -66,7 +66,7 @@ public class AdminService implements IAdminService {
 
     @Override
     public void updateUser(User updatedUser) {
-        User existingUser = userRepo.findById(updatedUser.getId()).orElse(null); // Dùng userRepo thay vì adminRepo
+        User existingUser = userRepo.findById(updatedUser.getId()).orElse(null);
         if (existingUser != null) {
             existingUser.setUserName(updatedUser.getUserName());
             existingUser.setEmail(updatedUser.getEmail());
@@ -76,7 +76,7 @@ public class AdminService implements IAdminService {
             existingUser.setFirstName(updatedUser.getFirstName());
             existingUser.setLastName(updatedUser.getLastName());
             existingUser.setBirthday(updatedUser.getBirthday());
-            // Không động vào Role
+
             userRepo.save(existingUser); // Lưu lại User vào database
         }
     }

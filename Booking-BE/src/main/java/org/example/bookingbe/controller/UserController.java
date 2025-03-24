@@ -6,21 +6,24 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
 import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
+import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,17 +43,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
     @Autowired
     private IUserService userService;
-    @Autowired
-    private IRoomService roomService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private IRoomService roomService;
 
     @Autowired
     private IRoomRepo roomRepo;
 
     @Autowired
     private IImageService imageService;
+
+    @Autowired
+    private IBookingRepo bookingRepo;
+
+    @Autowired
+    private IBookingService bookingService;
 
 
     @GetMapping("/")
@@ -88,16 +98,29 @@ public class UserController {
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
-            return "redirect:/api/login";
+            return "redirect:/api/login"; // Nếu không có userId, yêu cầu đăng nhập lại
         }
 
+        // Lấy User từ database
         User user = userService.getUserById(userId);
         if (user == null) {
             return "redirect:/api/login";
         }
 
+        // Lấy danh sách booking của user
+        List<Booking> bookings = bookingRepo.findByUserId(userId);
+
         model.addAttribute("user", user);
-        return "profile"; // Trả về trang profile.html với dữ liệu user
+        model.addAttribute("bookings", bookings); // Gửi danh sách booking đến profile.html
+
+        return "auth/profile"; // Trả về trang profile.html với dữ liệu user và bookings
+    }
+
+    @PostMapping("/user/deleteBooking/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        bookingService.deleteBooking(id);
+        redirectAttributes.addAttribute("success", true);
+        return "redirect:/api/user/userProfile";
     }
 
     @PostMapping("/user/updateProfile")
