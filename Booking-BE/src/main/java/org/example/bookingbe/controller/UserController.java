@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
+import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
+import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +52,9 @@ public class UserController {
 
     @Autowired
     private IRoomRepo roomRepo;
+
+    @Autowired
+    private IImageService imageService;
 
 
     @GetMapping("/")
@@ -156,12 +163,19 @@ public class UserController {
                     .collect(Collectors.toList());
         }
 
+        // Lấy danh sách ảnh cho từng phòng
+        Map<Long, List<String>> roomImages = new HashMap<>();
+        for (Room room : rooms) {
+            List<String> images = imageService.getImagesByRoomId(room.getId()); // Gọi service để lấy danh sách ảnh
+            roomImages.put(room.getId(), images);
+        }
+
+        model.addAttribute("roomImages", roomImages);
         model.addAttribute("rooms", rooms);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
     }
-
 
 
     @GetMapping("/user/home")
