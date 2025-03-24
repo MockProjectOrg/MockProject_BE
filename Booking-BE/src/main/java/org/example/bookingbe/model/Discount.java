@@ -3,7 +3,8 @@ package org.example.bookingbe.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "discount")
@@ -11,11 +12,42 @@ public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "name")
-    private String name;
+    @Column(name = "discount_percent", columnDefinition = "LONG")
+    private Long discountPercent;
+    @Column(name = "date_start", columnDefinition = "DATETIME")
+    private LocalDateTime dateStart;
+    @Column(name = "date_end", columnDefinition = "DATETIME")
+    private LocalDateTime dateEnd;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    private BigDecimal discountValue;
+    private Boolean isActive;
+
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
+
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
+
+    // Thêm các thuộc tính để định nghĩa điều kiện của mã giảm giá
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "discount_condition") // Hoặc tên thực tế của cột trong database
+    private DiscountCondition condition;
+
+    public void setIsActive(boolean b) {
+    }
+
+    // Điều kiện áp dụng mã giảm giá
+    public enum DiscountCondition {
+        NEW_USER,    // Khách hàng mới
+        VIP_USER,    // Khách VIP
+        FREQUENT_USER // Khách đặt nhiều
+    }
 
     @Column(name = "discount_value")
     private Integer discountValue;
@@ -31,25 +63,23 @@ public class Discount {
     private Hotel hotel;
 
     public Discount() {
+    @PrePersist
+    protected void onCreate() {
+        createAt = LocalDateTime.now();
+        updateAt = LocalDateTime.now();
     }
 
-    public Discount(Long id, String name, String description, Integer discountValue, Boolean isActive, LocalDate createAt, LocalDate updateAt, Hotel hotel) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.discountValue = discountValue;
-        this.isActive = isActive;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.hotel = hotel;
+    @PreUpdate
+    protected void onUpdate() {
+        updateAt = LocalDateTime.now();
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Integer id) {
+        this.id = Long.valueOf(id);
     }
 
     public String getName() {
@@ -68,11 +98,11 @@ public class Discount {
         this.description = description;
     }
 
-    public Integer getDiscountValue() {
+    public BigDecimal getDiscountValue() {
         return discountValue;
     }
 
-    public void setDiscountValue(Integer discountValue) {
+    public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
     }
 
@@ -84,19 +114,19 @@ public class Discount {
         isActive = active;
     }
 
-    public LocalDate getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDate createAt) {
+    public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
 
-    public LocalDate getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(LocalDate updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -106,5 +136,13 @@ public class Discount {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public DiscountCondition getCondition() {
+        return condition;
+    }
+
+    public void setCondition(DiscountCondition condition) {
+        this.condition = condition;
     }
 }

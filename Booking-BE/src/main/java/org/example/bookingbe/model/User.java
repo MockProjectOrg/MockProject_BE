@@ -28,21 +28,15 @@ public class User {
     @Column(name = "phone", columnDefinition = "varchar(10)")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number up to 10 digits")
     private String phone;
-
     @Column(name = "password", columnDefinition = "TEXT")
     private String password;
-
     @Column(name = "address", columnDefinition = "varchar(155)")
-    @Size(min = 20, max = 150, message = "Address must be between 20 and 150 characters")
     private String address;
-
     @Column(name = "gender")
     private Integer gender;
-
     @Column(name = "first_name", columnDefinition = "varchar(50)")
     @Size(min = 2, max = 10, message = "First name must be between 2 and 10 characters")
     private String firstName;
-
     @Column(name = "last_name", columnDefinition = "varchar(50)")
     @Size(min = 2, max = 20, message = "Last name must be between 2 and 20 characters")
     private String lastName;
@@ -50,31 +44,26 @@ public class User {
     @Column(name = "birthday", columnDefinition = "DATE")
     @AgeOver18
     private LocalDate birthday;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Hotel hotel;
+    public User(Long userId) {}
 
-    public User(Long userId) {
-    }
-
-    public User(Long id, String email, String phone, String address, Integer gender, String firstName, String lastName, LocalDate birthday) {
+    public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
         this.id = id;
+        this.userName = userName;
         this.email = email;
         this.phone = phone;
+        this.password = password;
         this.address = address;
-        this.gender = gender;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
+        this.role = role;
     }
 
     public User() {
-        
+
     }
+
 
     public Long getId() {
         return id;
@@ -172,11 +161,17 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Hotel getHotel() {
-        return hotel;
+    // Thêm vào class User
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    // Thêm getter và setter
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
+
 }

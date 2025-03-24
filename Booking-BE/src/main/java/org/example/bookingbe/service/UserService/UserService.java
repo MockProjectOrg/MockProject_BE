@@ -1,29 +1,22 @@
 package org.example.bookingbe.service.UserService;
 
-import jakarta.mail.MessagingException;
 import org.example.bookingbe.model.Role;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.RoleRepo.IRoleRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
-import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
-import org.example.bookingbe.service.MailSender.MailRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private final IUserRepo userRepo;
+    private IUserRepo userRepo;
     @Autowired
-    private final IRoleRepo roleRepo;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final MailRegister mailRegister;
     @Autowired
     private final CloudinaryService cloudinaryService;
