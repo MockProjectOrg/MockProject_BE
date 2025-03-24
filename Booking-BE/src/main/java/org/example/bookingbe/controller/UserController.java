@@ -60,7 +60,7 @@ public class UserController {
     @GetMapping("/")
     public String login(HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
-            return "redirect:/api/user/home";
+            return "redirect:/home";
         }
         return "auth/login";
     }

@@ -1,7 +1,5 @@
 package org.example.bookingbe.service.ImageService;
 
-import java.util.List;
-
 import org.example.bookingbe.model.Image;
 
 import java.util.List;
