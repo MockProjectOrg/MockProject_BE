@@ -1,11 +1,9 @@
 package org.example.bookingbe.service.ReviewService;
 
 import org.example.bookingbe.model.Review;
-import org.example.bookingbe.model.Status;
 import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
 import org.example.bookingbe.repository.ReviewRepo.IReviewRepo;
 import org.example.bookingbe.repository.StatusRepo.IStatusRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +12,16 @@ import java.util.List;
 @Service
 public class ReviewService implements IReviewService {
 
-    @Autowired
-    private IReviewRepo reviewRepo;
+    private final IReviewRepo reviewRepo;
+    private final IBookingRepo bookingRepo;
+    private final IStatusRepo statusRepo;
 
-    @Autowired
-    private IBookingRepo bookingRepo;
-    @Autowired
-    private IStatusRepo statusRepo;
+    // Dùng Constructor Injection
+    public ReviewService(IReviewRepo reviewRepo, IBookingRepo bookingRepo, IStatusRepo statusRepo) {
+        this.reviewRepo = reviewRepo;
+        this.bookingRepo = bookingRepo;
+        this.statusRepo = statusRepo;
+    }
 
     @Transactional
     @Override
@@ -35,11 +36,8 @@ public class ReviewService implements IReviewService {
 
     @Override
     public boolean hasCheckedOut(Long userId, Long roomId) {
-        Status checkedOutStatus = statusRepo.findByName("CHECKED_OUT");
-        if (checkedOutStatus == null) {
-            return false;
-        }
-        return bookingRepo.existsByUserIdAndRoomIdAndStatus_StatusName(userId, roomId, checkedOutStatus.getStatusName());
+        List<Review> reviews = reviewRepo.findByRoomId(roomId);
+        return !reviews.isEmpty();
     }
 
     @Override

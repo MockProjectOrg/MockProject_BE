@@ -30,7 +30,7 @@ import java.util.List;
 public class RoomController {
 
     private final CloudinaryService cloudinaryService;
-    @Autowired
+    
     private IRoomService roomService;
     @Autowired
     private CustomUserDetailService userDetailService;

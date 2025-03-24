@@ -13,7 +13,6 @@ import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -38,27 +37,31 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public Double getTotalRevenue() {
-        return Optional.ofNullable(bookingRepo.countTotalRevenue()).orElse(0.0);
+    public Double getTotalRevenue(int month, int year) {
+        Double revenue = bookingRepo.getTotalRevenue(month, year);
+        return revenue != null ? revenue : 0.0;
     }
 
-    private Long countOrdersThisWeek() {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfWeek = today.with(DayOfWeek.MONDAY).atStartOfDay();
-        LocalDateTime endOfWeek = today.with(DayOfWeek.SUNDAY).plusDays(1).atStartOfDay().minusSeconds(1);
-        return Optional.ofNullable(bookingRepo.countOrdersThisWeek(startOfWeek, endOfWeek)).orElse(0L);
-    }
 
     @Override
     public List<Map<String, Object>> getMonthlyRevenue() {
-        return Optional.ofNullable(bookingRepo.getMonthlyRevenue())
-                .orElse(Collections.emptyList())
-                .stream().map(row -> {
-                    Map<String, Object> revenueMap = new HashMap<>();
-                    revenueMap.put("month", ((Number) row[0]).intValue());
-                    revenueMap.put("revenue", ((Number) row[1]).doubleValue());
-                    return revenueMap;
-                }).collect(Collectors.toList());
+        List<Object[]> results = bookingRepo.countBookingsByMonth(); // Lấy dữ liệu doanh thu theo tháng
+
+        if (results == null || results.isEmpty()) {
+            return Collections.emptyList(); // Trả về danh sách rỗng nếu không có dữ liệu
+        }
+
+        return results.stream().map(row -> {
+            Map<String, Object> revenueMap = new HashMap<>();
+
+            Integer month = row[0] != null ? ((Number) row[0]).intValue() : null;
+            Double revenue = row[1] != null ? ((Number) row[1]).doubleValue() : 0.0;
+
+            revenueMap.put("month", month);
+            revenueMap.put("revenue", revenue);
+
+            return revenueMap;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -120,11 +123,11 @@ public class BookingService implements IBookingService {
     @Override
     public Map<String, Object> getStatistics() {
         Map<String, Object> statistics = new HashMap<>();
+        int currentMonth = LocalDate.now().getMonthValue();
+        int currentYear = LocalDate.now().getYear();
         statistics.put("totalOrders", Optional.ofNullable(bookingRepo.countTotalOrders()).orElse(0L));
-        statistics.put("thisWeekOrders", countOrdersThisWeek());
         statistics.put("thisMonthlyOrders", Optional.ofNullable(bookingRepo.countOrdersThisMonth()).orElse(0L));
-        statistics.put("totalRevenues", getTotalRevenue());
-        statistics.put("thisMonthlyRevenues", Optional.ofNullable(bookingRepo.getRevenueThisMonth()).orElse(0.0));
+        statistics.put("totalRevenues", getTotalRevenue(currentMonth, currentYear));
         return statistics;
     }
 
@@ -163,7 +166,7 @@ public class BookingService implements IBookingService {
 
     @Override
     public List<Integer> getBookingCountsByMonth() {
-        return Optional.ofNullable(bookingRepo.getBookingCountsByMonth())
+        return Optional.ofNullable(bookingRepo.countBookingsByMonth())
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(row -> row != null && row.length > 1 && row[1] instanceof Number ? ((Number) row[1]).intValue() : 0)
@@ -270,13 +273,13 @@ public class BookingService implements IBookingService {
         if (projection == null) {
             return null;
         }
-        System.out.println(projection.getHotelId());
-        System.out.println(projection.getCheckIn());
-        System.out.println(projection.getRoomId());
-        System.out.println(projection.getUserId());
-        Optional<Hotel> hotel = hotelRepo.findById(projection.getHotelId());
-        Optional<Room> room = roomRepo.findById(projection.getRoomId());
-        UserDto user = userRepo.findUserById(projection.getUserId());
+
+        // Lấy dữ liệu từ các bảng liên quan
+        Hotel hotel = projection.getHotelId() != null ? hotelRepo.findById(projection.getHotelId()).orElse(null) : null;
+        Room room = projection.getRoomId() != null ? roomRepo.findById(projection.getRoomId()).orElse(null) : null;
+        UserDto user = projection.getUserId() != null ? userRepo.findUserById(projection.getUserId()) : null;
+
+        // Trả về DTO đã tối ưu
         return new BookingDto(
                 hotel,
                 room,

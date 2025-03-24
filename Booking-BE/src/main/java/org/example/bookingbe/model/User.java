@@ -72,6 +72,10 @@ public class User {
         this.birthday = birthday;
     }
 
+    public User() {
+        
+    }
+
     public Long getId() {
         return id;
     }

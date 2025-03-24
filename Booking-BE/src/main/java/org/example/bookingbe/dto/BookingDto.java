@@ -2,21 +2,18 @@ package org.example.bookingbe.dto;
 
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
-import org.example.bookingbe.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class BookingDto {
-    private Optional<Hotel> hotel;
-    private Optional<Room> room;
+    private Hotel hotel;
+    private Room room;
     private UserDto user;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private String description;
 
-
-    public BookingDto( Optional<Hotel> hotel, Optional<Room> room, UserDto user, LocalDateTime checkIn, LocalDateTime checkOut, String description) {
+    public BookingDto(Hotel hotel, Room room, UserDto user, LocalDateTime checkIn, LocalDateTime checkOut, String description) {
         this.hotel = hotel;
         this.room = room;
         this.user = user;
@@ -31,19 +28,19 @@ public class BookingDto {
         this.description = description;
     }
 
-    public Optional<Hotel> getHotel() {
+    public Hotel getHotel() {
         return hotel;
     }
 
-    public void setHotel(Optional<Hotel> hotel) {
+    public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
 
-    public Optional<Room> getRoom() {
+    public Room getRoom() {
         return room;
     }
 
-    public void setRoom(Optional<Room> room) {
+    public void setRoom(Room room) {
         this.room = room;
     }
 
