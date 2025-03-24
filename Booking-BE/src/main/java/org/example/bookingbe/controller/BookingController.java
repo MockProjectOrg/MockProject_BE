@@ -7,10 +7,8 @@ import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
 import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.dto.DiscountDto;
-import org.example.bookingbe.model.Booking;
-import org.example.bookingbe.model.Image;
-import org.example.bookingbe.model.Room;
-import org.example.bookingbe.model.User;
+import org.example.bookingbe.model.*;
+import org.example.bookingbe.service.BillService.IBillService;
 import org.example.bookingbe.service.BookingService.IBookingService;
 import org.example.bookingbe.service.DiscountService.IDiscountService;
 import org.example.bookingbe.service.ImageService.IImageService;
@@ -36,6 +34,8 @@ import static org.example.bookingbe.custom.datetime.DateTimeFormat.calculateDays
 @RequestMapping("/api")
 public class BookingController {
     @Autowired
+    private IBillService billService;
+    @Autowired
     private DateTimeFormat dateTimeFormatter;
     @Autowired
     private IBookingService bookingService;
@@ -56,8 +56,12 @@ public class BookingController {
                            @RequestParam (required = false) String checkOut,
                            Principal principal, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.setAttribute("room", roomService.getRoomById(id));
-        session.setAttribute("user", userService.findByUsername(principal.getName()));
+        Optional<Room> room = roomService.getRoomById(id);
+        Room roomOp = room.get();
+        Optional<User> userOptional = userService.findByUsername(principal.getName());
+        User user = userOptional.get();
+        session.setAttribute("room", roomOp);
+        session.setAttribute("user", user);
         session.setAttribute("checkIn", checkIn);
         session.setAttribute("checkOut", checkOut);
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -66,7 +70,6 @@ public class BookingController {
         String formattedCheckOut = checkOut != null ? LocalDateTime.parse(checkOut, inputFormatter).format(outputFormatter) : null;
         List<Image> images = iImageService.findAllImagesByRoomId(id);
         List<DiscountDto> discountDto = discountService.getDiscounts(principal.getName(), id);
-        Optional<Room> room = roomService.getRoomById(id);
         long days = calculateDaysBetween(checkIn, checkOut);
         double priceTotal = room.get().getPrice() * days;
         model.addAttribute("images", images);
@@ -94,7 +97,7 @@ public class BookingController {
         User user = (User) session.getAttribute("user");
         Room room = (Room) session.getAttribute("room");
         Booking booking = new Booking(room,user,LocalDateTime.parse(checkIn, formatter), LocalDateTime.parse(checkOut,formatter), false);
-        bookingService.saveBooking(booking);
+        session.setAttribute("booking", bookingService.saveBooking(booking));
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(price, bill, baseUrl);
         return "redirect:" + vnpayUrl;
@@ -102,6 +105,7 @@ public class BookingController {
 
     @GetMapping("/vnpay-payment")
     public String GetMapping(HttpServletRequest request, Model model){
+        HttpSession session = request.getSession();
         int paymentStatus =vnPayService.orderReturn(request);
 
         String orderInfo = request.getParameter("vnp_OrderInfo");
@@ -120,9 +124,12 @@ public class BookingController {
                 e.printStackTrace();
             }
         }
-//        System.out.println(billDto.getEmail());
-//        model.addAttribute("orderId", orderInfo);
-        System.out.println();
+        Booking booking = (Booking) session.getAttribute("booking");
+        Double price = Double.valueOf(totalPrice);
+        Bill bill = new Bill(LocalDateTime.now(), price, booking);
+        billService.save(bill);
+        booking.setStatus(true);
+        bookingService.saveBooking(booking);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("paymentTime", paymentTime);
         model.addAttribute("transactionId", transactionId);

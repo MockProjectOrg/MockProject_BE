@@ -1,11 +1,5 @@
 package org.example.bookingbe.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.example.bookingbe.model.Room;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class BillDto {
     private String lastName;
@@ -26,13 +20,6 @@ public class BillDto {
         this.price = price;
     }
 
-    public Long getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
 
     public BillDto(Double price) {
         this.price = price;
