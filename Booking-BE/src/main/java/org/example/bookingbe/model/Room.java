@@ -36,6 +36,7 @@ public class Room {
 
     public Room() {
     }
+
     public Room(Long id, Double price, String description, RoomType roomType, Hotel hotel, Status status) {
         this.id = id;
         this.price = price;
@@ -56,36 +57,36 @@ public class Room {
         this.utilities = utilities;
     }
 
-        public Long getId() {
-            return id;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public Double getPrice() {
-            return price;
-        }
+    public Double getPrice() {
+        return price;
+    }
 
-        public void setPrice(Double price) {
-            this.price = price;
-        }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-        public String getDescription() {
-            return description;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-        public RoomType getRoomType() {
-            return roomType;
-        }
+    public RoomType getRoomType() {
+        return roomType;
+    }
 
-        public void setRoomType(RoomType roomType) {
-            this.roomType = roomType;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
         }
 
         public Status getStatus() {

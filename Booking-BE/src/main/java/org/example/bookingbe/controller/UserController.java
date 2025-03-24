@@ -142,7 +142,7 @@ public class UserController {
         if (hotelName != null || typeName != null || minPrice != null || maxPrice != null || checkIn != null || checkOut != null ) {
             rooms = roomService.searchRooms(hotelName, typeName, minPrice, maxPrice, checkIn, checkOut)
                     .stream()
-                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 1) // Chỉ lấy phòng available
+                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 4) // Chỉ lấy phòng available
                     .collect(Collectors.toList());
         } else {
             // Nếu không có điều kiện tìm kiếm -> chỉ lấy danh sách phòng available
@@ -157,6 +157,8 @@ public class UserController {
         }
 
         model.addAttribute("rooms", rooms);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
         return "client/searchRooms";
     }
 

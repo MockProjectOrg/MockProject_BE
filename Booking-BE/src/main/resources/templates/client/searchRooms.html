@@ -161,12 +161,12 @@
           <!-- Check In & Check Out -->
           <div class="mb-3">
             <label for="checkIn" class="form-label fw-bold">📅 Check In Date</label>
-            <input type="datetime-local" id="checkIn" name="checkIn" class="form-control">
+            <input type="datetime-local" id="checkIn" name="checkIn" class="form-control" th:value="${checkIn}">
           </div>
 
           <div class="mb-3">
             <label for="checkOut" class="form-label fw-bold">📅 Check Out Date</label>
-            <input type="datetime-local" id="checkOut" name="checkOut" class="form-control">
+            <input type="datetime-local" id="checkOut" name="checkOut" class="form-control" th:value="${checkOut}">
           </div>
 
           <!-- Search Button -->
@@ -196,7 +196,7 @@
             <div class="row g-0">
               <!-- Cột hình ảnh -->
               <div class="col-md-4">
-                <img th:src="${room.imageUrl}" alt="Hình ảnh phòng" class="img-fluid rounded-start"
+                <img alt="Hình ảnh phòng" class="img-fluid rounded-start"
                      style="height: 100%; width: 100%; object-fit: cover;">
               </div>
 
@@ -230,7 +230,9 @@
 
                   <div class="text-end">
                     <a href="#" class="btn btn-primary btn-sm">Detail</a>
-                    <a href="#" class="btn btn-success btn-sm">Book</a>
+                    <a th:href="@{/api/booking/{id}(id=${room.id},
+                                        checkIn=${#temporals.format(checkIn, 'dd/MM/yyyy HH:mm')},
+                                        checkOut=${#temporals.format(checkOut, 'dd/MM/yyyy HH:mm')})}" class="btn btn-success btn-sm">Book</a>
                   </div>
                 </div>
               </div>

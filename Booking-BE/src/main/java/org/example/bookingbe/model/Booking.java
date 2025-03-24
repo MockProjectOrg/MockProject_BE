@@ -38,6 +38,14 @@ public class Booking {
         this.room = room;
     }
 
+    public Booking(Room room, User user, LocalDateTime checkIn, LocalDateTime checkOut, Boolean status) {
+        this.room = room;
+        this.user = user;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.status = status;
+    }
+
     public Boolean getStatus() {
         return status;
     }

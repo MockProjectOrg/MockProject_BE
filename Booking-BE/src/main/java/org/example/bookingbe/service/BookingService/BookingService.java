@@ -128,26 +128,5 @@ public class BookingService implements IBookingService {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
     }
 
-    @Override
-    public BookingDto getBooking(Long id) {
-        BookingInterface projection = bookingRepo.getBooking(id);
-        if (projection == null) {
-            return null;
-        }
-        System.out.println(projection.getHotelId());
-        System.out.println(projection.getCheckIn());
-        System.out.println(projection.getRoomId());
-        System.out.println(projection.getUserId());
-        Optional<Hotel> hotel = hotelRepo.findById(projection.getHotelId());
-        Optional<Room> room = roomRepo.findById(projection.getRoomId());
-        UserDto user = userRepo.findUserById(projection.getUserId());
-        return new BookingDto(
-                hotel,
-                room,
-                user,
-                projection.getCheckIn(),
-                projection.getCheckOut(),
-                projection.getDescription()
-        );
-    }
+
 }

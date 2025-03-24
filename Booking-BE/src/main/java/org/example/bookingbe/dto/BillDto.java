@@ -1,5 +1,12 @@
 package org.example.bookingbe.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.example.bookingbe.model.Room;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class BillDto {
     private String lastName;
     private String firstName;
@@ -7,21 +14,31 @@ public class BillDto {
     private String email;
     private String phone;
     private Double price;
-
     public BillDto() {
+    }
+
+    public BillDto(String lastName, String firstName, String address, String email, String phone, Double price) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.price = price;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     public BillDto(Double price) {
         this.price = price;
     }
 
-    public BillDto(String lastName, String firstName, String address, String email, String phone) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.address = address;
-        this.email = email;
-        this.phone = phone;
-    }
+
 
     public String getLastName() {
         return lastName;

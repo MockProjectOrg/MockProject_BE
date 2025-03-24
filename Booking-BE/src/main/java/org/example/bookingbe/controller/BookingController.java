@@ -2,13 +2,20 @@ package org.example.bookingbe.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
+import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.dto.DiscountDto;
+import org.example.bookingbe.model.Booking;
+import org.example.bookingbe.model.Image;
 import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.User;
 import org.example.bookingbe.service.BookingService.IBookingService;
 import org.example.bookingbe.service.DiscountService.IDiscountService;
+import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
+import org.example.bookingbe.service.UserService.IUserService;
 import org.example.bookingbe.service.VNPayService.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,29 +45,56 @@ public class BookingController {
     private IDiscountService discountService;
     @Autowired
     private VNPayService vnPayService;
+    @Autowired
+    private IImageService iImageService;
+    @Autowired
+    private IUserService userService;
+
     @GetMapping("/booking/{id}")
     private String booking(@PathVariable("id") Long id, Model model,
                            @RequestParam (required = false) String checkIn,
                            @RequestParam (required = false) String checkOut,
-                           Principal principal) {
-        System.out.println("user_name" + principal.getName());
+                           Principal principal, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("room", roomService.getRoomById(id));
+        session.setAttribute("user", userService.findByUsername(principal.getName()));
+        session.setAttribute("checkIn", checkIn);
+        session.setAttribute("checkOut", checkOut);
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        String formattedCheckIn = checkIn != null ? LocalDateTime.parse(checkIn, inputFormatter).format(outputFormatter) : null;
+        String formattedCheckOut = checkOut != null ? LocalDateTime.parse(checkOut, inputFormatter).format(outputFormatter) : null;
+        List<Image> images = iImageService.findAllImagesByRoomId(id);
         List<DiscountDto> discountDto = discountService.getDiscounts(principal.getName(), id);
         Optional<Room> room = roomService.getRoomById(id);
         long days = calculateDaysBetween(checkIn, checkOut);
         double priceTotal = room.get().getPrice() * days;
+        model.addAttribute("images", images);
+        model.addAttribute("discounts", discountDto);
         model.addAttribute("room", room);
+        model.addAttribute("checkIn", formattedCheckIn);
+        model.addAttribute("checkOut", formattedCheckOut);
         model.addAttribute("totalPrice", priceTotal);
         model.addAttribute("dateCheckIn", dateTimeFormatter.formatDate(checkIn));
         model.addAttribute("timeCheckIn", dateTimeFormatter.formatTime(checkIn));
         model.addAttribute("dateCheckOut", dateTimeFormatter.formatDate(checkOut));
         model.addAttribute("timeCheckOut", dateTimeFormatter.formatTime(checkOut));
         model.addAttribute("day", days);
+        model.addAttribute("bill", new BillDto());
         return "client/payment";
     }
 
 
     @PostMapping("/pay")
-    private String pay(@ModelAttribute("bill") BillDto bill, @RequestParam("price") Double price, HttpServletRequest request) {
+    private String pay(@ModelAttribute("bill") BillDto bill, @RequestParam("price") Double price,
+                       @RequestParam(required = false)String checkIn,
+                       @RequestParam(required = false)String checkOut, HttpServletRequest request) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Room room = (Room) session.getAttribute("room");
+        Booking booking = new Booking(room,user,LocalDateTime.parse(checkIn, formatter), LocalDateTime.parse(checkOut,formatter), false);
+        bookingService.saveBooking(booking);
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(price, bill, baseUrl);
         return "redirect:" + vnpayUrl;
@@ -84,8 +120,9 @@ public class BookingController {
                 e.printStackTrace();
             }
         }
-        System.out.println(billDto.getPrice());
+//        System.out.println(billDto.getEmail());
 //        model.addAttribute("orderId", orderInfo);
+        System.out.println();
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("paymentTime", paymentTime);
         model.addAttribute("transactionId", transactionId);

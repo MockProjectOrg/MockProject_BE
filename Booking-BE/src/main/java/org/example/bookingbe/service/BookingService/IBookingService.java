@@ -28,5 +28,5 @@ public interface IBookingService {
     List<Booking> getBookingsByHotelId(Long hotelId);
     boolean isBookingBelongToHotel(Long bookingId, Long hotelId);
 
-    BookingDto getBooking(Long id);
+
 }

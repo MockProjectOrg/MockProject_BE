@@ -8,51 +8,35 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class BookingDto {
-    private Optional<Hotel> hotel;
-    private Optional<Room> room;
-    private UserDto user;
+    private Room roomId;
+    private User userId;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
-    private String description;
+    private Boolean status;
 
 
-    public BookingDto( Optional<Hotel> hotel, Optional<Room> room, UserDto user, LocalDateTime checkIn, LocalDateTime checkOut, String description) {
-        this.hotel = hotel;
-        this.room = room;
-        this.user = user;
+    public BookingDto(Room roomId, User userId, LocalDateTime checkIn, LocalDateTime checkOut, Boolean status) {
+        this.roomId = roomId;
+        this.userId = userId;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        this.description = description;
+        this.status = status;
     }
 
-    public BookingDto(LocalDateTime checkIn, LocalDateTime checkOut, String description) {
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-        this.description = description;
+    public Room getRoomId() {
+        return roomId;
     }
 
-    public Optional<Hotel> getHotel() {
-        return hotel;
+    public void setRoomId(Room roomId) {
+        this.roomId = roomId;
     }
 
-    public void setHotel(Optional<Hotel> hotel) {
-        this.hotel = hotel;
+    public User getUserId() {
+        return userId;
     }
 
-    public Optional<Room> getRoom() {
-        return room;
-    }
-
-    public void setRoom(Optional<Room> room) {
-        this.room = room;
-    }
-
-    public UserDto getUser() {
-        return user;
-    }
-
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCheckIn() {
@@ -71,11 +55,11 @@ public class BookingDto {
         this.checkOut = checkOut;
     }
 
-    public String getDescription() {
-        return description;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

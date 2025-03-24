@@ -88,7 +88,7 @@
 
         .room-info {
             width: 33%;
-            height: 550px;
+            height: 700px;
             background-color: white;
             border-radius: 10px;
             margin-bottom: 30px;
@@ -96,6 +96,8 @@
 
         .room-info img{
             width: 100%;
+            height: 250px; /* Đặt chiều cao cố định */
+            object-fit: cover;
         }
 
         .wrap-booking-room{
@@ -246,8 +248,8 @@
     </div>
 </nav>
 <div class="container">
-    <form class="wrap-form" method="post" action="/api/pay" >
-
+    <form class="wrap-form" id="paymentForm" method="post" action="/api/pay" th:object="${bill}">
+<!--        <input type="hidden" name="roomId" th:field="*{roomId}" th:value="${room.get().getId()}">-->
         <div class="form-info">
             <h2>Thông tin liên hệ</h2>
             <p>Hãy điền chính xác tất cả thông tin để đảm bảo bạn nhận được Phiếu xác nhận đặt phòng (E-voucher) qua
@@ -255,14 +257,14 @@
             <div class="row g-3 needs-validation" novalidate>
                 <div class="col-md-4">
                     <label for="validationCustom01" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="validationCustom01"  value="Mark" required>
+                    <input type="text" class="form-control" id="validationCustom01" name="firstName"  th:field="*{firstName}" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
                 <div class="col-md-8">
                     <label for="validationCustom02" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="validationCustom02"  value="Otto" required>
+                    <input type="text" class="form-control" id="validationCustom02" name="lastName" th:field="*{lastName}"  value="Otto" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -270,7 +272,7 @@
 
                 <div class="col-md-6">
                     <label for="validationCustom03" class="form-label">Phone</label>
-                    <input type="text" class="form-control" id="validationCustom03"   required>
+                    <input type="text" class="form-control" id="validationCustom03" name="phone" th:field="*{phone}"   required>
                     <div class="invalid-feedback">
                         Please provide a valid city.
                     </div>
@@ -279,7 +281,7 @@
                     <label for="validationCustomUsername" class="form-label">Email</label>
                     <div class="input-group has-validation">
                         <input type="text" class="form-control" id="validationCustomUsername"
-                               aria-describedby="inputGroupPrepend"  required>
+                               aria-describedby="inputGroupPrepend" th:field="*{email}" name="email"  required>
                         <div class="invalid-feedback">
                             Please choose a username.
                         </div>
@@ -290,7 +292,7 @@
                     <div class="input-group has-validation">
 
                         <input type="text" class="form-control" id="validationCustom04"
-                               aria-describedby="inputGroupPrepend"   required>
+                               aria-describedby="inputGroupPrepend" name="address" th:field="*{address}"   required>
                         <div class="invalid-feedback">
                             Please choose a username.
                         </div>
@@ -299,7 +301,7 @@
                 <div class="col-md-6">
                     <label for="validationCustom04" class="form-label">Discount</label>
                     <div class="input-group has-validation">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#discountModal">
                             Select Discount
                         </button>
                         <div class="invalid-feedback">
@@ -321,14 +323,14 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <p style="font-size: larger">Discount</p>
-                    <p style="font-size: large" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}">20%</p>
+                    <p style="font-size: large" id="discountValueDisplay"></p>
                 </div>
             </div>
 
             <div class="d-flex justify-content-between">
                 <h4><b>Total</b></h4>
-                <input type="hidden" name="price" th:value="${totalPrice}" >
-                <h2 style="color: orangered" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}" ></h2>
+                <input type="hidden" name="price" id="updatedTotalPrice" th:value="${totalPrice}" >
+                <h2 id="totalPriceDisplay" th:data-original-price="${totalPrice}" style="color: orangered" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}" ></h2>
             </div>
 
 
@@ -343,10 +345,7 @@
             <b><p>Orchide'es Ocean Hotel</p></b>
         </div>
         <div class="slide">
-            <img src="https://ik.imagekit.io/tvlk/apr-asset/Ixf4aptF5N2Qdfmh4fGGYhTN274kJXuNMkUAzpL5HuD9jzSxIGG5kZNhhHY-p7nw/hotel/asset/20011694-4c950f9b429acbf55d3751e720e401db.jpeg?_src=imagekit&tr=f-jpg,h-150,pr-true,q-90,w-375" alt="">
-            <img src="https://ik.imagekit.io/tvlk/apr-asset/Ixf4aptF5N2Qdfmh4fGGYhTN274kJXuNMkUAzpL5HuD9jzSxIGG5kZNhhHY-p7nw/hotel/asset/20011694-4c950f9b429acbf55d3751e720e401db.jpeg?_src=imagekit&tr=f-jpg,h-150,pr-true,q-90,w-375" alt="">
-            <img src="https://ik.imagekit.io/tvlk/apr-asset/Ixf4aptF5N2Qdfmh4fGGYhTN274kJXuNMkUAzpL5HuD9jzSxIGG5kZNhhHY-p7nw/hotel/asset/20011694-4c950f9b429acbf55d3751e720e401db.jpeg?_src=imagekit&tr=f-jpg,h-150,pr-true,q-90,w-375" alt="">
-
+            <img th:each="img :${images}"  th:src="${img.imageName}">
         </div>
 
         <div class="wrap-booking-room">
@@ -355,6 +354,7 @@
                     <p>Check In</p>
                 </div>
                 <div>
+                    <input type="hidden" id="checkInHidden" name="checkIn" th:value="${checkIn}">
                     <b><p style="margin: 0" th:text="${dateCheckIn}"></p></b>
                     <p th:text="${timeCheckIn}"></p>
                 </div>
@@ -365,6 +365,7 @@
                     <p>Check Out</p>
                 </div>
                 <div>
+                    <input type="hidden" id="checkOutHidden" name="checkOut" th:value="${checkOut}">
                     <b><p style="margin: 0" th:text="${dateCheckOut}"></p></b>
                     <p th:text="${timeCheckOut}"></p>
                 </div>
@@ -378,7 +379,7 @@
                         <i class="fa-solid fa-people-roof"></i>
                     </div>
                     <div>
-                        <p>2 Guest</p>
+                        <p th:text="${room.get().getRoomType().getCapacity()} + ' Guest'"></p>
                     </div>
                 </div>
                 <div class="capacity">
@@ -402,7 +403,7 @@
                     <b><p><i class="fa-solid fa-file-invoice"></i> Total room price: </p></b>
                     <p>1 phòng, 1 đêm</p>
                 </div>
-                <b><h5 th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}">200.000</h5></b>
+                <b><h5 th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></h5></b>
             </div>
 
         </div>
@@ -410,19 +411,32 @@
 
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="discountModal" tabindex="-1" aria-labelledby="discountModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="discountModalLabel">Select a Discount</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
+                <form id="discountForm">
+                    <div class="list-group">
+                        <div th:each="discount : ${discounts}" class="list-group-item list-group-item-action">
+                            <input type="radio" class="form-check-input me-2" name="selectedDiscount"
+                                   th:id="'discount_' + ${discount.getId()}" th:value="${discount.getId()}">
+                            <label th:for="'discount_' + ${discount.getId()}" class="form-check-label">
+                                <strong th:text="${discount.getName()}"></strong> -
+                                <span class="text-success fw-bold" th:text="${discount.getDiscountValue() + '% Off'}"></span>
+                                <br>
+                                <small class="text-muted">Expires on: <span th:text="${#temporals.format(discount.getExpiredAt(), 'dd/MM/yyyy')}"></span></small>
+                            </label>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="applyDiscount()">Apply Discount</button>
             </div>
         </div>
     </div>
@@ -433,7 +447,84 @@
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 2000,
+        autoplaySpeed: 1500,
     });
+
+    function applyDiscount() {
+        let selectedDiscount = document.querySelector('input[name="selectedDiscount"]:checked');
+
+        if (!selectedDiscount) {
+            alert("Please select a discount!");
+            return;
+        }
+
+        let discountValueText = selectedDiscount.nextElementSibling.querySelector('.text-success').innerText;
+        let discountValue = parseFloat(discountValueText.replace('% Off', '').trim());
+
+        document.getElementById("discountValueDisplay").innerText = discountValue + "%";
+
+        let totalPriceElement = document.getElementById("totalPriceDisplay");
+
+        // 🔥 Lấy giá gốc từ data-original-price
+        let originalPrice = parseFloat(totalPriceElement.getAttribute("data-original-price"));
+
+        if (isNaN(originalPrice)) {
+            console.error("Lỗi: Không tìm thấy giá gốc!");
+            return;
+        }
+
+        // ✅ Luôn tính lại từ giá gốc
+        let discountedPrice = originalPrice - (originalPrice * (discountValue / 100));
+        totalPriceElement.innerText = discountedPrice.toLocaleString('en-US') + " VND";
+
+        let modalElement = document.getElementById("discountModal");
+        let modalInstance = bootstrap.Modal.getInstance(modalElement);
+        document.getElementById("updatedTotalPrice").value = discountedPrice;
+
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+
+        setTimeout(() => {
+            document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
+            document.body.classList.remove("modal-open");
+            document.body.style.overflow = "auto";
+            document.body.style.paddingRight = "0px";
+        }, 300);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let discountModal = document.getElementById("discountModal");
+
+        discountModal.addEventListener("hidden.bs.modal", function () {
+            setTimeout(() => {
+                discountModal.innerHTML = discountModal.innerHTML; // Reset lại nội dung modal
+                document.body.classList.remove("modal-open"); // Đảm bảo không chặn thao tác
+                document.body.style.overflow = "auto"; // Cho phép cuộn lại bình thường
+            }, 100);
+        });
+    });
+
+    document.getElementById("paymentForm").addEventListener("submit", function (event) {
+        let form = event.target;
+
+        // Lấy giá trị checkIn, checkOut từ ngoài form
+        let checkInValue = document.getElementById("checkInHidden").value;
+        let checkOutValue = document.getElementById("checkOutHidden").value;
+
+        // Nếu chưa có input, thì tạo input ẩn
+        let checkInInput = document.createElement("input");
+        checkInInput.type = "hidden";
+        checkInInput.name = "checkIn";
+        checkInInput.value = checkInValue;
+        form.appendChild(checkInInput);
+
+        let checkOutInput = document.createElement("input");
+        checkOutInput.type = "hidden";
+        checkOutInput.name = "checkOut";
+        checkOutInput.value = checkOutValue;
+        form.appendChild(checkOutInput);
+    });
+
 </script>
 </html>

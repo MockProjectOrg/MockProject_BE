@@ -43,7 +43,7 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r WHERE r.id = :roomId AND r.status.id = 1")
     Optional<Room> findAvailableRoomForBooking(@Param("roomId") Long roomId);
 
-    @Query("SELECT r FROM Room r WHERE r.status.id = 1")
+    @Query("SELECT r FROM Room r WHERE r.status.id = 4")
     List<Room> findAvailableRooms();
 
     Optional<Room> findById(Long id);
