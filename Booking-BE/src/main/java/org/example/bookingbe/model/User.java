@@ -13,39 +13,53 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_name", columnDefinition = "varchar(100)")
+
+    @Column(name = "avatar", columnDefinition = "varchar(255)")
+    private String avatar;
+
+    @Column(name = "user_name", columnDefinition = "varchar(100)", unique = true)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d._-]+$", message = "example: user_123 or user123")
     private String userName;
+
     @Column(name = "email", columnDefinition = "varchar(50)")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
-            message = "Email không hợp lệ!"
-    )
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", message = "Email không hợp lệ!")
     private String email;
+
     @Column(name = "phone", columnDefinition = "varchar(10)")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number up to 10 digits")
     private String phone;
+
     @Column(name = "password", columnDefinition = "TEXT")
-//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "example: user_123 or Password123!")
     private String password;
+
     @Column(name = "address", columnDefinition = "varchar(155)")
-    @Size(min = 20, max = 150, message = "address minimum 20 characters")
+    @Size(min = 20, max = 150, message = "Address must be between 20 and 150 characters")
     private String address;
+
     @Column(name = "gender")
     private Integer gender;
+
     @Column(name = "first_name", columnDefinition = "varchar(50)")
-    @Size(min = 2, max = 10, message = "First name minimum 2 characters")
+    @Size(min = 2, max = 10, message = "First name must be between 2 and 10 characters")
     private String firstName;
+
     @Column(name = "last_name", columnDefinition = "varchar(50)")
-    @Size(min = 2, max = 20, message = "Last name minimum 2 characters")
+    @Size(min = 2, max = 20, message = "Last name must be between 2 and 20 characters")
     private String lastName;
-    @Column(name = "birthday", columnDefinition = "Date")
+
+    @Column(name = "birthday", columnDefinition = "DATE")
     @AgeOver18
     private LocalDate birthday;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public User(Long userId) {}
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Hotel hotel;
+
+    public User(Long userId) {
+    }
 
     public User(Long id, String email, String phone, String address, Integer gender, String firstName, String lastName, LocalDate birthday) {
         this.id = id;
@@ -58,20 +72,9 @@ public class User {
         this.birthday = birthday;
     }
 
-    public User(Long id, String userName, String email, String phone, String password, String address, Role role) {
-        this.id = id;
-        this.userName = userName;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.address = address;
-        this.role = role;
-    }
-
     public User() {
-
+        
     }
-
 
     public Long getId() {
         return id;
@@ -79,6 +82,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUserName() {
@@ -159,5 +170,13 @@ public class User {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 }

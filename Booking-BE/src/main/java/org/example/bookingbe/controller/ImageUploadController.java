@@ -1,8 +1,11 @@
 package org.example.bookingbe.controller;
 
 import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -20,7 +23,7 @@ public class ImageUploadController {
     @PostMapping
     public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) {
         try {
-            // ✅ Thêm "folder" khi gọi uploadFile()
+            // Thêm "folder" khi gọi uploadFile()
             String url = cloudinaryService.uploadFile(file, "user_profiles", "profile_" + userId);
             return ResponseEntity.ok(Map.of("url", url));
         } catch (Exception e) {

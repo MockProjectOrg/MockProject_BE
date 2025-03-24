@@ -6,13 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
-import org.example.bookingbe.dto.BookingDto;
-import org.example.bookingbe.dto.DiscountDto;
-import org.example.bookingbe.model.*;
-import org.example.bookingbe.service.BillService.IBillService;
+import org.example.bookingbe.model.Room;
 import org.example.bookingbe.service.BookingService.IBookingService;
-import org.example.bookingbe.service.DiscountService.IDiscountService;
-import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.example.bookingbe.service.VNPayService.VNPayService;
@@ -23,10 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 import static org.example.bookingbe.custom.datetime.DateTimeFormat.calculateDaysBetween;
@@ -117,6 +108,7 @@ public class BookingController {
 
         if (orderInfo != null) {
             try {
+                // 🔥 Giải mã chuỗi JSON từ URL
                 String orderInfoJson = URLDecoder.decode(orderInfo, StandardCharsets.UTF_8.toString());
                 ObjectMapper objectMapper = new ObjectMapper();
                 billDto = objectMapper.readValue(orderInfoJson, BillDto.class);
@@ -143,5 +135,42 @@ public class BookingController {
         session.removeAttribute("usser");
         session.removeAttribute("room");
         return "client/orderFail";
+    }
+
+    // Lấy tổng số đơn đặt phòng và doanh thu
+    @GetMapping("/total-bookings")
+    public String getTotalBookings(Model model) {
+        Map<String, Object> statistics = billService.getStatistics();
+
+        Long totalBookings = Optional.ofNullable(statistics.get("totalOrders"))
+                .map(val -> (Long) val).orElse(0L);
+
+        Double totalRevenue = Optional.ofNullable(statistics.get("totalRevenues"))
+                .map(val -> (Double) val).orElse(0.0);
+
+        model.addAttribute("totalBookings", totalBookings);
+        model.addAttribute("totalRevenue", totalRevenue);
+
+        return "/adminHotel/adminStatistics";
+    }
+
+
+    @GetMapping("/admin/popular-rooms")
+    public String getPopularRooms(Model model) {
+        List<Map<String, Object>> popularRooms = bookingService.getPopularRoomTypes();
+
+        // Lấy danh sách tên phòng và số lượt đặt
+        List<String> roomTypes = popularRooms.stream()
+                .map(room -> room.get("roomType").toString())
+                .toList();
+
+        List<Integer> bookingCounts = popularRooms.stream()
+                .map(room -> ((Number) room.get("bookingCount")).intValue())
+                .toList();
+
+        model.addAttribute("roomTypes", roomTypes);
+        model.addAttribute("bookingCounts", bookingCounts);
+
+        return "adminHotel/adminStatistics"; // Trả về trang Dashboard
     }
 }

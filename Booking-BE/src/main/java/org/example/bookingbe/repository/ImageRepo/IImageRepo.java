@@ -17,4 +17,3 @@ public interface IImageRepo extends JpaRepository<Image, Long> {
     @Query("SELECT i.imageName FROM Image i WHERE i.room = :room")
     List<String> findImagesByRoom(Room room);
 }
-

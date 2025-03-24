@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService implements IBookingService {
@@ -34,6 +34,59 @@ public class BookingService implements IBookingService {
 
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    public BookingService(IBookingRepo bookingRepo) {
+        this.bookingRepo = bookingRepo;
+    }
+
+    public List<Booking> getBookingsByUser(Long userId) {
+        return bookingRepo.findByUserId(userId);
+    }
+
+    public List<Booking> getBookingsByHotelId(Long hotelId) {
+        return bookingRepo.findByHotelId(hotelId);
+    }
+
+    @Override
+    public Long countCancelledBookings() {
+        return Optional.ofNullable(bookingRepo.countCancelledBookings()).orElse(0L);
+    }
+
+    @Override
+    public boolean isUserCheckedOut(Long userId, Long roomId) {
+        return false;
+    }
+
+
+    @Override
+    public Integer getCountRoomAvailable() {
+        return Math.toIntExact(Optional.ofNullable(bookingRepo.countAvailableRooms()).orElse(0L));
+    }
+
+    @Override
+    public String getSalesChartUrl() {
+        return "";
+    }
+
+    @Override
+    public List<Object[]> getBookingDataByMonth() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Map<String, Object>> getPopularRoomTypes() {
+        List<Object[]> results = Optional.ofNullable(bookingRepo.getMostPopularRoomType())
+                .orElse(Collections.emptyList());
+
+        return results.stream().map(row -> {
+            Map<String, Object> roomData = new HashMap<>();
+            roomData.put("roomType", row[0]);  // Tên loại phòng
+            roomData.put("bookingCount", ((Number) row[1]).intValue()); // Số lượt đặt
+            return roomData;
+        }).collect(Collectors.toList());
+    }
+
 
     @Transactional
     @Override
@@ -62,6 +115,31 @@ public class BookingService implements IBookingService {
         return bookingRepo.save(booking);
     }
 
+
+    // lấy tất cả đơn đặt phòng
+    @Override
+    public List<Booking> getAllBookings() {
+        return bookingRepo.findAll();
+    }
+
+    @Override
+    public Optional<Booking> getBookingById(Long id) {
+        return bookingRepo.findById(id);
+    }
+
+    // Lưu đặt phòng
+    @Override
+    public Booking saveBooking(Booking booking) {
+        return bookingRepo.save(booking);
+    }
+
+    // Xóa đơn đặt phòng
+    @Override
+    public void deleteBooking(Long id) {
+        bookingRepo.deleteById(id);
+    }
+
+    // Hủy đặt phòng
     @Transactional
     @Override
     public void cancelBooking(Long bookingId, Long userId) {
@@ -128,5 +206,26 @@ public class BookingService implements IBookingService {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
     }
 
-
+    @Override
+    public BookingDto getBooking(Long id) {
+        BookingInterface projection = bookingRepo.getBooking(id);
+        if (projection == null) {
+            return null;
+        }
+        System.out.println(projection.getHotelId());
+        System.out.println(projection.getCheckIn());
+        System.out.println(projection.getRoomId());
+        System.out.println(projection.getUserId());
+        Optional<Hotel> hotel = hotelRepo.findById(projection.getHotelId());
+        Optional<Room> room = roomRepo.findById(projection.getRoomId());
+        UserDto user = userRepo.findUserById(projection.getUserId());
+        return new BookingDto(
+                hotel,
+                room,
+                user,
+                projection.getCheckIn(),
+                projection.getCheckOut(),
+                projection.getDescription()
+        );
+    }
 }

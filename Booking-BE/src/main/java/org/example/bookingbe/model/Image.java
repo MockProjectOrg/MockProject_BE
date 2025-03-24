@@ -10,11 +10,16 @@ public class Image {
     private Long id;
     @Column(name = "image_name", columnDefinition = "TEXT")
     private String imageName;
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
+
+
     private Room room;
 
-    public Image() {}
+    public Image() {
+    }
 
     public Long getId() {
         return id;
@@ -32,6 +37,14 @@ public class Image {
         this.imageName = imageName;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Room getRoom() {
         return room;
     }
@@ -39,4 +52,5 @@ public class Image {
     public void setRoom(Room room) {
         this.room = room;
     }
+
 }

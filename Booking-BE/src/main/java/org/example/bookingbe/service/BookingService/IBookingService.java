@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IBookingService {
@@ -29,4 +30,23 @@ public interface IBookingService {
     boolean isBookingBelongToHotel(Long bookingId, Long hotelId);
 
 
+    // Tổng số booking bị hủy
+    Long countCancelledBookings();
+
+    // Kiểm tra xem user có đặt phòng và đã CHECKED_OUT chưa
+    boolean isUserCheckedOut(Long userId, Long roomId);
+
+    // Số lượng phòng trống
+    Integer getCountRoomAvailable();
+
+    // Lấy URL biểu đồ doanh thu
+    String getSalesChartUrl();
+
+    // Dữ liệu đặt phòng theo tháng
+    List<Object[]> getBookingDataByMonth();
+
+    // Danh sách loại phòng phổ biến
+    List<Map<String, Object>> getPopularRoomTypes();
+
+    BookingDto getBooking(Long id);
 }

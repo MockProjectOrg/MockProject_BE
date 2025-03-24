@@ -15,7 +15,9 @@ import java.util.Optional;
 @Transactional
 public interface IUserRepo extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String username);
+
     Boolean existsByUserName(String username);
+
     Boolean existsByEmail(String email);
 
     @Query("SELECT u FROM User u JOIN u.role r JOIN Hotel h ON h.user = u WHERE h.id = :hotelId AND r.roleName = 'HOTEL_MANAGER'")

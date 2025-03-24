@@ -6,24 +6,20 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
-import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
-import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
-import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,12 +39,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
     @Autowired
     private IUserService userService;
-
+    @Autowired
+    private IRoomService roomService;
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private IRoomService roomService;
 
     @Autowired
     private IRoomRepo roomRepo;
@@ -60,7 +55,7 @@ public class UserController {
     @GetMapping("/")
     public String login(HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
-            return "redirect:/home";
+            return "redirect:/api/user/home";
         }
         return "auth/login";
     }
@@ -92,10 +87,9 @@ public class UserController {
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
-            return "redirect:/api/login"; // Nếu không có userId, yêu cầu đăng nhập lại
+            return "redirect:/api/login";
         }
 
-        // Lấy User từ database
         User user = userService.getUserById(userId);
         if (user == null) {
             return "redirect:/api/login";
@@ -149,7 +143,7 @@ public class UserController {
         if (hotelName != null || typeName != null || minPrice != null || maxPrice != null || checkIn != null || checkOut != null ) {
             rooms = roomService.searchRooms(hotelName, typeName, minPrice, maxPrice, checkIn, checkOut)
                     .stream()
-                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 4) // Chỉ lấy phòng available
+                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 1) // Chỉ lấy phòng available
                     .collect(Collectors.toList());
         } else {
             // Nếu không có điều kiện tìm kiếm -> chỉ lấy danh sách phòng available

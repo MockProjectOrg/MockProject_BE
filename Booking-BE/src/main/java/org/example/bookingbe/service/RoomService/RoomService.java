@@ -1,18 +1,16 @@
 package org.example.bookingbe.service.RoomService;
 
-import jakarta.transaction.Transactional;
 import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.Status;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
-import org.example.bookingbe.repository.ImageRepo.IImageRepo;
-import org.example.bookingbe.repository.ReviewRepo.IReviewRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.repository.StatusRepo.IStatusRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,12 +31,27 @@ public class RoomService implements IRoomService {
     @Autowired
     private IStatusRepo statusRepo;
 
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Room> findById(Long id) {
+        return roomRepo.findById(id);
+    }
+
+    @Override
+    public Optional<Room> getRoomByIdWithDetails(Long roomId) {
+        return roomRepo.findByIdWithDetails(roomId);
+    }
+
+    @Transactional
+    public Room getRoomWithUtilities(Long id) {
+        return roomRepo.findByIdWithUtilities(id)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+    }
 
     @Override
     public List<Room> getAvailableRooms() {
         return roomRepo.findAvailableRooms();
     }
-
 
     public List<Room> getRoomsByHotel(Long hotelId, Long userId) {
         Optional<User> user = userRepo.findById(userId);
@@ -52,11 +65,11 @@ public class RoomService implements IRoomService {
         throw new RuntimeException("User is not authorized to access this hotel's rooms");
     }
 
-    @Override
-    public Optional<Room> getRoomById(Long roomId) {
-        return roomRepo.findById(roomId);
-    }
 
+    @Transactional
+    public Optional<Room> getRoomById(Long id) {
+        return roomRepo.findByIdWithHotelAndUser(id);
+    }
 
     @Override
     public Room createRoom(Room room, Long userId) {
@@ -75,7 +88,6 @@ public class RoomService implements IRoomService {
         return roomRepo.save(room);
     }
 
-
     @Override
     public Room updateRoom(Long roomId, Room updatedRoom, Long userId) {
         Room existingRoom = roomRepo.findById(roomId)
@@ -91,7 +103,6 @@ public class RoomService implements IRoomService {
 
         return roomRepo.save(existingRoom);
     }
-
 
     public void deleteRoom(Long roomId, Long userId) {
         Room room = roomRepo.findById(roomId)
@@ -120,7 +131,6 @@ public class RoomService implements IRoomService {
         return rooms;
     }
 
-
     public Room updateRoomStatus(Long roomId, Long statusId, Long userId) {
         Room room = roomRepo.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -138,7 +148,6 @@ public class RoomService implements IRoomService {
     @Override
     public List<Status> getAllStatuses() {
         return statusRepo.findAll(); // Lấy toàn bộ danh sách trạng thái từ database
-
     }
 
     @Override
@@ -147,3 +156,4 @@ public class RoomService implements IRoomService {
     }
 
 }
+
