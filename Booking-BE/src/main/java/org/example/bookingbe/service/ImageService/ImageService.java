@@ -25,6 +25,8 @@ public class ImageService implements IImageService {
     @Autowired
     private IRoomRepo roomRepo;
 
+
+
     @Override
     public List<Image> findAllImagesByRoomId(Long roomId) {
         return imageRepo.findByRoomId(roomId);

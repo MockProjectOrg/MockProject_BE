@@ -127,17 +127,6 @@ public class BookingService implements IBookingService {
         return bookingRepo.findById(id);
     }
 
-    // Lưu đặt phòng
-    @Override
-    public Booking saveBooking(Booking booking) {
-        return bookingRepo.save(booking);
-    }
-
-    // Xóa đơn đặt phòng
-    @Override
-    public void deleteBooking(Long id) {
-        bookingRepo.deleteById(id);
-    }
 
     // Hủy đặt phòng
     @Transactional
@@ -162,19 +151,6 @@ public class BookingService implements IBookingService {
         bookingRepo.deleteById(bookingId);
     }
 
-    @Override
-    public List<Booking> getBookingsByUser(Long userId) {
-        return bookingRepo.findByUserId(userId);
-    }
-    @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepo.findAll();
-    }
-
-    @Override
-    public Optional<Booking> getBookingById(Long id) {
-        return bookingRepo.findById(id);
-    }
 
     @Override
     public Booking saveBooking(Booking booking) {
@@ -196,36 +172,11 @@ public class BookingService implements IBookingService {
         return bookingRepo.findBookingsByHotelManager(managerId);
     }
 
-    @Override
-    public List<Booking> getBookingsByHotelId(Long hotelId) {
-        return bookingRepo.findByHotelId(hotelId);
-    }
 
     @Override
     public boolean isBookingBelongToHotel(Long bookingId, Long hotelId) {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
     }
 
-    @Override
-    public BookingDto getBooking(Long id) {
-        BookingInterface projection = bookingRepo.getBooking(id);
-        if (projection == null) {
-            return null;
-        }
-        System.out.println(projection.getHotelId());
-        System.out.println(projection.getCheckIn());
-        System.out.println(projection.getRoomId());
-        System.out.println(projection.getUserId());
-        Optional<Hotel> hotel = hotelRepo.findById(projection.getHotelId());
-        Optional<Room> room = roomRepo.findById(projection.getRoomId());
-        UserDto user = userRepo.findUserById(projection.getUserId());
-        return new BookingDto(
-                hotel,
-                room,
-                user,
-                projection.getCheckIn(),
-                projection.getCheckOut(),
-                projection.getDescription()
-        );
-    }
+
 }

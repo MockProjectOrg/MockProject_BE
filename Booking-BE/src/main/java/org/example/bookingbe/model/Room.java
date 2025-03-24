@@ -126,4 +126,20 @@ public class Room {
     public void setUtilities(Set<Utilities> utilities) {
         this.utilities = utilities;
     }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

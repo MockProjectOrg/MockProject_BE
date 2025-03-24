@@ -62,8 +62,7 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     List<Object[]> getMostPopularRoomType();
 
     // tìm đơn đặt phòng theo quản lý khách sạn
-    @Query("SELECT b FROM Booking b JOIN b.room r JOIN r.hotel h WHERE h.user.id = :managerId AND h.user.role.roleName = 'HOTEL_MANAGER'")
-    List<Booking> findBookingsByHotelManager(@Param("managerId") Long managerId);
+
 
     @Query("SELECT b FROM Booking b WHERE b.id = :id")
     BookingInterface getBooking(@Param("id") Long id);

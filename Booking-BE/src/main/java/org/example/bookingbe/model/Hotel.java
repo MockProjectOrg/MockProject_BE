@@ -17,16 +17,13 @@ public class Hotel {
     @Column(name = "address", columnDefinition = "varchar(150)", nullable = false)
     private String address;
 
-    @Column(name = "rating")
-    private int rate;
-
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "avatar", columnDefinition = "TEXT")
     private String avatar;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
 
@@ -57,13 +54,7 @@ public class Hotel {
         this.address = address;
     }
 
-    public int getRate() {
-        return rate;
-    }
 
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
 
     public String getDescription() {
         return description;

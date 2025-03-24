@@ -48,5 +48,4 @@ public interface IBookingService {
     // Danh sách loại phòng phổ biến
     List<Map<String, Object>> getPopularRoomTypes();
 
-    BookingDto getBooking(Long id);
 }

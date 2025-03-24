@@ -1,7 +1,9 @@
 package org.example.bookingbe.service.HotelService;
 
 import org.example.bookingbe.model.Hotel;
+import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
+import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -8,6 +8,7 @@ import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
+import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +144,7 @@ public class UserController {
         if (hotelName != null || typeName != null || minPrice != null || maxPrice != null || checkIn != null || checkOut != null ) {
             rooms = roomService.searchRooms(hotelName, typeName, minPrice, maxPrice, checkIn, checkOut)
                     .stream()
-                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 1) // Chỉ lấy phòng available
+                    .filter(room -> room.getStatus() != null && room.getStatus().getId() == 4) // Chỉ lấy phòng available
                     .collect(Collectors.toList());
         } else {
             // Nếu không có điều kiện tìm kiếm -> chỉ lấy danh sách phòng available

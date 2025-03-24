@@ -6,8 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
-import org.example.bookingbe.model.Room;
+import org.example.bookingbe.dto.DiscountDto;
+import org.example.bookingbe.model.*;
+import org.example.bookingbe.service.BillService.IBillService;
 import org.example.bookingbe.service.BookingService.IBookingService;
+import org.example.bookingbe.service.DiscountService.IDiscountService;
+import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.example.bookingbe.service.VNPayService.VNPayService;
@@ -18,6 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.example.bookingbe.custom.datetime.DateTimeFormat.calculateDaysBetween;
