@@ -4,6 +4,7 @@ import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.dto.BookingInterface;
 import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Hotel;
+import org.example.bookingbe.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,9 +35,11 @@ public interface IBookingRepo extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) > 0 FROM Booking b JOIN b.room r WHERE b.id = :bookingId AND r.hotel.id = :hotelId")
     boolean isBookingBelongToHotel(@Param("bookingId") Long bookingId, @Param("hotelId") Long hotelId);
 
-    @Query("SELECT b FROM Booking b WHERE b.checkOut BETWEEN :startDate AND :endDate")
-    List<Booking> findUpcomingCheckouts(@Param("startDate") LocalDateTime startDate,
-                                        @Param("endDate") LocalDateTime endDate);
+
+
+    @Query("SELECT b FROM Booking b WHERE b.id = :id")
+    BookingInterface getBooking(@Param("id") Long id);
+
 
 
 }

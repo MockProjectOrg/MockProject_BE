@@ -1,7 +1,11 @@
 package org.example.bookingbe.model;
 
 import jakarta.persistence.*;
+import org.example.bookingbe.model.Discount;
+import org.example.bookingbe.model.User;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.time.LocalDateTime;
 
 import java.time.LocalDate;
 
@@ -27,6 +31,13 @@ public class DiscountUser {
     @ManyToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;
+
+
+    @PrePersist
+    protected void onCreate() {
+        createAt = LocalDate.now();
+        isUsed = false;
+    }
 
     public DiscountUser() {
     }

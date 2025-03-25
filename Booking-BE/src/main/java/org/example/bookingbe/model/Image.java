@@ -14,7 +14,8 @@ public class Image {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public Image() {}
+    public Image() {
+    }
 
     public Long getId() {
         return id;
@@ -32,6 +33,7 @@ public class Image {
         this.imageName = imageName;
     }
 
+
     public Room getRoom() {
         return room;
     }
@@ -39,4 +41,5 @@ public class Image {
     public void setRoom(Room room) {
         this.room = room;
     }
+
 }

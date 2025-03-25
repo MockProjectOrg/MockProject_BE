@@ -1,8 +1,8 @@
 package org.example.bookingbe.repository.RoomRepo;
 
 import jakarta.persistence.LockModeType;
-import org.example.bookingbe.model.Hotel;
 import org.example.bookingbe.model.Room;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface IRoomRepo extends JpaRepository<Room, Long> {
+
+
+
+
     @Query("SELECT r FROM Room r JOIN FETCH r.roomType WHERE r.hotel.id = :hotelId")
     List<Room> findRoomsByHotel(@Param("hotelId") Long hotelId);
 
@@ -46,7 +50,6 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r WHERE r.status.id = 4")
     List<Room> findAvailableRooms();
 
-    Optional<Room> findById(Long id);
     List<Room> findByHotelIdAndStatusId(Long hotelId, Long statusId);
 
 }

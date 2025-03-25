@@ -100,7 +100,7 @@ body {
           <input type="hidden" name="userId" th:value="${user.id}">
           <select name="newRole" class="form-select form-select-sm">
             <option value="USER" th:selected="${user.role.roleName == 'USER'}">User</option>
-            <option value="HOTEL MANAGER" th:selected="${user.role.roleName == 'HOTEL MANAGER'}">Manager</option>
+            <option value="HOTEL_MANAGER" th:selected="${user.role.roleName == 'HOTEL_MANAGER'}">Manager</option>
           </select>
           <button type="submit" class="btn btn-primary btn-sm mt-1"
                   onclick="return confirm('Admin lưu ý, hãy đảm bảo quy định và hợp đồng đối với bên khách sạn trước

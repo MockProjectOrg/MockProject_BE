@@ -1,11 +1,11 @@
 package org.example.bookingbe.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.bookingbe.custom.datetime.DateTimeFormat;
 import org.example.bookingbe.dto.BillDto;
-import org.example.bookingbe.dto.BookingDto;
 import org.example.bookingbe.dto.DiscountDto;
 import org.example.bookingbe.model.*;
 import org.example.bookingbe.service.BillService.IBillService;
@@ -26,6 +26,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.example.bookingbe.custom.datetime.DateTimeFormat.calculateDaysBetween;
@@ -104,7 +105,7 @@ public class BookingController {
     }
 
     @GetMapping("/vnpay-payment")
-    public String GetMapping(HttpServletRequest request, Model model){
+    public String GetMapping(HttpServletRequest request, Model model) throws MessagingException {
         HttpSession session = request.getSession();
         int paymentStatus =vnPayService.orderReturn(request);
 
@@ -124,16 +125,25 @@ public class BookingController {
                 e.printStackTrace();
             }
         }
-        Booking booking = (Booking) session.getAttribute("booking");
-        Double price = Double.valueOf(totalPrice) / 100;
-        Bill bill = new Bill(LocalDateTime.now(), price, booking);
-        billService.save(bill);
-        booking.setStatus(true);
-        bookingService.saveBooking(booking);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
-        model.addAttribute("transactionId", transactionId);
-
-        return paymentStatus == 1 ? "client/orderSuccess" : "client/orderFail";
+        if(paymentStatus == 1){
+            Booking booking = (Booking) session.getAttribute("booking");
+            Double price = Double.valueOf(totalPrice) / 100;
+            Bill bill = new Bill(LocalDateTime.now(), price, booking);
+            billService.save(bill, (String) session.getAttribute("checkIn"), (String) session.getAttribute("checkOut"), billDto.getFirstName(),
+                    billDto.getLastName(), billDto.getAddress(), billDto.getEmail(), billDto.getPhone(), price, paymentTime);
+            booking.setStatus(true);
+            bookingService.saveBooking(booking);
+            model.addAttribute("totalPrice", totalPrice);
+            model.addAttribute("paymentTime", paymentTime);
+            model.addAttribute("transactionId", transactionId);
+            return "client/orderSuccess";
+        }
+        session.removeAttribute("booking");
+        session.removeAttribute("checkIn");
+        session.removeAttribute("checkOut");
+        session.removeAttribute("usser");
+        session.removeAttribute("room");
+        return "client/orderFail";
     }
+
 }

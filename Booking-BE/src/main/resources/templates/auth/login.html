@@ -227,8 +227,8 @@
     <div class="conntent-left">
         <div class="login-box">
             <div class="login-text">
-                <h3><strong>Chào Bạn!</strong></h3>
-                <label>Hãy cùng nhau tạo ra cộng đồng lớn mạnh với chúng tôi!</label>
+                <h3><strong>Hello!</strong></h3>
+                <label>Let's experience our service together!</label>
             </div>
             <form class="form" th:action="@{/login}" method="post">
                 <div class="alert alert-danger" role="alert" th:if="${param.error}">
@@ -262,9 +262,9 @@
                         <input type="checkbox" id="remember-me">
                         <label for="remember-me">remember me</label>
                     </div>
-                    <a  class="span">dang ki?</a>
+                    <a th:href="@{/api/register}" class="span">Register Now?</a>
                 </div>
-                <button class="confirm-login" type="submit">Đăng nhập</button>
+                <button class="confirm-login" type="submit">Login</button>
             </form>
         </div>
     </div>

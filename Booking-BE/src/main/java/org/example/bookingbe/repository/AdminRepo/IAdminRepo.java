@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IAdminRepo extends JpaRepository<Role, Long> {
-    Role findByRoleName(String roleName); // Tìm role theo tên
+    Role findByRoleName(String roleName);
 }

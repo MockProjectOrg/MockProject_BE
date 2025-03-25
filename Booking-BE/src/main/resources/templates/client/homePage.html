@@ -1,955 +1,1012 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-    Sona - A Luxury Hotel
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Halminton+Grand&display=swap" rel="stylesheet"/>
-  <style>
-    body {
-       font-family: 'Libre Baskerville', serif;
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>
+        Sona - A Luxury Hotel
+    </title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+    <script src="https://cdn.tailwindcss.com">
 
-     }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Halminton+Grand&display=swap"
+          rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-    .hero-text {
-      font-family: 'Halminton Grand', serif;
-    }
+    <style>
+        body {
+            font-family: 'Libre Baskerville', serif;
 
-    .hotel-slide {
-      transition: transform 0.5s ease;
-    }
+        }
 
-    .hotel-rooms {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease;
-    }
+        .hero-text {
+            font-family: 'Halminton Grand', serif;
+        }
 
-    .hotel-rooms.active {
-      max-height: 1000px;
-    }
+        .hotel-slide {
+            transition: transform 0.5s ease;
+        }
 
-    .slide-btn {
-      cursor: pointer;
-      user-select: none;
-    }
+        .hotel-rooms {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
 
-    .hotel-indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #d1d5db;
-      cursor: pointer;
-    }
+        .hotel-rooms.active {
+            max-height: 1000px;
+        }
 
-    .hotel-indicator.active {
-      background-color: #f97316;
-    }
+        .slide-btn {
+            cursor: pointer;
+            user-select: none;
+        }
 
-    /* Thêm vào CSS */
-    .hotel-rooms {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease-out;
-    }
+        .hotel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            cursor: pointer;
+        }
 
-    .hotel-rooms.active {
-      max-height: 2000px; /* Giá trị đủ lớn để chứa nội dung */
-      transition: max-height 0.5s ease-in;
-    }
-  </style>
+        .hotel-indicator.active {
+            background-color: #f97316;
+        }
+
+        /* Thêm vào CSS */
+        .hotel-rooms {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .hotel-rooms.active {
+            max-height: 2000px; /* Giá trị đủ lớn để chứa nội dung */
+            transition: max-height 0.5s ease-in;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            border-bottom: 2px solid #deb887;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .logo span {
+            color: #deb887;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #222;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #deb887;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+
+        .avt_func {
+            width: 78px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .avt_func div img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .wrap-drop-personal {
+            display: none;
+            position: absolute;
+            cursor: pointer;
+            top: 82%;
+            left: 87%;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            width: 200px;
+        }
+
+        .wrap-drop-personal a {
+            color: black;
+            border-left: 4px solid white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .wrap-drop-personal a:hover {
+            background-color: #F7F7F7;
+            border-left: 4px solid #F48023;
+            color: #F48023;
+        }
+
+        .wrap-drop-personal a i {
+            padding-right: 10px;
+        }
+
+        .wrap-drop-personal a:hover i {
+            color: #F48023;
+        }
+
+        .avt_func:hover .wrap-drop-personal {
+            display: block;
+        }
+
+
+    </style>
 </head>
 <body class="bg-white text-gray-800">
 <header class="absolute top-0 left-0 w-full z-20 py-6">
-  <div class="container mx-auto flex justify-between items-center px-6">
-    <div class="flex items-center space-x-4">
-      <a class="text-orange-500 font-semibold" href="tel:+1234567890">
-        <i class="fas fa-phone-alt">
-        </i>
-        (12) 345 67890
-      </a>
-      <a class="text-orange-500 font-semibold" href="mailto:info.colorlib@gmail.com">
-        <i class="fas fa-envelope">
-        </i>
-        info.colorlib@gmail.com
-      </a>
-    </div>
-    <div class="flex items-center space-x-4">
-      <a class="text-white font-semibold" href="#">
-        <i class="fab fa-facebook-f">
-        </i>
-      </a>
-      <a class="text-white font-semibold" href="#">
-        <i class="fab fa-twitter">
-        </i>
-      </a>
-      <a class="text-white font-semibold" href="#">
-        <i class="fab fa-tripadvisor">
-        </i>
-      </a>
-      <a class="text-white font-semibold" href="#">
-        <i class="fab fa-instagram">
-        </i>
-      </a>
-      <a class="bg-orange-500 text-white px-4 py-2 rounded font-semibold" th:href="@{/rooms}">
-        BOOKING NOW
-      </a>
-      <a class="text-white font-semibold" href="#">
-        <img alt="Flag" class="inline-block" height="20" src="https://storage.googleapis.com/a1aa/image/1GjAFbltkkF2FJPHpE0Mk1O8ZKhiK_WvMYD3dj1hHR0.jpg" width="20"/>
-        EN
-        <i class="fas fa-chevron-down">
-        </i>
-      </a>
-      <nav class="d-flex align-items-center">
-        <!-- Nếu chưa đăng nhập -->
-        <div th:if="${session.userId == null}" class="d-flex gap-3">
-          <a class="text-white font-semibold" th:href="@{/api/login}">
-            <i class="fas fa-sign-in-alt me-1"></i> Login
-          </a>
-          <a class="text-white font-semibold" th:href="@{/api/register}">
-            <i class="fas fa-user-plus me-1"></i> Register
-          </a>
+    <nav class="navbar">
+        <div class="logo">Sona<span>.</span></div>
+        <ul class="nav-links">
+            <li><a th:href="@{/home}" class="active">Home</a></li>
+            <li><a>Rooms</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Pages</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="avt_func" th:object="${room}">
+            <div class="d-flex align-items-center">
+                <img src="https://firebasestorage.googleapis.com/v0/b/photo-archive-a0523i1.appspot.com/o/imgLanding%2Fz5572534439426_12e9a1d7d2b51721634af3d654e8c21b.jpg?alt=media&token=6fa5eb7d-4293-4552-b680-c8951492269d"
+                     alt="Avatar">
+                <i style="margin-left: 15px" class="fa-solid fa-caret-down"></i>
+            </div>
+            <div class="wrap-drop-personal">
+                <a th:href="@{/api/user/userProfile}"><i class="fa-regular fa-user"></i> Profile</a>
+                <a th:href="@{/logout}"><i class="fa-regular fa-user"></i> Logout</a>
+
+            </div>
         </div>
-
-        <!-- Nếu đã đăng nhập -->
-        <div th:if="${session.userId != null}" class="dropdown">
-          <a class="text-white font-semibold dropdown-toggle" href="#" id="userDropdown" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user-circle me-1"></i>
-            <span th:text="${user != null ? user.userName : 'User'}"></span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li>
-              <a class="dropdown-item" th:href="@{/api/user/userProfile}">
-                <i class="fas fa-user me-2"></i> Profile
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item text-danger" th:href="@{/api/logout}">
-                <i class="fas fa-sign-out-alt me-2"></i> Logout
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-
-    </div>
-  </div>
-
-  <nav class="relative z-20">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <a class="text-3xl font-bold hero-text text-white" th:href="@{/home}">
-        Sona.
-      </a>
-      <ul class="flex space-x-6">
-        <li>
-          <a class="text-white hover:text-orange-500" th:href="@{/home}">
-            Home
-          </a>
-        </li>
-        <li>
-          <a class="text-white hover:text-orange-500" th:href="@{/rooms}">
-            Rooms
-          </a>
-        </li>
-        <li>
-          <a class="text-white hover:text-orange-500" th:href="@{/about}">
-            About Us
-          </a>
-        </li>
-        <li>
-          <a class="text-white hover:text-orange-500" th:href="@{/contact}">
-            Contact
-          </a>
-        </li>
-      </ul>
-      <a th:href="@{/api/user/searchRooms}" class="bg-orange-500 text-white py-2 px-4 rounded-full flex items-center">
-        <i class="fas fa-search mr-2"></i> Search
-      </a>
-    </div>
-  </nav>
+    </nav>
 </header>
 <section class="hero relative h-screen flex flex-col justify-center">
-  <img alt="A luxurious hotel with a beautiful exterior view" class="absolute inset-0 w-full h-full object-cover" height="1080" src="https://storage.googleapis.com/a1aa/image/P1ZQaV7J1qQwWwa0ETWPGYHmLfegJI0_4Tus2uDhpqA.jpg" width="1920"/>
-  <div class="absolute inset-0 bg-black opacity-50">
-  </div>
-
-  <div class="container mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between px-6">
-    <div class="text-white max-w-lg">
-      <h1 class="text-5xl md:text-6xl font-bold hero-text">
-        Enjoy Your Travel
-      </h1>
-      <p class="mt-4 text-lg">
-        Discover the best hotel deals and book your stay at top-rated hotels worldwide. Enjoy exclusive offers and seamless booking experience.
-      </p>
-
+    <img alt="A luxurious hotel with a beautiful exterior view" class="absolute inset-0 w-full h-full object-cover"
+         height="1080" src="https://storage.googleapis.com/a1aa/image/P1ZQaV7J1qQwWwa0ETWPGYHmLfegJI0_4Tus2uDhpqA.jpg"
+         width="1920"/>
+    <div class="absolute inset-0 bg-black opacity-50">
     </div>
-  </div>
+
+    <div class="container mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between px-6">
+        <div class="text-white max-w-lg">
+            <h1 class="text-5xl md:text-6xl font-bold hero-text">
+                Enjoy Your Travel
+            </h1>
+            <p class="mt-4 text-lg">
+                Discover the best hotel deals and book your stay at top-rated hotels worldwide. Enjoy exclusive offers
+                and seamless booking experience.
+            </p>
+            <a th:href="@{/api/user/searchRooms}" style="text-decoration: none">
+                <button class="mt-6 px-6 py-3 bg-orange-500 text-white font-semibold text-lg rounded-full shadow-lg transition-transform transform hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-300">
+                    Booking Now
+                </button>
+            </a>
+        </div>
+    </div>
 </section>
 
 <!-- New Hotel Slideshow Section -->
 <section class="container mx-auto py-16 px-6">
-  <h2 class="text-4xl font-bold text-center mb-12 font-serif">
-    Our <span class="text-orange-500">Luxury</span> Hotels and Rooms
-  </h2>
+    <h2 class="text-4xl font-bold text-center mb-12 font-serif">
+        Our <span class="text-orange-500">Luxury</span> Hotels and Rooms
+    </h2>
 
-  <th:block th:if="${hotels != null and not #lists.isEmpty(hotels)}">
-    <div class="relative">
-      <!-- Slideshow container with enhanced shadow and rounded corners -->
-      <div class="overflow-hidden rounded-xl shadow-2xl">
-        <div class="flex transition-transform duration-700 ease-in-out" id="hotel-slider">
-          <!-- Dynamically generate hotel slides -->
-          <th:block th:each="hotel, hotelStat : ${hotels}">
-            <div class="hotel-slide min-w-full">
-              <div class="bg-white overflow-hidden cursor-pointer group"
-                   th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
+    <th:block th:if="${hotels != null and not #lists.isEmpty(hotels)}">
+        <div class="relative">
+            <!-- Slideshow container with enhanced shadow and rounded corners -->
+            <div class="overflow-hidden rounded-xl shadow-2xl">
+                <div class="flex transition-transform duration-700 ease-in-out" id="hotel-slider">
+                    <!-- Dynamically generate hotel slides -->
+                    <th:block th:each="hotel, hotelStat : ${hotels}">
+                        <div class="hotel-slide min-w-full">
+                            <div class="bg-white overflow-hidden cursor-pointer group"
+                                 th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
 
-                <!-- Hotel image with hover effect -->
-                <div class="relative overflow-hidden h-80">
-                  <img th:src="${hotel.avatar != null and hotel.avatar != '' ? hotel.avatar : 'https://storage.googleapis.com/a1aa/image/default-hotel.jpg'}"
-                       th:alt="${hotel.hotelName}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
+                                <!-- Hotel image with hover effect -->
+                                <div class="relative overflow-hidden h-80">
+                                    <img th:src="${hotel.avatar != null and hotel.avatar != '' ? hotel.avatar : 'https://storage.googleapis.com/a1aa/image/default-hotel.jpg'}"
+                                         th:alt="${hotel.hotelName}"
+                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
 
-                  <!-- Overlay with hotel name -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                    <h3 th:text="${hotel.hotelName}" class="text-white text-3xl font-bold p-8">Hotel Name</h3>
-                  </div>
-                </div>
+                                    <!-- Overlay with hotel name -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                        <h3 th:text="${hotel.hotelName}" class="text-white text-3xl font-bold p-8">Hotel
+                                            Name</h3>
+                                    </div>
+                                </div>
 
-                <div class="p-8">
-                  <div class="flex items-center mb-4">
-                    <div class="flex text-orange-500">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                    </div>
-                    <span class="ml-2 text-gray-600">5-Star Luxury</span>
-                  </div>
+                                <div class="p-8">
+                                    <div class="flex items-center mb-4">
+                                        <div class="flex text-orange-500">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span class="ml-2 text-gray-600">5-Star Luxury</span>
+                                    </div>
 
-                  <p class="text-gray-700 mb-6 leading-relaxed" th:text="${hotel.description}">
-                    Hotel description with a more elegant presentation and additional space.
-                  </p>
+                                    <p class="text-gray-700 mb-6 leading-relaxed" th:text="${hotel.description}">
+                                        Hotel description with a more elegant presentation and additional space.
+                                    </p>
 
-                  <div class="flex items-center justify-between">
-                    <div class="flex space-x-4">
-                      <span class="flex items-center text-gray-600"><i class="fas fa-wifi mr-2"></i> Free WiFi</span>
-                      <span class="flex items-center text-gray-600"><i class="fas fa-swimming-pool mr-2"></i> Pool</span>
-                      <span class="flex items-center text-gray-600"><i class="fas fa-utensils mr-2"></i> Restaurant</span>
-                    </div>
-                    <button class="text-orange-500 flex items-center font-medium group-hover:text-orange-600 transition-colors">
-                      View rooms <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex space-x-4">
+                                            <span class="flex items-center text-gray-600"><i
+                                                    class="fas fa-wifi mr-2"></i> Free WiFi</span>
+                                            <span class="flex items-center text-gray-600"><i
+                                                    class="fas fa-swimming-pool mr-2"></i> Pool</span>
+                                            <span class="flex items-center text-gray-600"><i
+                                                    class="fas fa-utensils mr-2"></i> Restaurant</span>
+                                        </div>
+                                        <button class="text-orange-500 flex items-center font-medium group-hover:text-orange-600 transition-colors">
+                                            View rooms <i
+                                                class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
 
-              <!-- Phần HTML cho phần xem phòng cải tiến -->
-              <div class="hotel-rooms bg-gray-50 border-t border-gray-200" th:id="'hotel' + ${hotelStat.index} + '-rooms'">
-                <div class="p-8 relative">
-                  <!-- Thanh điều hướng sticky khi cuộn -->
-                  <div class="sticky top-0 bg-white shadow-md p-4 rounded-lg flex justify-between items-center mb-6 z-10">
-                    <h4 class="text-2xl font-bold text-gray-800">Available Rooms</h4>
-                  </div>
+                            <!-- Phần HTML cho phần xem phòng cải tiến -->
+                            <div class="hotel-rooms bg-gray-50 border-t border-gray-200"
+                                 th:id="'hotel' + ${hotelStat.index} + '-rooms'">
+                                <div class="p-8 relative">
+                                    <!-- Thanh điều hướng sticky khi cuộn -->
+                                    <div class="sticky top-0 bg-white shadow-md p-4 rounded-lg flex justify-between items-center mb-6 z-10">
+                                        <h4 class="text-2xl font-bold text-gray-800">Available Rooms</h4>
+                                    </div>
 
-                  <!-- Nội dung phòng với phân trang -->
-                  <div class="room-pagination mb-6 flex justify-between items-center">
-                    <div class="flex items-center">
-                      <span class="text-gray-600">Showing <span class="room-count-visible">3</span> of <span class="room-count-total" th:text="${#lists.size(availableRoomsMap[hotel.id])}">9</span> rooms</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <button class="pagination-prev w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50" disabled>
-                        <i class="fas fa-chevron-left"></i>
-                      </button>
-                      <div class="flex space-x-1 room-pagination-buttons" th:attr="data-hotel-index=${hotelStat.index}"></div>
-                      <button class="pagination-next w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300">
-                        <i class="fas fa-chevron-right"></i>
-                      </button>
-                    </div>
-                  </div>
+                                    <!-- Nội dung phòng với phân trang -->
+                                    <div class="room-pagination mb-6 flex justify-between items-center">
+                                        <div class="flex items-center">
+                                            <span class="text-gray-600">Showing <span
+                                                    class="room-count-visible">3</span> of <span
+                                                    class="room-count-total"
+                                                    th:text="${#lists.size(availableRoomsMap[hotel.id])}">9</span> rooms</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <button class="pagination-prev w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                                    disabled>
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <div class="flex space-x-1 room-pagination-buttons"
+                                                 th:attr="data-hotel-index=${hotelStat.index}"></div>
+                                            <button class="pagination-next w-8 h-8 flex items-center justify-center rounded bg-gray-200 hover:bg-gray-300">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <th:block th:if="${availableRoomsMap[hotel.id] != null and not #lists.isEmpty(availableRoomsMap[hotel.id])}">
-                      <div th:each="room : ${availableRoomsMap[hotel.id]}"
-                           class="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-xl">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <th:block
+                                                th:if="${availableRoomsMap[hotel.id] != null and not #lists.isEmpty(availableRoomsMap[hotel.id])}">
+                                            <div th:each="room : ${availableRoomsMap[hotel.id]}"
+                                                 class="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-xl">
 
-                        <div class="relative">
-                          <img src="https://storage.googleapis.com/a1aa/image/default-room.jpg"
-                               th:alt="${room.roomType?.typeName}" class="w-full h-56 object-cover"/>
-                          <div class="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            <span th:text="'$' + ${room.price}">$199</span> / night
-                          </div>
-                          <!-- Badge cho phòng đặc biệt -->
-                          <div th:if="${room.price > 200}" class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            Premium
-                          </div>
+                                                <div class="relative">
+                                                    <th:block
+                                                            th:if="${images[room.id] != null and not #lists.isEmpty(images[room.id])}">
+                                                        <div class="slide">
+                                                            <img th:src="${images[room.id][0]}" alt="Room Image"
+                                                                 class="w-full h-56 object-cover"/>
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+
+                                                <div class="p-6">
+                                                    <h5 th:text="${room.roomType != null ? room.roomType.typeName : 'Unknown'}"
+                                                        class="text-xl font-bold mb-2 text-gray-800">Room Type</h5>
+
+                                                    <div class="flex flex-wrap items-center mb-4 text-sm text-gray-600">
+                                                        <span class="flex items-center mr-4 mb-2"
+                                                              th:text="${room.roomType.capacity} + ' Guest'"><i
+                                                                class="fas fa-users mr-2"></i> Guests</span>
+                                                        <span class="flex items-center mr-4 mb-2"><i
+                                                                class="fas fa-bath mr-2"></i> En-suite</span>
+                                                        <span class="flex items-center mb-2"><i
+                                                                class="fas fa-wifi mr-2"></i> Free WiFi</span>
+                                                    </div>
+
+                                                    <p class="text-gray-700 mb-6" th:text="${room.description}">Room
+                                                        description with better spacing.</p>
+
+                                                    <div class="flex flex-col space-y-3">
+                                                        <a th:href="@{/api/user/searchRooms}"
+                                                           class="block w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
+                                                            Book Now <i class="fas fa-arrow-right ml-2"></i>
+                                                        </a>
+                                                        <a th:href="@{/user/room/{id}(id=${room.id})}">
+                                                            <button class="w-full bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-3 rounded text-center transition-colors">
+                                                                View Details
+                                                            </button>
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th:block>
+
+                                        <!-- Thông báo không có phòng khả dụng với thiết kế tốt hơn -->
+                                        <div th:if="${availableRoomsMap[hotel.id] == null or #lists.isEmpty(availableRoomsMap[hotel.id])}"
+                                             class="col-span-3 text-center py-10">
+                                            <div class="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
+                                                <i class="fas fa-bed text-5xl text-gray-300 mb-4"></i>
+                                                <h5 class="text-xl font-bold mb-2 text-gray-800">No Rooms Available</h5>
+                                                <p class="text-gray-500 mb-6">All rooms at this hotel are currently
+                                                    booked.</p>
+                                                <div class="flex flex-col space-y-3">
+                                                    <button class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
+                                                        Join Waiting List
+                                                    </button>
+                                                    <button class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded text-center transition-colors"
+                                                            th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
-
-                        <div class="p-6">
-                          <h5 th:text="${room.roomType != null ? room.roomType.typeName : 'Unknown'}"
-                              class="text-xl font-bold mb-2 text-gray-800">Room Type</h5>
-
-                          <div class="flex flex-wrap items-center mb-4 text-sm text-gray-600">
-                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-users mr-2"></i> 2 Guests</span>
-                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-bed mr-2"></i> 1 King Bed</span>
-                            <span class="flex items-center mr-4 mb-2"><i class="fas fa-bath mr-2"></i> En-suite</span>
-                            <span class="flex items-center mb-2"><i class="fas fa-wifi mr-2"></i> Free WiFi</span>
-                          </div>
-
-                          <p class="text-gray-700 mb-6" th:text="${room.description}">Room description with better spacing.</p>
-
-                          <div class="flex flex-col space-y-3">
-                            <a th:href="@{/rooms(id=${room.id})}"
-                               class="block w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
-                              Book Now <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                            <button class="w-full bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-3 rounded text-center transition-colors">
-                              View Details
-                            </button>
-                          </div>
-                        </div>
-                      </div>
                     </th:block>
-
-                    <!-- Thông báo không có phòng khả dụng với thiết kế tốt hơn -->
-                    <div th:if="${availableRoomsMap[hotel.id] == null or #lists.isEmpty(availableRoomsMap[hotel.id])}"
-                         class="col-span-3 text-center py-10">
-                      <div class="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
-                        <i class="fas fa-bed text-5xl text-gray-300 mb-4"></i>
-                        <h5 class="text-xl font-bold mb-2 text-gray-800">No Rooms Available</h5>
-                        <p class="text-gray-500 mb-6">All rooms at this hotel are currently booked.</p>
-                        <div class="flex flex-col space-y-3">
-                          <button class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
-                            Join Waiting List
-                          </button>
-                          <button class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded text-center transition-colors"
-                                  th:onclick="'toggleRooms(\'hotel' + ${hotelStat.index} + '\')'">
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-
-
-
-
             </div>
-          </th:block>
+
+            <!-- Improved Slider Controls with larger, more elegant buttons -->
+            <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 left-4 transform -translate-y-1/2">
+                <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110"
+                        onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110"
+                        onclick="nextSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Improved Slide Indicators -->
+            <div th:if="${#lists.size(hotels) > 1}" class="flex justify-center mt-8">
+                <th:block th:each="hotel, hotelStat : ${hotels}">
+                    <div th:classappend="${hotelStat.index == 0 ? 'active bg-orange-500 w-12' : 'w-8 bg-gray-300'}"
+                         class="hotel-indicator h-2 mx-1 rounded-full transition-all duration-300 hover:bg-orange-400"
+                         th:onclick="'goToSlide(' + ${hotelStat.index} + ')'"></div>
+                </th:block>
+            </div>
         </div>
-      </div>
+    </th:block>
 
-      <!-- Improved Slider Controls with larger, more elegant buttons -->
-      <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 left-4 transform -translate-y-1/2">
-        <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110" onclick="prevSlide()">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-      </div>
-      <div th:if="${#lists.size(hotels) > 1}" class="absolute top-1/2 right-4 transform -translate-y-1/2">
-        <button class="bg-white w-12 h-12 rounded-full shadow-lg text-orange-500 hover:text-orange-600 flex items-center justify-center slide-btn transition-transform hover:scale-110" onclick="nextSlide()">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-
-      <!-- Improved Slide Indicators -->
-      <div th:if="${#lists.size(hotels) > 1}" class="flex justify-center mt-8">
-        <th:block th:each="hotel, hotelStat : ${hotels}">
-          <div th:classappend="${hotelStat.index == 0 ? 'active bg-orange-500 w-12' : 'w-8 bg-gray-300'}"
-               class="hotel-indicator h-2 mx-1 rounded-full transition-all duration-300 hover:bg-orange-400"
-               th:onclick="'goToSlide(' + ${hotelStat.index} + ')'"></div>
-        </th:block>
-      </div>
+    <!-- Improved empty state message -->
+    <div th:if="${hotels == null or #lists.isEmpty(hotels)}" class="text-center py-16 bg-gray-50 rounded-xl">
+        <i class="fas fa-hotel text-5xl text-gray-300 mb-4"></i>
+        <h3 class="text-2xl font-bold text-gray-700 mb-2">No Hotels Available</h3>
+        <p class="text-gray-500 max-w-md mx-auto">We're currently updating our hotel inventory. Please check back later
+            for exciting new options.</p>
     </div>
-  </th:block>
-
-  <!-- Improved empty state message -->
-  <div th:if="${hotels == null or #lists.isEmpty(hotels)}" class="text-center py-16 bg-gray-50 rounded-xl">
-    <i class="fas fa-hotel text-5xl text-gray-300 mb-4"></i>
-    <h3 class="text-2xl font-bold text-gray-700 mb-2">No Hotels Available</h3>
-    <p class="text-gray-500 max-w-md mx-auto">We're currently updating our hotel inventory. Please check back later for exciting new options.</p>
-  </div>
 </section>
 <section class="bg-gray-100 py-12">
-  <div class="container mx-auto px-6">
-    <h2 class="text-3xl font-bold text-center mb-8">
-      Services
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Free Wi-Fi
-        </h3>
-        <p class="text-gray-700">
-          Stay connected with our complimentary high-speed internet access available in all rooms and public areas.
-        </p>
-      </div>
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          24/7 Delivery
-        </h3>
-        <p class="text-gray-700">
-          Enjoy delicious meals and snacks delivered to your room at any time of the day or night.
-        </p>
-      </div>
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Fitness Center
-        </h3>
-        <p class="text-gray-700">
-          Maintain your fitness routine with our state-of-the-art gym facilities, open 24/7 for your convenience.
-        </p>
-      </div>
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Swimming Pool
-        </h3>
-        <p class="text-gray-700">
-          Relax and unwind in our outdoor swimming pool, complete with a sun deck and poolside bar.
-        </p>
-      </div>
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Spa Services
-        </h3>
-        <p class="text-gray-700">
-          Indulge in a range of spa treatments and therapies designed to rejuvenate your body and mind.
-        </p>
-      </div>
-      <div class="bg-white shadow-lg rounded-lg p-6">
-        <h3 class="text-xl font-bold mb-2">
-          Conference Rooms
-        </h3>
-        <p class="text-gray-700">
-          Host your business meetings and events in our fully-equipped conference rooms with modern amenities.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-<footer class="bg-gray-800 text-white py-12">
-  <div class="container mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div>
-        <h3 class="text-xl font-bold mb-4">
-          About Sona
-        </h3>
-        <p class="text-gray-400">
-          Sona is a luxury hotel offering the best services and amenities for a comfortable and memorable stay.
-        </p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-4">
-          Quick Links
-        </h3>
-        <ul>
-          <li class="mb-2">
-            <a class="text-gray-400 hover:text-white" href="#">
-              Home
-            </a>
-          </li>
-          <li class="mb-2">
-            <a class="text-gray-400 hover:text-white" href="#">
-              Rooms
-            </a>
-          </li>
-          <li class="mb-2">
-            <a class="text-gray-400 hover:text-white" href="#">
-              About Us
-            </a>
-          </li>
-          <li class="mb-2">
-            <a class="text-gray-400 hover:text-white" href="#">
-              Contact
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-4">
-          Contact Us
-        </h3>
-        <p class="text-gray-400">
-          <i class="fas fa-map-marker-alt mr-2">
-          </i>
-          123 Luxury St, City, Country
-        </p>
-        <p class="text-gray-400">
-          <i class="fas fa-phone-alt mr-2">
-          </i>
-          (12) 345 67890
-        </p>
-        <p class="text-gray-400">
-          <i class="fas fa-envelope mr-2">
-          </i>
-          info.colorlib@gmail.com
-        </p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-4">
-          Follow Us
-        </h3>
-        <div class="flex space-x-4">
-          <a class="text-gray-400 hover:text-white" href="#">
-            <i class="fab fa-facebook-f">
-            </i>
-          </a>
-          <a class="text-gray-400 hover:text-white" href="#">
-            <i class="fab fa-twitter">
-            </i>
-          </a>
-          <a class="text-gray-400 hover:text-white" href="#">
-            <i class="fab fa-tripadvisor">
-            </i>
-          </a>
-          <a class="text-gray-400 hover:text-white" href="#">
-            <i class="fab fa-instagram">
-            </i>
-          </a>
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-8">
+            Services
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    Free Wi-Fi
+                </h3>
+                <p class="text-gray-700">
+                    Stay connected with our complimentary high-speed internet access available in all rooms and public
+                    areas.
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    24/7 Delivery
+                </h3>
+                <p class="text-gray-700">
+                    Enjoy delicious meals and snacks delivered to your room at any time of the day or night.
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    Fitness Center
+                </h3>
+                <p class="text-gray-700">
+                    Maintain your fitness routine with our state-of-the-art gym facilities, open 24/7 for your
+                    convenience.
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    Swimming Pool
+                </h3>
+                <p class="text-gray-700">
+                    Relax and unwind in our outdoor swimming pool, complete with a sun deck and poolside bar.
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    Spa Services
+                </h3>
+                <p class="text-gray-700">
+                    Indulge in a range of spa treatments and therapies designed to rejuvenate your body and mind.
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-bold mb-2">
+                    Conference Rooms
+                </h3>
+                <p class="text-gray-700">
+                    Host your business meetings and events in our fully-equipped conference rooms with modern amenities.
+                </p>
+            </div>
         </div>
-      </div>
     </div>
+</section>
+<footer class="bg-dark text-white pt-5 pb-4">
+    <div class="container">
+        <div class="row">
+            <!-- Thông tin khách sạn -->
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+                <h6 class="text-uppercase fw-bold mb-4">
+                    <i class="fas fa-building me-2"></i>Sona Hotel
+                </h6>
+                <p>
+                    Chúng tôi là khách sạn hàng đầu với dịch vụ chăm sóc khách hàng chuyên nghiệp, mang đến trải nghiệm nghỉ dưỡng tuyệt vời nhất.
+                </p>
+            </div>
 
-    <div class="text-center text-gray-400 mt-8">
-      © 2023 Sona. All rights reserved.
+            <!-- Dịch vụ -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                <h6 class="text-uppercase fw-bold mb-4">
+                    Dịch Vụ
+                </h6>
+                <p><a href="#" class="footer-link">Phòng Nghỉ</a></p>
+                <p><a href="#" class="footer-link">Nhà Hàng</a></p>
+                <p><a href="#" class="footer-link">Dịch Vụ Spa</a></p>
+                <p><a href="#" class="footer-link">Hồ Bơi</a></p>
+            </div>
+
+            <!-- Liên kết nhanh -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                <h6 class="text-uppercase fw-bold mb-4">
+                    Liên Kết Nhanh
+                </h6>
+                <p><a href="#" class="footer-link">Đặt Phòng</a></p>
+                <p><a href="#" class="footer-link">Về Chúng Tôi</a></p>
+                <p><a href="#" class="footer-link">Điều Khoản</a></p>
+                <p><a href="#" class="footer-link">Chính Sách</a></p>
+            </div>
+
+            <!-- Thông tin liên hệ -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                <h6 class="text-uppercase fw-bold mb-4">Liên Hệ</h6>
+                <p><i class="fas fa-home me-3"></i> Đà Nẵng, Việt Nam</p>
+                <p><i class="fas fa-envelope me-3"></i> support@sona.hotel</p>
+                <p><i class="fas fa-phone me-3"></i> + 84 234 567 88</p>
+                <p><i class="fas fa-print me-3"></i> + 84 234 567 89</p>
+            </div>
+        </div>
+
+        <!-- Mạng xã hội -->
+        <div class="d-flex justify-content-center p-4 border-top">
+            <div>
+                <a href="#" class="me-4 footer-link fs-4">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="me-4 footer-link fs-4">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="me-4 footer-link fs-4">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="me-4 footer-link fs-4">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Bản quyền -->
+        <div class="text-center p-3 border-top">
+            © 2025 Bản quyền:
+            <a class="footer-link" href="#">Sona Hotel</a>
+        </div>
     </div>
-  </div>
 </footer>
 </body>
 </html>
 
 <script>
-  // Hotel Slideshow Enhanced JavaScript
-// Main state variables
-let currentSlide = 0;
-const totalSlides = /*[[${#lists.size(hotels)}]]*/ 10;
-let slideInterval;
-let isRoomViewOpen = false;
-let touchStartX = 0;
-let touchEndX = 0;
 
-// DOM elements
-let slider;
-let indicators;
+    // Hotel Slideshow Enhanced JavaScript
+    // Main state variables
+    let currentSlide = 0;
+    const totalSlides = /*[[${#lists.size(hotels)}]]*/ 10;
+    let slideInterval;
+    let isRoomViewOpen = false;
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-// Constants
-const SLIDE_INTERVAL_DURATION = 5000;
-const SWIPE_THRESHOLD = 50;
-const ROOMS_PER_PAGE = 3;
+    // DOM elements
+    let slider;
+    let indicators;
 
-/**
- * Initialize the slider and all related functionality
- */
-function initializeSlider() {
-  slider = document.getElementById('hotel-slider');
-  indicators = document.querySelectorAll('.hotel-indicator');
+    // Constants
+    const SLIDE_INTERVAL_DURATION = 5000;
+    const SWIPE_THRESHOLD = 50;
+    const ROOMS_PER_PAGE = 3;
 
-  if (!slider) return;
+    /**
+     * Initialize the slider and all related functionality
+     */
+    function initializeSlider() {
+        slider = document.getElementById('hotel-slider');
+        indicators = document.querySelectorAll('.hotel-indicator');
 
-  // Setup initial state
-  updateSlider();
-  setupEventListeners();
-  addCloseButtons();
+        if (!slider) return;
 
-  // Add initial fade-in effect
-  slider.style.opacity = '0';
-  setTimeout(() => {
-    slider.style.transition = 'opacity 0.5s ease-in-out';
-    slider.style.opacity = '1';
-  }, 100);
+        // Setup initial state
+        updateSlider();
+        setupEventListeners();
+        addCloseButtons();
 
-  // Start automatic slideshow
-  startSlideInterval();
+        // Add initial fade-in effect
+        slider.style.opacity = '0';
+        setTimeout(() => {
+            slider.style.transition = 'opacity 0.5s ease-in-out';
+            slider.style.opacity = '1';
+        }, 100);
 
-  // Initialize pagination for all hotels
-  document.querySelectorAll('[id^="hotel"]').forEach(hotel => {
-    const hotelIndex = hotel.id.match(/hotel(\d+)/)?.[1];
-    if (hotelIndex) paginateRooms(hotelIndex, 1);
-  });
+        // Start automatic slideshow
+        startSlideInterval();
 
-  // Initialize pagination for any already open room views
-  const openRooms = document.querySelector('.hotel-rooms.active');
-  if (openRooms) {
-    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-    if (hotelIndex) paginateRooms(hotelIndex, 1);
-  }
-}
+        // Initialize pagination for all hotels
+        document.querySelectorAll('[id^="hotel"]').forEach(hotel => {
+            const hotelIndex = hotel.id.match(/hotel(\d+)/)?.[1];
+            if (hotelIndex) paginateRooms(hotelIndex, 1);
+        });
 
-/**
- * Set up all event listeners
- */
-function setupEventListeners() {
-  // Slider hover events
-  slider.addEventListener('mouseenter', pauseSlideInterval);
-  slider.addEventListener('mouseleave', () => {
-    if (!isRoomViewOpen) startSlideInterval();
-  });
-
-  // Touch events for mobile
-  slider.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  });
-
-  slider.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-  });
-
-  // Keyboard navigation
-  document.addEventListener('keydown', e => {
-    if (isRoomViewOpen) return;
-
-    if (e.key === 'ArrowLeft') {
-      prevSlide();
-    } else if (e.key === 'ArrowRight') {
-      nextSlide();
+        // Initialize pagination for any already open room views
+        const openRooms = document.querySelector('.hotel-rooms.active');
+        if (openRooms) {
+            const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+            if (hotelIndex) paginateRooms(hotelIndex, 1);
+        }
     }
-  });
 
-  // Scroll event to pause slideshow when out of view
-  window.addEventListener('scroll', () => {
-    if (!slider) return;
 
-    const sliderRect = slider.getBoundingClientRect();
-    if (sliderRect.bottom < 0 || sliderRect.top > window.innerHeight) {
-      pauseSlideInterval();
-    } else if (!isRoomViewOpen) {
-      startSlideInterval();
+
+    /**
+     * Set up all event listeners
+     */
+    function setupEventListeners() {
+        // Slider hover events
+        slider.addEventListener('mouseenter', pauseSlideInterval);
+        slider.addEventListener('mouseleave', () => {
+            if (!isRoomViewOpen) startSlideInterval();
+        });
+
+        // Touch events for mobile
+        slider.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        slider.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', e => {
+            if (isRoomViewOpen) return;
+
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
+        // Scroll event to pause slideshow when out of view
+        window.addEventListener('scroll', () => {
+            if (!slider) return;
+
+            const sliderRect = slider.getBoundingClientRect();
+            if (sliderRect.bottom < 0 || sliderRect.top > window.innerHeight) {
+                pauseSlideInterval();
+            } else if (!isRoomViewOpen) {
+                startSlideInterval();
+            }
+        });
+
+        // Click outside to close room view
+        document.addEventListener('click', e => {
+            if (isRoomViewOpen &&
+                !e.target.closest('.hotel-rooms') &&
+                !e.target.closest('[onclick^="toggleRooms"]')) {
+
+                const openRooms = document.querySelector('.hotel-rooms.active');
+                if (openRooms) {
+                    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+                    if (hotelIndex) toggleRooms('hotel' + hotelIndex);
+                }
+            }
+        });
     }
-  });
 
-  // Click outside to close room view
-  document.addEventListener('click', e => {
-    if (isRoomViewOpen &&
-        !e.target.closest('.hotel-rooms') &&
-        !e.target.closest('[onclick^="toggleRooms"]')) {
+    /**
+     * Handle swipe gestures for mobile devices
+     */
+    function handleSwipe() {
+        if (isRoomViewOpen) return;
 
-      const openRooms = document.querySelector('.hotel-rooms.active');
-      if (openRooms) {
-        const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-        if (hotelIndex) toggleRooms('hotel' + hotelIndex);
-      }
+        if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
+            nextSlide(); // Swipe left
+        } else if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
+            prevSlide(); // Swipe right
+        }
     }
-  });
-}
 
-/**
- * Handle swipe gestures for mobile devices
- */
-function handleSwipe() {
-  if (isRoomViewOpen) return;
+    /**
+     * Start automatic slideshow timer
+     */
+    function startSlideInterval() {
+        if (isRoomViewOpen || totalSlides <= 1) return;
 
-  if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
-    nextSlide(); // Swipe left
-  } else if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
-    prevSlide(); // Swipe right
-  }
-}
-
-/**
- * Start automatic slideshow timer
- */
-function startSlideInterval() {
-  if (isRoomViewOpen || totalSlides <= 1) return;
-
-  clearInterval(slideInterval);
-  slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_DURATION);
-}
-
-/**
- * Pause automatic slideshow
- */
-function pauseSlideInterval() {
-  clearInterval(slideInterval);
-}
-
-/**
- * Navigate to the next slide
- */
-function nextSlide() {
-  if (isRoomViewOpen) return;
-
-  currentSlide = (currentSlide + 1) % totalSlides;
-  updateSlider();
-}
-
-/**
- * Navigate to the previous slide
- */
-function prevSlide() {
-  if (isRoomViewOpen) return;
-
-  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-  updateSlider();
-}
-
-/**
- * Go to a specific slide
- * @param {number} index - The slide index to go to
- */
-function goToSlide(index) {
-  // Close any open room views first
-  const openRooms = document.querySelector('.hotel-rooms.active');
-  if (openRooms) {
-    const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
-    if (hotelIndex) toggleRooms('hotel' + hotelIndex);
-  }
-
-  currentSlide = index;
-  updateSlider();
-}
-
-/**
- * Update the slider position and indicators
- */
-function updateSlider() {
-  if (!slider) return;
-
-  // Update slider position
-  slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-  // Update indicators
-  updateIndicators();
-}
-
-/**
- * Update the indicator styling
- */
-function updateIndicators() {
-  indicators.forEach((indicator, index) => {
-    if (index === currentSlide) {
-      indicator.classList.add('active', 'bg-orange-500', 'w-12');
-      indicator.classList.remove('bg-gray-300', 'w-8');
-    } else {
-      indicator.classList.remove('active', 'bg-orange-500', 'w-12');
-      indicator.classList.add('bg-gray-300', 'w-8');
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_DURATION);
     }
-  });
-}
 
-/**
- * Toggle room visibility for a hotel
- * @param {string} hotelId - The hotel ID
- */
-function toggleRooms(hotelId) {
-  const roomsElement = document.getElementById(hotelId + '-rooms');
-  if (!roomsElement) return;
-
-  const isOpening = !roomsElement.classList.contains('active');
-  roomsElement.classList.toggle('active');
-
-  // Update chevron icon
-  const hotelElement = document.querySelector(`[onclick="toggleRooms('${hotelId}')"]`);
-  const chevronIcon = hotelElement?.querySelector('.fa-chevron-down, .fa-chevron-up');
-
-  if (chevronIcon) {
-    if (roomsElement.classList.contains('active')) {
-      chevronIcon.classList.add('transform', 'rotate-180');
-    } else {
-      chevronIcon.classList.remove('transform', 'rotate-180');
+    /**
+     * Pause automatic slideshow
+     */
+    function pauseSlideInterval() {
+        clearInterval(slideInterval);
     }
-  }
 
-  // Update room view state
-  isRoomViewOpen = roomsElement.classList.contains('active');
+    /**
+     * Navigate to the next slide
+     */
+    function nextSlide() {
+        if (isRoomViewOpen) return;
 
-  // Pause/resume slideshow based on room view state
-  if (isRoomViewOpen) {
-    pauseSlideInterval();
-
-    // Initialize pagination
-    const hotelIndex = hotelId.replace('hotel', '');
-    paginateRooms(hotelIndex, 1);
-  } else {
-    startSlideInterval();
-  }
-
-  // Smooth scroll to rooms when opened
-  if (isOpening) {
-    setTimeout(() => {
-      roomsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }
-}
-
-/**
- * Handle room pagination
- * @param {string} hotelIndex - The hotel index
- * @param {number} pageNumber - The page number to display
- */
-function paginateRooms(hotelIndex, pageNumber) {
-  const hotelRoomsContainer = document.getElementById(`hotel${hotelIndex}-rooms`);
-  if (!hotelRoomsContainer) return;
-
-  // Find all room cards
-  const roomCards = hotelRoomsContainer.querySelectorAll('.grid > div');
-  if (!roomCards.length) return;
-
-  const totalPages = Math.ceil(roomCards.length / ROOMS_PER_PAGE);
-
-  // Validate page number
-  pageNumber = Math.max(1, Math.min(pageNumber, totalPages));
-
-  // Update pagination buttons
-  updatePaginationControls(hotelRoomsContainer, hotelIndex, pageNumber, totalPages);
-
-  // Update room visibility
-  const startIndex = (pageNumber - 1) * ROOMS_PER_PAGE;
-  const endIndex = startIndex + ROOMS_PER_PAGE - 1;
-  let visibleCount = 0;
-
-  roomCards.forEach((room, index) => {
-    if (index >= startIndex && index <= endIndex) {
-      room.style.display = 'block';
-      visibleCount++;
-    } else {
-      room.style.display = 'none';
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
     }
-  });
 
-  // Update room count display
-  const roomCountVisible = hotelRoomsContainer.querySelector('.room-count-visible');
-  if (roomCountVisible) {
-    roomCountVisible.textContent = visibleCount;
-  }
-}
+    /**
+     * Navigate to the previous slide
+     */
+    function prevSlide() {
+        if (isRoomViewOpen) return;
 
-/**
- * Update pagination controls
- * @param {HTMLElement} container - The container element
- * @param {string} hotelIndex - The hotel index
- * @param {number} currentPage - The current page
- * @param {number} totalPages - The total number of pages
- */
-function updatePaginationControls(container, hotelIndex, currentPage, totalPages) {
-  // Update prev/next buttons
-  const prevButton = container.querySelector('.pagination-prev');
-  const nextButton = container.querySelector('.pagination-next');
-
-  if (prevButton) {
-    prevButton.disabled = currentPage <= 1;
-    prevButton.onclick = function(e) {
-      e.stopPropagation();
-      if (currentPage > 1) {
-        paginateRooms(hotelIndex, currentPage - 1);
-      }
-    };
-  }
-
-  if (nextButton) {
-    nextButton.disabled = currentPage >= totalPages;
-    nextButton.onclick = function(e) {
-      e.stopPropagation();
-      if (currentPage < totalPages) {
-        paginateRooms(hotelIndex, currentPage + 1);
-      }
-    };
-  }
-
-  // Update page number buttons
-  const paginationButtonsContainer = container.querySelector('.room-pagination-buttons');
-  if (paginationButtonsContainer) {
-    paginationButtonsContainer.innerHTML = '';
-
-    for (let i = 0; i < totalPages; i++) {
-      const button = document.createElement('button');
-      button.className = `w-8 h-8 flex items-center justify-center rounded ${
-        i + 1 === currentPage ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
-      }`;
-      button.textContent = i + 1;
-      button.onclick = function(e) {
-        e.stopPropagation();
-        paginateRooms(hotelIndex, i + 1);
-      };
-      paginationButtonsContainer.appendChild(button);
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlider();
     }
-  }
-}
 
-/**
- * Add close buttons to all room sections
- */
-function addCloseButtons() {
-  const roomSections = document.querySelectorAll('.hotel-rooms');
+    /**
+     * Go to a specific slide
+     * @param {number} index - The slide index to go to
+     */
+    function goToSlide(index) {
+        // Close any open room views first
+        const openRooms = document.querySelector('.hotel-rooms.active');
+        if (openRooms) {
+            const hotelIndex = openRooms.id.match(/hotel(\d+)-rooms/)?.[1];
+            if (hotelIndex) toggleRooms('hotel' + hotelIndex);
+        }
 
-  roomSections.forEach(section => {
-    // Skip if already has a close button
-    if (section.querySelector('.close-room-button')) return;
-
-    const hotelIndex = section.id.match(/hotel(\d+)-rooms/)?.[1];
-    if (!hotelIndex) return;
-
-    const closeButton = document.createElement('button');
-    closeButton.className = 'close-room-button absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10';
-    closeButton.innerHTML = '<i class="fas fa-times"></i>';
-    closeButton.onclick = function(e) {
-      e.stopPropagation();
-      toggleRooms('hotel' + hotelIndex);
-    };
-
-    const contentDiv = section.querySelector('div');
-    if (contentDiv) {
-      contentDiv.style.position = 'relative';
-      contentDiv.prepend(closeButton);
+        currentSlide = index;
+        updateSlider();
     }
-  });
-}
 
-/**
- * Safe document ready handler with fallback
- */
-function onDocumentReady(callback) {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', callback);
-  } else {
-    callback();
-  }
-}
+    /**
+     * Update the slider position and indicators
+     */
+    function updateSlider() {
+        if (!slider) return;
 
-/**
- * Preload images and initialize the slider
- */
-function preloadImagesAndInitialize() {
-  const images = document.querySelectorAll('img');
+        // Update slider position
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-  if (images.length === 0) {
-    initializeSlider();
-    return;
-  }
-
-  let imagesLoaded = 0;
-  const totalImages = images.length;
-
-  const handleImageLoad = () => {
-    imagesLoaded++;
-    if (imagesLoaded === totalImages) {
-      initializeSlider();
+        // Update indicators
+        updateIndicators();
     }
-  };
 
-  images.forEach(img => {
-    if (img.complete) {
-      handleImageLoad();
-    } else {
-      img.addEventListener('load', handleImageLoad);
-      img.addEventListener('error', handleImageLoad); // Handle image error as loaded
+    /**
+     * Update the indicator styling
+     */
+    function updateIndicators() {
+        indicators.forEach((indicator, index) => {
+            if (index === currentSlide) {
+                indicator.classList.add('active', 'bg-orange-500', 'w-12');
+                indicator.classList.remove('bg-gray-300', 'w-8');
+            } else {
+                indicator.classList.remove('active', 'bg-orange-500', 'w-12');
+                indicator.classList.add('bg-gray-300', 'w-8');
+            }
+        });
     }
-  });
 
-  // Fallback in case images don't load properly
-  setTimeout(initializeSlider, 1000);
-}
+    /**
+     * Toggle room visibility for a hotel
+     * @param {string} hotelId - The hotel ID
+     */
+    function toggleRooms(hotelId) {
+        const roomsElement = document.getElementById(hotelId + '-rooms');
+        if (!roomsElement) return;
 
-// Initialize everything when the document is ready
-onDocumentReady(preloadImagesAndInitialize);
+        const isOpening = !roomsElement.classList.contains('active');
+        roomsElement.classList.toggle('active');
 
-// Make functions globally accessible
-window.goToSlide = goToSlide;
-window.toggleRooms = toggleRooms;
+        // Update chevron icon
+        const hotelElement = document.querySelector(`[onclick="toggleRooms('${hotelId}')"]`);
+        const chevronIcon = hotelElement?.querySelector('.fa-chevron-down, .fa-chevron-up');
+
+        if (chevronIcon) {
+            if (roomsElement.classList.contains('active')) {
+                chevronIcon.classList.add('transform', 'rotate-180');
+            } else {
+                chevronIcon.classList.remove('transform', 'rotate-180');
+            }
+        }
+
+        // Update room view state
+        isRoomViewOpen = roomsElement.classList.contains('active');
+
+        // Pause/resume slideshow based on room view state
+        if (isRoomViewOpen) {
+            pauseSlideInterval();
+
+            // Initialize pagination
+            const hotelIndex = hotelId.replace('hotel', '');
+            paginateRooms(hotelIndex, 1);
+        } else {
+            startSlideInterval();
+        }
+
+        // Smooth scroll to rooms when opened
+        if (isOpening) {
+            setTimeout(() => {
+                roomsElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }, 100);
+        }
+    }
+
+    /**
+     * Handle room pagination
+     * @param {string} hotelIndex - The hotel index
+     * @param {number} pageNumber - The page number to display
+     */
+    function paginateRooms(hotelIndex, pageNumber) {
+        const hotelRoomsContainer = document.getElementById(`hotel${hotelIndex}-rooms`);
+        if (!hotelRoomsContainer) return;
+
+        // Find all room cards
+        const roomCards = hotelRoomsContainer.querySelectorAll('.grid > div');
+        if (!roomCards.length) return;
+
+        const totalPages = Math.ceil(roomCards.length / ROOMS_PER_PAGE);
+
+        // Validate page number
+        pageNumber = Math.max(1, Math.min(pageNumber, totalPages));
+
+        // Update pagination buttons
+        updatePaginationControls(hotelRoomsContainer, hotelIndex, pageNumber, totalPages);
+
+        // Update room visibility
+        const startIndex = (pageNumber - 1) * ROOMS_PER_PAGE;
+        const endIndex = startIndex + ROOMS_PER_PAGE - 1;
+        let visibleCount = 0;
+
+        roomCards.forEach((room, index) => {
+            if (index >= startIndex && index <= endIndex) {
+                room.style.display = 'block';
+                visibleCount++;
+            } else {
+                room.style.display = 'none';
+            }
+        });
+
+        // Update room count display
+        const roomCountVisible = hotelRoomsContainer.querySelector('.room-count-visible');
+        if (roomCountVisible) {
+            roomCountVisible.textContent = visibleCount;
+        }
+    }
+
+    /**
+     * Update pagination controls
+     * @param {HTMLElement} container - The container element
+     * @param {string} hotelIndex - The hotel index
+     * @param {number} currentPage - The current page
+     * @param {number} totalPages - The total number of pages
+     */
+    function updatePaginationControls(container, hotelIndex, currentPage, totalPages) {
+        // Update prev/next buttons
+        const prevButton = container.querySelector('.pagination-prev');
+        const nextButton = container.querySelector('.pagination-next');
+
+        if (prevButton) {
+            prevButton.disabled = currentPage <= 1;
+            prevButton.onclick = function (e) {
+                e.stopPropagation();
+                if (currentPage > 1) {
+                    paginateRooms(hotelIndex, currentPage - 1);
+                }
+            };
+        }
+
+        if (nextButton) {
+            nextButton.disabled = currentPage >= totalPages;
+            nextButton.onclick = function (e) {
+                e.stopPropagation();
+                if (currentPage < totalPages) {
+                    paginateRooms(hotelIndex, currentPage + 1);
+                }
+            };
+        }
+
+        // Update page number buttons
+        const paginationButtonsContainer = container.querySelector('.room-pagination-buttons');
+        if (paginationButtonsContainer) {
+            paginationButtonsContainer.innerHTML = '';
+
+            for (let i = 0; i < totalPages; i++) {
+                const button = document.createElement('button');
+                button.className = `w-8 h-8 flex items-center justify-center rounded ${
+                    i + 1 === currentPage ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                }`;
+                button.textContent = i + 1;
+                button.onclick = function (e) {
+                    e.stopPropagation();
+                    paginateRooms(hotelIndex, i + 1);
+                };
+                paginationButtonsContainer.appendChild(button);
+            }
+        }
+    }
+
+    /**
+     * Add close buttons to all room sections
+     */
+    function addCloseButtons() {
+        const roomSections = document.querySelectorAll('.hotel-rooms');
+
+        roomSections.forEach(section => {
+            // Skip if already has a close button
+            if (section.querySelector('.close-room-button')) return;
+
+            const hotelIndex = section.id.match(/hotel(\d+)-rooms/)?.[1];
+            if (!hotelIndex) return;
+
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-room-button absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg z-10';
+            closeButton.innerHTML = '<i class="fas fa-times"></i>';
+            closeButton.onclick = function (e) {
+                e.stopPropagation();
+                toggleRooms('hotel' + hotelIndex);
+            };
+
+            const contentDiv = section.querySelector('div');
+            if (contentDiv) {
+                contentDiv.style.position = 'relative';
+                contentDiv.prepend(closeButton);
+            }
+        });
+    }
+
+    /**
+     * Safe document ready handler with fallback
+     */
+    function onDocumentReady(callback) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', callback);
+        } else {
+            callback();
+        }
+    }
+
+    /**
+     * Preload images and initialize the slider
+     */
+    function preloadImagesAndInitialize() {
+        const images = document.querySelectorAll('img');
+
+        if (images.length === 0) {
+            initializeSlider();
+            return;
+        }
+
+        let imagesLoaded = 0;
+        const totalImages = images.length;
+
+        const handleImageLoad = () => {
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+                initializeSlider();
+            }
+        };
+
+        images.forEach(img => {
+            if (img.complete) {
+                handleImageLoad();
+            } else {
+                img.addEventListener('load', handleImageLoad);
+                img.addEventListener('error', handleImageLoad); // Handle image error as loaded
+            }
+        });
+
+        // Fallback in case images don't load properly
+        setTimeout(initializeSlider, 1000);
+    }
+    // $('.slide').slick({
+    //     slidesToShow: 1,
+    //     slidesToScroll: 1,
+    //     autoplay: true,
+    //     autoplaySpeed: 1500,
+    // });
+
+    // Initialize everything when the document is ready
+    onDocumentReady(preloadImagesAndInitialize);
+
+    // Make functions globally accessible
+    window.goToSlide = goToSlide;
+    window.toggleRooms = toggleRooms;
 </script>

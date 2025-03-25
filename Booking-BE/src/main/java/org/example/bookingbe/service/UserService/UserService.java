@@ -5,11 +5,14 @@ import org.example.bookingbe.model.Role;
 import org.example.bookingbe.model.User;
 import org.example.bookingbe.repository.RoleRepo.IRoleRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
+import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.example.bookingbe.service.MailSender.MailRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -17,16 +20,22 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepo userRepo;
     @Autowired
-    private IRoleRepo roleRepo;
-    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private MailRegister mailRegister;
+    private  MailRegister mailRegister;
+    @Autowired
+    private  CloudinaryService cloudinaryService;
+
+    @Autowired
+    private IRoleRepo roleRepo;
+
     public void registerUser(User user) throws MessagingException {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role role = roleRepo.findByRoleName("USER");
         user.setRole(role);
         userRepo.save(user);
+
         mailRegister.sendEmailRegister(user.getEmail(), user.getFirstName(), user.getLastName());
     }
 
@@ -55,4 +64,32 @@ public class UserService implements IUserService {
         userRepo.save(user);  // Lưu thông tin user đã chỉnh sửa
     }
 
+    @Override
+    public String uploadAvatar(MultipartFile file, Long userId) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty, please upload a valid image.");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("Invalid file type. Only images are allowed.");
+        }
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        try {
+            // Tạo publicId duy nhất cho avatar (mỗi user có một avatar riêng)
+            String publicId = "avatar_" + userId;
+            String avatarUrl = cloudinaryService.uploadFile(file, "user_avatars", publicId);
+
+            // Cập nhật avatar mới vào database
+            user.setAvatar(avatarUrl);
+            userRepo.save(user);
+
+            return avatarUrl;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload avatar to Cloudinary", e);
+        }
+    }
 }

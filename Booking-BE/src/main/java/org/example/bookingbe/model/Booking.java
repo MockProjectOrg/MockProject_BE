@@ -17,16 +17,22 @@ public class Booking {
     private LocalDateTime checkOut;
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "status_book", columnDefinition = "BIT")
     @ColumnDefault("0")
     private Boolean status;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
-    public Booking() {}
+
+
+    public Booking() {
+    }
+
 
     public Booking(Long id, LocalDateTime checkIn, LocalDateTime checkOut, String description, User user, Boolean status, Room room) {
         this.id = id;
@@ -101,4 +107,5 @@ public class Booking {
     public void setRoom(Room room) {
         this.room = room;
     }
+
 }

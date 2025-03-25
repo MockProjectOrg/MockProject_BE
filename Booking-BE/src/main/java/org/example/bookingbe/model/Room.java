@@ -1,6 +1,6 @@
-    package org.example.bookingbe.model;
+package org.example.bookingbe.model;
 
-    import jakarta.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +11,8 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "price")
+
+    @Column(name = "price", nullable = false)
     private Double price;
     @Column(name = "room_name")
     private String roomName;
@@ -23,8 +24,9 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
     @ManyToMany
     @JoinTable(
@@ -33,6 +35,7 @@ public class Room {
             inverseJoinColumns = @JoinColumn(name = "utilities_id")
     )
     private Set<Utilities> utilities = new HashSet<>();
+
 
     public Room() {
     }
@@ -87,23 +90,23 @@ public class Room {
 
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
-        }
+    }
 
-        public Status getStatus() {
-            return status;
-        }
+    public Status getStatus() {
+        return status;
+    }
 
-        public void setStatus(Status status) {
-            this.status = status;
-        }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-        public Hotel getHotel() {
-            return hotel;
-        }
+    public Hotel getHotel() {
+        return hotel;
+    }
 
-        public void setHotel(Hotel hotel) {
-            this.hotel = hotel;
-        }
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
     public String getRoomName() {
         return roomName;
@@ -120,4 +123,6 @@ public class Room {
     public void setUtilities(Set<Utilities> utilities) {
         this.utilities = utilities;
     }
-    }
+
+
+}

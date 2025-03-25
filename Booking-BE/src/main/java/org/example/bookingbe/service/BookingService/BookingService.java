@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService implements IBookingService {
@@ -34,6 +34,20 @@ public class BookingService implements IBookingService {
 
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    public BookingService(IBookingRepo bookingRepo) {
+        this.bookingRepo = bookingRepo;
+    }
+
+    public List<Booking> getBookingsByUser(Long userId) {
+        return bookingRepo.findByUserId(userId);
+    }
+
+    public List<Booking> getBookingsByHotelId(Long hotelId) {
+        return bookingRepo.findByHotelId(hotelId);
+    }
+
 
     @Transactional
     @Override
@@ -62,6 +76,20 @@ public class BookingService implements IBookingService {
         return bookingRepo.save(booking);
     }
 
+
+    // lấy tất cả đơn đặt phòng
+    @Override
+    public List<Booking> getAllBookings() {
+        return bookingRepo.findAll();
+    }
+
+    @Override
+    public Optional<Booking> getBookingById(Long id) {
+        return bookingRepo.findById(id);
+    }
+
+
+    // Hủy đặt phòng
     @Transactional
     @Override
     public void cancelBooking(Long bookingId, Long userId) {
@@ -84,19 +112,6 @@ public class BookingService implements IBookingService {
         bookingRepo.deleteById(bookingId);
     }
 
-    @Override
-    public List<Booking> getBookingsByUser(Long userId) {
-        return bookingRepo.findByUserId(userId);
-    }
-    @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepo.findAll();
-    }
-
-    @Override
-    public Optional<Booking> getBookingById(Long id) {
-        return bookingRepo.findById(id);
-    }
 
     @Override
     public Booking saveBooking(Booking booking) {
@@ -118,15 +133,10 @@ public class BookingService implements IBookingService {
         return bookingRepo.findBookingsByHotelManager(managerId);
     }
 
-    @Override
-    public List<Booking> getBookingsByHotelId(Long hotelId) {
-        return bookingRepo.findByHotelId(hotelId);
-    }
 
     @Override
     public boolean isBookingBelongToHotel(Long bookingId, Long hotelId) {
         return bookingRepo.isBookingBelongToHotel(bookingId, hotelId);
     }
-
 
 }

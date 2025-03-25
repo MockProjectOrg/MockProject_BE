@@ -55,6 +55,10 @@
     .pagination-button:hover {
         background-color: #FF8C00;
     }
+
+    .carousel-item img{
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -229,7 +233,7 @@
                   <p class="card-text"><strong>🟢 Status:</strong> <span class="text-success fw-bold">Available</span></p>
 
                   <div class="text-end">
-                    <a href="#" class="btn btn-outline-primary btn-sm px-4">Detail</a>
+                    <a th:href="@{/user/room/{id}(id=${room.id})}" class="btn btn-outline-primary btn-sm px-4">Detail</a>
                     <a th:href="@{/api/booking/{id}(id=${room.id},
                                         checkIn=${#temporals.format(checkIn, 'dd/MM/yyyy HH:mm')},
                                         checkOut=${#temporals.format(checkOut, 'dd/MM/yyyy HH:mm')})}" class="btn btn-success btn-sm px-4">Book</a>

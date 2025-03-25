@@ -47,4 +47,36 @@ public class MailRegister {
         email.setText(message);
         mailSender.send(email);
     }
+
+    public void payMail(String checkIn, String checkOut, String firstName, String lastName, String address, String email, String phone , Double price, String datePay) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("/templates/client/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML");
+
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        String priceString = String.valueOf(price);
+        Context context = new Context();
+        context.setVariable("name", firstName + " " + lastName);
+        context.setVariable("email", email);
+        context.setVariable("address", address);
+        context.setVariable("phone", phone);
+        context.setVariable("email", email);
+        context.setVariable("checkIn", checkIn);
+        context.setVariable("checkOut", checkOut);
+        context.setVariable("paymentDate", datePay);
+        context.setVariable("price", priceString);
+        String htmlContent = templateEngine.process("emailPay", context);
+
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Payment Confirmation");
+        mimeMessageHelper.setText(htmlContent, true);
+
+        // Gửi email
+        mailSender.send(mimeMessage);
+    }
 }

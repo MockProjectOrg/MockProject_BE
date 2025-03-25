@@ -7,6 +7,7 @@ import org.example.bookingbe.repository.ImageRepo.IImageRepo;
 import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.example.bookingbe.service.CloudinaryService.CloudinaryService;
 import org.example.bookingbe.service.RoomService.IRoomService;
+import org.example.bookingbe.service.RoomService.RoomService;
 import org.example.bookingbe.service.UserDetail.CustomUserDetailService;
 import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,23 +26,23 @@ import java.util.Map;
 @Controller
 @RequestMapping("/managerRooms")
 public class RoomController {
-    @Autowired
-    private IRoomService roomService;
 
+    private final CloudinaryService cloudinaryService;
+
+    private IRoomService roomService;
     @Autowired
     private CustomUserDetailService userDetailService;
-
     @Autowired
     private HttpSession session;
-
     @Autowired
     private IHotelRepo hotelRepo;
-
     @Autowired
     private IUserRepo userRepo;
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
+    public RoomController(RoomService roomService, CloudinaryService cloudinaryService) {
+        this.roomService = roomService;
+        this.cloudinaryService = cloudinaryService;
+    }
 
     @Autowired
     private IImageRepo imageRepo;
@@ -112,7 +113,7 @@ public class RoomController {
 
         System.out.println("User Role: " + user.getRole().getRoleName());
 
-        if (!"HOTEL MANAGER".equalsIgnoreCase(user.getRole().getRoleName())) {
+        if (!"HOTEL_MANAGER".equalsIgnoreCase(user.getRole().getRoleName())) {
             throw new RuntimeException("Người dùng không có quyền thêm phòng");
         }
 
@@ -197,5 +198,7 @@ public class RoomController {
         roomService.updateRoomStatus(id, statusId, userId);
         return "redirect:/managerRooms";
     }
+
 }
+
 

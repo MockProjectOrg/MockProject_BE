@@ -4,45 +4,41 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.example.bookingbe.model.Booking;
 import org.example.bookingbe.model.Room;
 import org.example.bookingbe.model.User;
-import org.example.bookingbe.repository.ImageRepo.IImageRepo;
+import org.example.bookingbe.repository.BookingRepo.IBookingRepo;
+import org.example.bookingbe.repository.DiscountUserRepo.IDiscountUserRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
 import org.example.bookingbe.respone.MessageRespone;
+import org.example.bookingbe.service.BookingService.IBookingService;
 import org.example.bookingbe.service.ImageService.IImageService;
 import org.example.bookingbe.service.RoomService.IRoomService;
-import org.example.bookingbe.service.UserDetail.UserPriciple;
 import org.example.bookingbe.service.UserService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 
 @Controller
 @RequestMapping("/api")
 public class UserController {
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IDiscountUserRepo discountUserRepo;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -56,11 +52,17 @@ public class UserController {
     @Autowired
     private IImageService imageService;
 
+    @Autowired
+    private IBookingRepo bookingRepo;
+
+    @Autowired
+    private IBookingService bookingService;
+
 
     @GetMapping("/")
     public String login(HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
-            return "redirect:/api/user/home";
+            return "redirect:/home";
         }
         return "auth/login";
     }
@@ -68,7 +70,7 @@ public class UserController {
     @GetMapping("/register")
     public String register(Model model, HttpServletRequest request){
         if(request.getUserPrincipal() !=null){
-            return "redirect:/api/user/home";
+            return "redirect:/home";
         }
         model.addAttribute("user", new User());
         return "auth/register";
@@ -89,6 +91,7 @@ public class UserController {
 
     @GetMapping("/user/userProfile")
     public String getUser(HttpSession session, Model model) {
+        // Lấy userId từ session
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
@@ -101,8 +104,20 @@ public class UserController {
             return "redirect:/api/login";
         }
 
+        // Lấy danh sách booking của user
+        List<Booking> bookings = bookingRepo.findByUserId(userId);
+
         model.addAttribute("user", user);
-        return "profile"; // Trả về trang profile.html với dữ liệu user
+        model.addAttribute("bookings", bookings); // Gửi danh sách booking đến profile.html
+
+        return "auth/profile"; // Trả về trang profile.html với dữ liệu user và bookings
+    }
+
+    @PostMapping("/user/deleteBooking/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        bookingService.deleteBooking(id);
+        redirectAttributes.addAttribute("success", true);
+        return "redirect:/api/user/userProfile";
     }
 
     @PostMapping("/user/updateProfile")

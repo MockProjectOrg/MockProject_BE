@@ -10,16 +10,16 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.Collection;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +30,7 @@ public class WebSecurityConfig {
 
     @Autowired
     private CustomAuthFailureHandler customAuthFailureHandler;
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -40,8 +41,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(withDefaults())
-                .csrf(csrf -> csrf.disable())
+        http.cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .sessionFixation().newSession()
@@ -49,7 +50,7 @@ public class WebSecurityConfig {
                         .expiredUrl("/api/?expired")
                         .maxSessionsPreventsLogin(false))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/","/api/register","/api/Doregister").permitAll()
+                        .requestMatchers("/api/", "/api/register", "/api/Doregister",  "/AdminManager/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/managerHotel/**", "/managerBookings/**", "/managerRooms/**").hasRole("HOTEL_MANAGER")
@@ -103,5 +104,16 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                response.sendRedirect("/admin/home");
+            } else {
+                response.sendRedirect("/api/user/home");
+            }
+        };
     }
 }

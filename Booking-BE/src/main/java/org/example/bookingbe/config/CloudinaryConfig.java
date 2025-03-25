@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
+
     @Bean
     public Cloudinary getCloudinary() {
         Map<String, String> config = new HashMap<>();
@@ -18,4 +19,6 @@ public class CloudinaryConfig {
         config.put("secure", "true");
         return new Cloudinary(config);
     }
+
+
 }

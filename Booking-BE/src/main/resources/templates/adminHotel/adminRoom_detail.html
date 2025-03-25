@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Room Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-900 h-screen p-4 shadow-lg">
+        <div class="text-white text-2xl font-bold text-center mb-6">
+            Dashlite
+        </div>
+        <nav class="space-y-4">
+            <a class="block py-3 px-5 rounded-lg transition duration-300 hover:bg-gray-700 text-white flex items-center"
+               href="#">
+                <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+            </a>
+            <a class="block py-3 px-5 rounded-lg transition duration-300 hover:bg-gray-700 text-white flex items-center"
+               href="#">
+                <i class="fas fa-book mr-3"></i> Bookings
+            </a>
+            <a class="block py-3 px-5 rounded-lg transition duration-300 hover:bg-gray-700 text-white flex items-center"
+               href="#">
+                <i class="fas fa-bed mr-3"></i> Room
+            </a>
+        </nav>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+        <!-- Top Bar -->
+        <div class="flex justify-between items-center bg-white p-4 shadow rounded-lg mb-6">
+            <div class="flex items-center">
+                <img alt="Flag" class="rounded-full w-8 h-8 mr-4"
+                     src="https://storage.googleapis.com/a1aa/image/0Ff5SQhxkCrEGj3lf3K94qcQC1s_NjHEALDnF69PZKE.jpg"/>
+                <img alt="User Avatar" class="rounded-full w-8 h-8 mr-2"
+                     src="https://storage.googleapis.com/a1aa/image/YDBCQH_TqS7OJDXBh6B_E_XomAnNTc7E41JSmqk-8GQ.jpg"/>
+                <div>
+                    <div class="text-sm font-semibold">HIEU</div>
+                    <div class="text-xs text-gray-500">Administrator</div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <main class="p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-2xl font-semibold mb-6">Room Details</h2>
+            <!-- Image Gallery -->
+            <div class="relative w-full max-w-2xl mx-auto">
+                <div class="relative" id="image-container">
+                    <button class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-3 rounded-full hover:bg-teal-600 transition duration-300">
+                        &#10094;
+                    </button>
+                    <div class="w-full h-64 flex items-center justify-center bg-gray-200 rounded-lg shadow-md cursor-pointer"
+                         id="image-wrapper">
+                        <img alt="Room Image" class="w-full h-64 object-cover rounded-lg shadow-md" id="room-image"
+                             src="${imageUrl}">
+                        <span class="text-gray-500">Click to Upload Image</span>
+                    </div>
+                    <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-3 rounded-full hover:bg-teal-600 transition duration-300">
+                        &#10095;
+                    </button>
+                </div>
+            </div>
+            <!-- Room Information -->
+            <div class="mt-6 space-y-4" id="room-info">
+                <p><strong>Hotel:</strong> <span th:text="${user.hotel.hotelName}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
+                <p><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span></p>
+                <p><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span></p>
+                <p><strong>Capacity:</strong> <span th:text="${room.capacity}"></span></p>
+                <p><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
+                <p><strong>Description:</strong> <span th:text="${room.description}"></span></p>
+                <!-- Action Buttons -->
+                <div class="mt-6 flex space-x-4">
+                    <button class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300"
+                            id="edit-btn" onclick="toggleEdit()">Edit
+                    </button>
+                    <button class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition duration-300 hidden"
+                            id="save-btn">Save
+                    </button>
+                    <button class="px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition duration-300"
+                            th:onclick="'window.location.href=' + @{/room_list}">Cancel
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+    function toggleEdit() {
+        const spans = document.querySelectorAll('#room-info span');
+        const inputs = document.querySelectorAll('#room-info input, #room-info textarea');
+        const editBtn = document.getElementById('edit-btn');
+        const saveBtn = document.getElementById('save-btn');
+
+        spans.forEach(span => span.classList.toggle('hidden'));
+        inputs.forEach(input => input.classList.toggle('hidden'));
+        editBtn.classList.toggle('hidden');
+        saveBtn.classList.toggle('hidden');
+    }
+</script>
+</body>
+</html>
