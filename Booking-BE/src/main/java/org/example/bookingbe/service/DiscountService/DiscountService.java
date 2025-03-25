@@ -1,16 +1,21 @@
 package org.example.bookingbe.service.DiscountService;
 
 import org.example.bookingbe.dto.DiscountDto;
-import org.example.bookingbe.model.Room;
+import org.example.bookingbe.model.*;
 import org.example.bookingbe.repository.DiscountRepo.IDiscountRepo;
+import org.example.bookingbe.repository.DiscountUserRepo.IDiscountUserRepo;
+import org.example.bookingbe.repository.HotelRepo.IHotelRepo;
 import org.example.bookingbe.repository.RoomRepo.IRoomRepo;
+import org.example.bookingbe.repository.UserRepo.IUserRepo;
 import org.example.bookingbe.service.HotelService.IHotelService;
-import org.example.bookingbe.service.RoomService.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class DiscountService implements IDiscountService {
@@ -20,9 +25,6 @@ public class DiscountService implements IDiscountService {
     private IHotelService hotelService;
     @Autowired
     private IRoomRepo roomRepo;
-
-    @Autowired
-    private IDiscountRepo discountRepo;
 
     @Autowired
     private IDiscountUserRepo discountUserRepo;
@@ -105,7 +107,7 @@ public class DiscountService implements IDiscountService {
             discountUser.setDiscount(discount);
             discountUser.setDiscountCode(generateUniqueCode(discount.getName()));
             discountUser.setUsed(false);
-            discountUser.setExpiredAt(LocalDateTime.now().plusMonths(1)); // Set expiry to 1 month from now
+            discountUser.setExpiredAt(LocalDate.now().plusMonths(1)); // Set expiry to 1 month from now
 
             discountUserRepo.save(discountUser);
         }
@@ -118,7 +120,7 @@ public class DiscountService implements IDiscountService {
         switch (condition) {
             case NEW_USER:
                 // Example: Get users who registered within the last week
-                return userRepo.findByCreatedAtAfter(LocalDateTime.now().minusWeeks(1));
+                return userRepo.findByCreatedAtAfter(LocalDate.now().minusWeeks(1));
             case VIP_USER:
                 // Example: In a real system, this would use some VIP status indicator
                 return userRepo.findByVipStatusTrue();
@@ -156,7 +158,7 @@ public class DiscountService implements IDiscountService {
             }
 
             // Check if the discount is expired
-            if (discountUser.getExpiredAt().isBefore(LocalDateTime.now())) {
+            if (discountUser.getExpiredAt().isBefore(LocalDate.now())) {
                 return false; // Discount is expired
             }
 

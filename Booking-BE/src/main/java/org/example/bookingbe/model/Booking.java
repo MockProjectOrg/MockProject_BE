@@ -11,10 +11,6 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "booking_date", columnDefinition = "DATETIME")
-    private LocalDateTime bookingDate;
-    @Column(name = "booking_cancel", columnDefinition = "DATETIME")
-    private LocalDateTime bookingCancel;
     @Column(name = "check_in", columnDefinition = "DATETIME")
     private LocalDateTime checkIn;
     @Column(name = "check_out", columnDefinition = "DATETIME")

@@ -48,45 +48,6 @@ public class BookingService implements IBookingService {
         return bookingRepo.findByHotelId(hotelId);
     }
 
-    @Override
-    public Long countCancelledBookings() {
-        return Optional.ofNullable(bookingRepo.countCancelledBookings()).orElse(0L);
-    }
-
-    @Override
-    public boolean isUserCheckedOut(Long userId, Long roomId) {
-        return false;
-    }
-
-
-    @Override
-    public Integer getCountRoomAvailable() {
-        return Math.toIntExact(Optional.ofNullable(bookingRepo.countAvailableRooms()).orElse(0L));
-    }
-
-    @Override
-    public String getSalesChartUrl() {
-        return "";
-    }
-
-    @Override
-    public List<Object[]> getBookingDataByMonth() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<Map<String, Object>> getPopularRoomTypes() {
-        List<Object[]> results = Optional.ofNullable(bookingRepo.getMostPopularRoomType())
-                .orElse(Collections.emptyList());
-
-        return results.stream().map(row -> {
-            Map<String, Object> roomData = new HashMap<>();
-            roomData.put("roomType", row[0]);  // Tên loại phòng
-            roomData.put("bookingCount", ((Number) row[1]).intValue()); // Số lượt đặt
-            return roomData;
-        }).collect(Collectors.toList());
-    }
-
 
     @Transactional
     @Override

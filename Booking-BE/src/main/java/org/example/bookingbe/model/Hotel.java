@@ -30,6 +30,14 @@ public class Hotel {
     public Hotel() {
     }
 
+    public Hotel(Long id, String hotelName, String address, String description, String avatar) {
+        this.id = id;
+        this.hotelName = hotelName;
+        this.address = address;
+        this.description = description;
+        this.avatar = avatar;
+    }
+
     public Long getId() {
         return id;
     }

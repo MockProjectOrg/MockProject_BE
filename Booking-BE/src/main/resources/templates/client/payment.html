@@ -236,7 +236,7 @@
 <nav class="navbar">
     <div class="logo">Sona<span>.</span></div>
     <ul class="nav-links">
-        <li><a href="#" class="active">Home</a></li>
+        <li><a th:href="@{/home}" class="active">Home</a></li>
         <li><a href="#">Rooms</a></li>
         <li><a href="#">About Us</a></li>
         <li><a href="#">Pages</a></li>
@@ -250,8 +250,8 @@
             <i style="margin-left: 15px" class="fa-solid fa-caret-down"></i>
         </div>
         <div class="wrap-drop-personal">
-            <a routerLink="/pages/components/info-personal"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a>
-            <a routerLink="/pages/components/info-personal"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a>
+            <a th:href="@{/api/user/userProfile}"><i class="fa-regular fa-user"></i> Profile</a>
+            <a th:href="@{/logout}"><i class="fa-regular fa-user"></i> Logout</a>
 
         </div>
     </div>
@@ -260,9 +260,8 @@
     <form class="wrap-form" id="paymentForm" method="post" action="/api/pay" th:object="${bill}">
 <!--        <input type="hidden" name="roomId" th:field="*{roomId}" th:value="${room.get().getId()}">-->
         <div class="form-info">
-            <h2>Thông tin liên hệ</h2>
-            <p>Hãy điền chính xác tất cả thông tin để đảm bảo bạn nhận được Phiếu xác nhận đặt phòng (E-voucher) qua
-                email của mình.</p>
+            <h2>Contact Information</h2>
+            <p>Please fill in all information correctly to ensure you receive your Booking Confirmation (E-voucher) via your email.</p>
             <div class="row g-3 needs-validation" novalidate>
                 <div class="col-md-4">
                     <label for="validationCustom01" class="form-label">First Name</label>

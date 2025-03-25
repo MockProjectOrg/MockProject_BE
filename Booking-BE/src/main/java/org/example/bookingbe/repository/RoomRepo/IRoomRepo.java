@@ -16,12 +16,8 @@ import java.util.Optional;
 @Repository
 public interface IRoomRepo extends JpaRepository<Room, Long> {
 
-    @EntityGraph(attributePaths = {"hotel", "roomType", "status", "images", "reviews", "utilities"})
-    Optional<Room> findById(Long id);
 
-    @EntityGraph(attributePaths = {"utilities"})
-    @Query("SELECT r FROM Room r LEFT JOIN FETCH r.utilities WHERE r.id = :id")
-    Optional<Room> findByIdWithUtilities(@Param("id") Long id);
+
 
     @Query("SELECT r FROM Room r JOIN FETCH r.roomType WHERE r.hotel.id = :hotelId")
     List<Room> findRoomsByHotel(@Param("hotelId") Long hotelId);
@@ -56,13 +52,4 @@ public interface IRoomRepo extends JpaRepository<Room, Long> {
 
     List<Room> findByHotelIdAndStatusId(Long hotelId, Long statusId);
 
-    @Query("SELECT r FROM Room r " +
-            "LEFT JOIN FETCH r.hotel " +
-            "LEFT JOIN FETCH r.images " +
-            "LEFT JOIN FETCH r.reviews " +
-            "WHERE r.id = :roomId")
-    Optional<Room> findByIdWithDetails(@Param("roomId") Long roomId);
-
-    @Query("SELECT r FROM Room r JOIN FETCH r.hotel h JOIN FETCH h.user WHERE r.id = :id")
-    Optional<Room> findByIdWithHotelAndUser(@Param("id") Long id);
 }

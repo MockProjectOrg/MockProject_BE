@@ -7,6 +7,7 @@
     </title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
     <script src="https://cdn.tailwindcss.com">
+
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Halminton+Grand&display=swap"
@@ -22,6 +23,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
     <style>
         body {
             font-family: 'Libre Baskerville', serif;
@@ -199,8 +204,8 @@
                 <i style="margin-left: 15px" class="fa-solid fa-caret-down"></i>
             </div>
             <div class="wrap-drop-personal">
-                <a routerLink="/pages/components/info-personal"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a>
-                <a routerLink="/pages/components/info-personal"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a>
+                <a th:href="@{/api/user/userProfile}"><i class="fa-regular fa-user"></i> Profile</a>
+                <a th:href="@{/logout}"><i class="fa-regular fa-user"></i> Logout</a>
 
             </div>
         </div>
@@ -362,9 +367,12 @@
                                                            class="block w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded text-center transition-colors">
                                                             Book Now <i class="fas fa-arrow-right ml-2"></i>
                                                         </a>
-                                                        <button class="w-full bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-3 rounded text-center transition-colors">
-                                                            View Details
-                                                        </button>
+                                                        <a th:href="@{/user/room/{id}(id=${room.id})}">
+                                                            <button class="w-full bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-3 rounded text-center transition-colors">
+                                                                View Details
+                                                            </button>
+                                                        </a>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -622,12 +630,7 @@
         }
     }
 
-    $('.slide').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 1500,
-    });
+
 
     /**
      * Set up all event listeners
@@ -993,6 +996,12 @@
         // Fallback in case images don't load properly
         setTimeout(initializeSlider, 1000);
     }
+    // $('.slide').slick({
+    //     slidesToShow: 1,
+    //     slidesToScroll: 1,
+    //     autoplay: true,
+    //     autoplaySpeed: 1500,
+    // });
 
     // Initialize everything when the document is ready
     onDocumentReady(preloadImagesAndInitialize);

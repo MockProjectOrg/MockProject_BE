@@ -1,241 +1,328 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Luxury Double Suite</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <title>
+        Melia Vinpearl Danang Riverfront
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            border-bottom: 2px solid #deb887;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .logo span {
+            color: #deb887;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #222;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #deb887;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+
+        .avt_func{
+            width: 78px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .avt_func div img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .wrap-drop-personal {
+            display: none;
+            position: absolute;
+            cursor: pointer;
+            top: 82%;
+            left: 87%;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            width: 200px;
+        }
+
+        .wrap-drop-personal a {
+            color: black;
+            border-left: 4px solid white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .wrap-drop-personal a:hover {
+            background-color: #F7F7F7;
+            border-left: 4px solid #F48023;
+            color: #F48023;
+        }
+
+        .wrap-drop-personal a i{
+            padding-right: 10px;
+        }
+
+        .wrap-drop-personal a:hover i {
+            color: #F48023;
+        }
+
+        .avt_func:hover .wrap-drop-personal {
+            display: block;
+        }
+
+    </style>
 </head>
-<body class="font-sans">
-<!-- Header -->
-<header class="bg-white shadow-md p-4 flex justify-between items-center">
-    <div class="text-xl font-bold">Mona</div>
-    <nav>
-        <ul class="flex space-x-4">
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">Home</a></li>
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">Rooms</a></li>
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">About Us</a></li>
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">Pages</a></li>
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">News</a></li>
-            <li><a class="hover:text-teal-500 transition duration-300" href="#">Contact</a></li>
-        </ul>
-    </nav>
-    <button class="bg-yellow-400 px-4 py-2 rounded">BOOK NOW</button>
-</header>
-
-<!-- Nội dung chính -->
-<main class="max-w-6xl mx-auto p-6">
-    <div class="grid md:grid-cols-2 gap-6">
-        <!-- Hình ảnh phòng -->
-        <div class="flex flex-col gap-4">
-            <div class="swiper mySwiper w-full h-96 rounded-md">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide" th:each="image : ${room.images}">
-                        <img alt="Room Image" class="w-full h-96 object-cover rounded-md"
-                             th:src="${image.imageUrl}">
-                    </div>
-                </div>
-                <!-- Nút điều hướng -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <!-- Chấm nhỏ dưới ảnh -->
-                <div class="swiper-pagination"></div>
-            </div>
+<body class="bg-gray-100">
+<nav class="navbar">
+    <div class="logo">Sona<span>.</span></div>
+    <ul class="nav-links">
+        <li><a th:href="@{/home}" class="active">Home</a></li>
+        <li><a href="#">Rooms</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Pages</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="avt_func" th:object="${room}">
+        <div class="d-flex align-items-center">
+            <img src="https://firebasestorage.googleapis.com/v0/b/photo-archive-a0523i1.appspot.com/o/imgLanding%2Fz5572534439426_12e9a1d7d2b51721634af3d654e8c21b.jpg?alt=media&token=6fa5eb7d-4293-4552-b680-c8951492269d"
+                 alt="Avatar">
+            <i style="margin-left: 15px" class="fa-solid fa-caret-down"></i>
         </div>
+        <div class="wrap-drop-personal">
+            <a th:href="@{/api/user/userProfile}"><i class="fa-regular fa-user"></i> Profile</a>
+            <a th:href="@{/logout}"><i class="fa-regular fa-user"></i> Logout</a>
 
-        <!-- Thông tin phòng -->
-        <div>
-            <h1 class="text-2xl font-bold">
-                <span th:text="${room.hotel.hotelName}"></span>
-            </h1>
-            <p class="text-blue-600 text-xl font-semibold"><span th:text="${room.price}"></span></p>
-            <p class="text-lg"><strong>Hotel:</strong> <span th:text="${room.hotel.hotelName}"></span></p>
-            <p class="text-lg"><strong>Address:</strong> <span th:text="${room.hotel.address}"></span></p>
-<!--            <p class="text-lg"><strong>Rating:</strong> <span th:text="${room.hotel.rate}"></span>★</p>-->
-            <p class="text-lg"><strong>Price:</strong> <span th:text="${#numbers.formatCurrency(room.price)}"></span> /night</p>
-            <p class="text-lg"><strong>Capacity:</strong> <span th:text="${room.roomType.capacity}"></span> guests</p>
-            <p class="text-lg"><strong>Type:</strong> <span th:text="${room.roomType.typeName}"></span></p>
-            <p class="text-lg"><strong>Status:</strong> <span th:text="${room.status.statusName}"></span></p>
-            <p class="text-lg"><strong>Description:</strong> <span th:text="${room.roomType.description}"></span></p>
-            <p class="text-lg"><strong>Utilities:</strong>
-                <span th:each="utility, iterStat : ${room.utilities}">
-        <span th:text="${utility.name}"></span><span th:if="${!iterStat.last}">, </span>
-    </span>
-            </p>
-            <button class="bg-blue-500 text-white px-6 py-2 rounded mt-4">BOOK NOW</button>
         </div>
     </div>
-</main>
-<!-- Reviews Section -->
-<div class="mt-8 container mx-auto px-4">
-    <h3 class="text-3xl font-semibold text-center mb-6">Reviews</h3>
-    <!-- Form nhập đánh giá -->
-    <div class="mt-6" th:if="${#authorization.expression('isAuthenticated()')}">
-        <div class="p-6 bg-white shadow-lg rounded-lg" th:if="${hasCheckedOut}">
-            <h3 class="text-lg font-semibold">Write your review</h3>
-            <div class="flex space-x-1 mt-2 text-xl text-gray-300 cursor-pointer" id="starRating">
-                <span data-value="1">★</span>
-                <span data-value="2">★</span>
-                <span data-value="3">★</span>
-                <span data-value="4">★</span>
-                <span data-value="5">★</span>
-            </div>
-            <form method="post" th:action="@{/room/review}">
-                <input name="roomId" th:value="${room.id}" type="hidden"/>
-                <input name="userId" th:value="${user.id}" type="hidden"/>
-                <textarea class="w-full p-2 border rounded-md mt-2" name="description"
-                          placeholder="Enter your review"></textarea>
-                <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md" type="submit">Send</button>
-            </form>
+</nav>
+<div class="max-w-6xl mx-auto p-4" style="margin-top: 10px">
+    <!-- Image Gallery -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" th:object="${room}">
+        <div class="col-span-2">
+            <img alt="View of Melia Vinpearl Danang Riverfront with pool and cityscape" class="w-full h-full object-cover rounded-lg" height="400" src="https://storage.googleapis.com/a1aa/image/CWmpEqK83QEuV04a7ALeztMRL7exPt0TO2AWaff6u_k.jpg" width="800"/>
         </div>
-        <div class="text-gray-500 text-sm mt-4" th:unless="${hasCheckedOut}">
-            You need to checkout before you can write a review.
+        <div class="grid grid-cols-2 gap-2">
+            <img alt="View of the hotel building" class="w-full h-full object-cover rounded-lg" th:each="img :${images}"  th:src="${img.imageName}" height="200" width="200"/>
+<!--            <img alt="View of the river from the hotel" class="w-full h-full object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/HwWxONAJw1t6A4LsJ7gI4WlfRNTrnqED6faP0SsDyzc.jpg" width="200"/>-->
+<!--            <img alt="View of the hotel pool area" class="w-full h-full object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/lzUZMxirLeHzzjSYC4XziUj0JY8aXTfw5h-1NAZlpDE.jpg" width="200"/>-->
+<!--            <img alt="Night view of the hotel" class="w-full h-full object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/6G8PpJtvmcDQ9GWSM7EXW0nWqGHJ8q5N-EZNvXc_-Js.jpg" width="200"/>-->
+<!--            <img alt="View of the city from the hotel" class="w-full h-full object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/bzfS9QIptC0ujHuNijVg3vE0EFj08kpWLpMQ6Sscsr0.jpg" width="200"/>-->
+<!--            <div class="relative">-->
+<!--                <img alt="View of the pool area at night" class="w-full h-full object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/hDzjfR2wuHdkLq-zBTnnWd6oRoA9OnrauE30FIque3Q.jpg" width="200"/>-->
+<!--                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg font-semibold">-->
+
+<!--                </div>-->
+<!--            </div>-->
         </div>
-        <div class="p-6 bg-white shadow-lg rounded-lg mt-4" th:each="review : ${room.reviews}">
+    </div>
+    <!-- Hotel Information -->
+    <div class="bg-white p-6 mt-4 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold" th:text="${room.get().getHotel().getHotelName()}">
+            Melia Vinpearl Danang Riverfront
+        </h1>
+        <div class="flex items-center mt-2">
+     <span class="bg-blue-100 text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
+      Hotel
+     </span>
             <div class="flex items-center">
-                <!-- Avatar của người dùng -->
-                <div class="mr-4">
-                    <img alt="User Avatar" class="w-12 h-12 rounded-full" th:src="@{${review.user.avatar}}"/>
-                </div>
-                <!-- Thông tin người dùng và đánh giá -->
-                <div>
-                    <div class="flex items-center">
-                        <!-- Sao đánh giá -->
-                        <div class="text-xl text-yellow-500">
-                            <span th:each="i : ${#numbers.sequence(1, review.rate)}">★</span>
-                            <span class="text-gray-300" th:each="i : ${#numbers.sequence(review.rate + 1, 5)}">★</span>
-                        </div>
-
-                        <!-- Tên người dùng -->
-                        <span class="ml-2 text-gray-600 text-sm" th:text="${review.user.userName}"></span>
+                <i class="fas fa-star text-yellow-500">
+                </i>
+                <i class="fas fa-star text-yellow-500">
+                </i>
+                <i class="fas fa-star text-yellow-500">
+                </i>
+                <i class="fas fa-star text-yellow-500">
+                </i>
+                <i class="fas fa-star text-yellow-500">
+                </i>
+            </div>
+            <span class="ml-2 text-green-600 text-sm">
+      Hạng 1 trong số Khách sạn và Khu nghỉ dưỡng 5 sao ở Đà Nẵng
+     </span>
+        </div>
+        <div class="flex flex-col md:flex-row mt-4">
+            <!-- Rating and Reviews -->
+            <div class="md:w-1/3 bg-blue-50 p-4 rounded-lg">
+                <div class="flex items-center">
+       <span class="text-4xl font-bold text-blue-600">
+        9,0
+       </span>
+                    <div class="ml-2">
+        <span class="block text-lg font-semibold">
+         Xuất sắc
+        </span>
+                        <span class="text-sm text-gray-600">
+         320 đánh giá
+        </span>
                     </div>
-
-                    <!-- Mô tả người dùng (description) -->
-                    <p class="mt-1 text-sm text-gray-500" th:text="${review.user.description}"></p>
-
-                    <!-- Bình luận của người dùng -->
-                    <p class="mt-2 text-md text-gray-700" th:text="${review.description}"></p>
                 </div>
+                <div class="mt-4">
+       <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+        Không Gian Phòng (7)
+       </span>
+                    <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+        Khu Vực Xung Quanh (6)
+       </span>
+                    <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+        Nhân Viên Thân Thiện (6)
+       </span>
+                    <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+        Phòng Ngủ (6)
+       </span>
+                </div>
+                <div class="mt-4">
+                    <p class="text-sm text-gray-700">
+                        <strong>
+                            Pham T. H. N.
+                        </strong>
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        mọi thứ rất tuyệt vời từ nhân viên, phòng ốc sạch sẽ view rất đẹp, vị trí trung tâm. đồ ăn sáng rất đa dạng và ngon miệng.
+                    </p>
+                    <div class="flex items-center mt-2">
+        <span class="text-blue-600 font-semibold">
+         8,5/10
+        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Location -->
+            <div class="md:w-1/3 mt-4 md:mt-0 md:ml-4">
+                <h2 class="text-lg font-semibold">
+                    Trong khu vực
+                </h2>
+                <p class="text-sm text-gray-600 mt-2" th:text="${room.get().getHotel().address}">
+                    341 Trần Hưng Đạo, Sơn Trà, An Hải Bắc, Sơn Trà, Đà Nẵng, Việt Nam, 550000
+                </p>
+                <p class="text-sm text-blue-600 mt-2">
+                    Gần khu vui chơi giải trí
+                </p>
+                <ul class="mt-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-blue-600 mr-2">
+                        </i>
+                        Cầu sông Hàn - 514 m
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-blue-600 mr-2">
+                        </i>
+                        Ga Đà Nẵng - 2.09 km
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-blue-600 mr-2">
+                        </i>
+                        Bệnh viện Đa khoa Gia Đình Đà Nẵng - 2.84 km
+                    </li>
+                </ul>
+            </div>
+            <!-- Amenities -->
+            <div class="md:w-1/3 mt-4 md:mt-0 md:ml-4">
+                <h2 class="text-lg font-semibold">
+                    Tiện ích chính
+                </h2>
+                <ul class="mt-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-wind text-blue-600 mr-2">
+                        </i>
+                        Máy lạnh
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-parking text-blue-600 mr-2">
+                        </i>
+                        Chỗ đậu xe
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-utensils text-blue-600 mr-2">
+                        </i>
+                        Nhà hàng
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-swimming-pool text-blue-600 mr-2">
+                        </i>
+                        Hồ bơi
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-wifi text-blue-600 mr-2">
+                        </i>
+                        WiFi
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-concierge-bell text-blue-600 mr-2">
+                        </i>
+                        Lễ tân 24h
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-elevator text-blue-600 mr-2">
+                        </i>
+                        Thang máy
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-
-    <!-- Hiển thị danh sách review -->
-
-
-    <!-- Footer -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4">
-        <div
-                class="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <h4 class="text-lg font-bold text-gray-800">Book Your Stay</h4>
-            <form class="flex flex-col md:flex-row md:space-x-4 w-full md:w-auto">
-                <input
-                        class="border rounded-lg p-2 w-full md:w-auto focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        type="date"
-                />
-                <input
-                        class="border rounded-lg p-2 w-full md:w-auto focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        type="date"
-                />
-                <button
-                        class="bg-blue-500 text-white rounded-lg px-6 py-2 hover:bg-blue-600 transition duration-200"
-                >
-                    Book Now
-                </button>
-            </form>
+    <!-- Booking Section -->
+    <div class="bg-white p-6 mt-4 rounded-lg shadow-lg flex justify-between items-center">
+        <div>
+     <span class="text-gray-600">
+      Price/room/nights
+     </span>
+            <span class="text-2xl font-bold text-red-600" th:text="${#numbers.formatDecimal(room.get().price, 0, 'COMMA', 0, 'POINT') + ' VND'}">
+      1.705.312 VND
+     </span>
         </div>
+        <a th:href="@{/api/user/searchRooms}">
+            <button class="bg-orange-500 text-white px-6 py-2 rounded-lg font-semibold">
+                Booking Now
+            </button>
+        </a>
+
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            new Swiper(".mySwiper", {
-                loop: true, // Lặp vô hạn
-                spaceBetween: 10, // Khoảng cách giữa ảnh
-                slidesPerView: 1, // Hiển thị 1 ảnh mỗi lần
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev"
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true
-                },
-                autoplay: {
-                    delay: 3000, // Tự động chuyển slide mỗi 3s
-                    disableOnInteraction: false
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM fully loaded and parsed");
-
-            // ✅ Xử lý menu toggle với hiệu ứng trượt
-            const menu = document.getElementById("menu");
-            const menuToggle = document.getElementById("menu-toggle");
-
-            if (menu && menuToggle) {
-                menuToggle.addEventListener("click", function (e) {
-                    menu.classList.toggle("hidden");
-                    menu.classList.toggle("slide-in");
-                    e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
-                });
-
-                document.addEventListener("click", function (e) {
-                    if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
-                        menu.classList.add("hidden");
-                        menu.classList.remove("slide-in");
-                    }
-                });
-            } else {
-                console.warn("⚠️ menu hoặc menu-toggle không tồn tại trên trang!");
-            }
-
-            // ✅ Xử lý đánh giá sao với hiệu ứng hover
-            const stars = document.querySelectorAll("#starRating span");
-            const ratingInput = document.getElementById("ratingInput");
-
-            if (stars.length > 0 && ratingInput) {
-                stars.forEach(star => {
-                    star.addEventListener("click", function () {
-                        let rating = this.dataset.value;
-                        ratingInput.value = rating;
-                        updateStars(rating);
-                    });
-
-                    star.addEventListener("mouseover", function () {
-                        updateStars(this.dataset.value);
-                    });
-
-                    star.addEventListener("mouseout", function () {
-                        updateStars(ratingInput.value || 0);
-                    });
-                });
-
-                function updateStars(rating) {
-                    stars.forEach(s => s.style.color = s.dataset.value <= rating ? "#ffcc00" : "#ccc");
-                }
-            } else {
-                console.warn("⚠️ Không tìm thấy #starRating hoặc #ratingInput trên trang!");
-            }
-
-            // ✅ Khởi tạo Swiper nếu có trên trang
-            if (typeof Swiper !== "undefined" && document.querySelector(".swiper")) {
-                new Swiper('.swiper', {
-                    loop: true,
-                    autoplay: { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true },
-                    speed: 800,
-                    effect: "fade",
-                    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-                    pagination: { el: ".swiper-pagination", clickable: true }
-                });
-            } else {
-                console.warn("⚠️ Swiper library chưa được tải hoặc không tìm thấy .swiper trên trang!");
-            }
-        });
-    </script>
-
+</div>
 </body>
 </html>

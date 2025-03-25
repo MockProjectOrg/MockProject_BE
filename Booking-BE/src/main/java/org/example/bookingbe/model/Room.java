@@ -35,10 +35,7 @@ public class Room {
             inverseJoinColumns = @JoinColumn(name = "utilities_id")
     )
     private Set<Utilities> utilities = new HashSet<>();
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Image> images = new HashSet<>();
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Review> reviews = new HashSet<>();
+
 
     public Room() {
     }
@@ -127,19 +124,5 @@ public class Room {
         this.utilities = utilities;
     }
 
-    public Set<Image> getImages() {
-        return images;
-    }
 
-    public void setImages(Set<Image> images) {
-        this.images = images;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
 }

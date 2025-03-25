@@ -146,40 +146,4 @@ public class BookingController {
         return "client/orderFail";
     }
 
-    // Lấy tổng số đơn đặt phòng và doanh thu
-    @GetMapping("/total-bookings")
-    public String getTotalBookings(Model model) {
-        Map<String, Object> statistics = billService.getStatistics();
-
-        Long totalBookings = Optional.ofNullable(statistics.get("totalOrders"))
-                .map(val -> (Long) val).orElse(0L);
-
-        Double totalRevenue = Optional.ofNullable(statistics.get("totalRevenues"))
-                .map(val -> (Double) val).orElse(0.0);
-
-        model.addAttribute("totalBookings", totalBookings);
-        model.addAttribute("totalRevenue", totalRevenue);
-
-        return "/adminHotel/adminStatistics";
-    }
-
-
-    @GetMapping("/admin/popular-rooms")
-    public String getPopularRooms(Model model) {
-        List<Map<String, Object>> popularRooms = bookingService.getPopularRoomTypes();
-
-        // Lấy danh sách tên phòng và số lượt đặt
-        List<String> roomTypes = popularRooms.stream()
-                .map(room -> room.get("roomType").toString())
-                .toList();
-
-        List<Integer> bookingCounts = popularRooms.stream()
-                .map(room -> ((Number) room.get("bookingCount")).intValue())
-                .toList();
-
-        model.addAttribute("roomTypes", roomTypes);
-        model.addAttribute("bookingCounts", bookingCounts);
-
-        return "adminHotel/adminStatistics"; // Trả về trang Dashboard
-    }
 }

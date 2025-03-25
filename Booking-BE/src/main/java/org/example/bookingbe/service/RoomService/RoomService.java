@@ -31,22 +31,7 @@ public class RoomService implements IRoomService {
     @Autowired
     private IStatusRepo statusRepo;
 
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Room> findById(Long id) {
-        return roomRepo.findById(id);
-    }
 
-    @Override
-    public Optional<Room> getRoomByIdWithDetails(Long roomId) {
-        return roomRepo.findByIdWithDetails(roomId);
-    }
-
-    @Transactional
-    public Room getRoomWithUtilities(Long id) {
-        return roomRepo.findByIdWithUtilities(id)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
-    }
 
     @Override
     public List<Room> getAvailableRooms() {
@@ -65,10 +50,8 @@ public class RoomService implements IRoomService {
         throw new RuntimeException("User is not authorized to access this hotel's rooms");
     }
 
-
-    @Transactional
     public Optional<Room> getRoomById(Long id) {
-        return roomRepo.findByIdWithHotelAndUser(id);
+        return roomRepo.findById(id);
     }
 
     @Override
